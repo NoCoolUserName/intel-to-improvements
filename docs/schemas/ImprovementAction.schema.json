@@ -1,0 +1,78 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "id": {
+      "default": "",
+      "title": "Id",
+      "type": "string"
+    },
+    "behavior_id": {
+      "title": "Behavior Id",
+      "type": "string"
+    },
+    "owner": {
+      "title": "Owner",
+      "type": "string"
+    },
+    "priority": {
+      "title": "Priority",
+      "type": "string"
+    },
+    "status": {
+      "default": "open",
+      "enum": [
+        "open",
+        "in progress",
+        "deployed",
+        "retest requested",
+        "closed"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "rationale": {
+      "title": "Rationale",
+      "type": "string"
+    },
+    "proposed_change": {
+      "title": "Proposed Change",
+      "type": "string"
+    },
+    "opened_at": {
+      "default": "",
+      "title": "Opened At",
+      "type": "string"
+    },
+    "deployed_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Deployed At"
+    },
+    "retest": {
+      "title": "Retest",
+      "type": "string"
+    }
+  },
+  "required": [
+    "behavior_id",
+    "owner",
+    "priority",
+    "rationale",
+    "proposed_change",
+    "retest"
+  ],
+  "title": "ImprovementAction",
+  "type": "object"
+}

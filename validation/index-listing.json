@@ -1,0 +1,27 @@
+{
+  "retrieved_at": "2026-10-08T18:24:01.366305+00:00",
+  "requested_limit": 5,
+  "returned": 5,
+  "links": [
+    {
+      "url": "https://thedfirreport.com/2026/08/24/bengalseo-part-1-anatomy-of-the-operation/",
+      "title": "Read more"
+    },
+    {
+      "url": "https://thedfirreport.com/2025/09/29/from-a-single-click-how-lunar-spider-enabled-a-near-two-month-intrusion/",
+      "title": "Read more"
+    },
+    {
+      "url": "https://thedfirreport.com/2025/09/08/blurring-the-lines-intrusion-shows-connection-with-three-major-ransomware-gangs/",
+      "title": "Read more"
+    },
+    {
+      "url": "https://thedfirreport.com/2023/12/04/sql-brute-force-leads-to-bluesky-ransomware/",
+      "title": "SQL Brute Force Leads to BlueSky Ransomware"
+    },
+    {
+      "url": "https://thedfirreport.com/2024/04/01/from-onenote-to-ransomnote-an-ice-cold-intrusion/",
+      "title": "From OneNote to RansomNote: An Ice Cold Intrusion"
+    }
+  ]
+}

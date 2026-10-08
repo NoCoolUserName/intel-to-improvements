@@ -1,0 +1,166 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "behavior_id": {
+      "title": "Behavior Id",
+      "type": "string"
+    },
+    "evidence": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "assumptions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Assumptions",
+      "type": "array"
+    },
+    "objective": {
+      "title": "Objective",
+      "type": "string"
+    },
+    "applicability": {
+      "title": "Applicability",
+      "type": "string"
+    },
+    "technique_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Technique Id"
+    },
+    "prerequisites": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Prerequisites",
+      "type": "array"
+    },
+    "telemetry_checks": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Telemetry Checks",
+      "type": "array"
+    },
+    "lab_scope": {
+      "title": "Lab Scope",
+      "type": "string"
+    },
+    "test_data": {
+      "title": "Test Data",
+      "type": "string"
+    },
+    "steps": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Steps",
+      "type": "array"
+    },
+    "expected_observables": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Expected Observables",
+      "type": "array"
+    },
+    "expected_detection": {
+      "title": "Expected Detection",
+      "type": "string"
+    },
+    "expected_prevention": {
+      "title": "Expected Prevention",
+      "type": "string"
+    },
+    "benign_controls": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Benign Controls",
+      "type": "array"
+    },
+    "stop_conditions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Stop Conditions",
+      "type": "array"
+    },
+    "cleanup": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Cleanup",
+      "type": "array"
+    },
+    "atomic_candidates": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Atomic Candidates",
+      "type": "array"
+    },
+    "limitations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Limitations",
+      "type": "array"
+    },
+    "exercise_designation": {
+      "default": "coordinated",
+      "title": "Exercise Designation",
+      "type": "string"
+    },
+    "evidence_template": {
+      "additionalProperties": true,
+      "title": "Evidence Template",
+      "type": "object"
+    }
+  },
+  "required": [
+    "id",
+    "behavior_id",
+    "evidence",
+    "assumptions",
+    "objective",
+    "applicability",
+    "prerequisites",
+    "telemetry_checks",
+    "lab_scope",
+    "test_data",
+    "steps",
+    "expected_observables",
+    "expected_detection",
+    "expected_prevention",
+    "benign_controls",
+    "stop_conditions",
+    "cleanup",
+    "atomic_candidates",
+    "limitations",
+    "evidence_template"
+  ],
+  "title": "EmulationStep",
+  "type": "object"
+}

@@ -1,0 +1,106 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "behavior_id": {
+      "title": "Behavior Id",
+      "type": "string"
+    },
+    "applicability": {
+      "enum": [
+        "applicable",
+        "not applicable",
+        "unknown"
+      ],
+      "title": "Applicability",
+      "type": "string"
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "missing_prerequisites": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Missing Prerequisites",
+      "type": "array"
+    },
+    "telemetry_readiness": {
+      "default": "unknown",
+      "title": "Telemetry Readiness",
+      "type": "string"
+    },
+    "detection_readiness": {
+      "default": "not assessed",
+      "title": "Detection Readiness",
+      "type": "string"
+    },
+    "deployment": {
+      "default": "unknown",
+      "title": "Deployment",
+      "type": "string"
+    },
+    "detection_test": {
+      "default": "not tested",
+      "title": "Detection Test",
+      "type": "string"
+    },
+    "prevention_test": {
+      "default": "not tested",
+      "title": "Prevention Test",
+      "type": "string"
+    },
+    "soc_response": {
+      "default": "not tested",
+      "title": "Soc Response",
+      "type": "string"
+    },
+    "synthetic_result": {
+      "default": "not tested",
+      "title": "Synthetic Result",
+      "type": "string"
+    },
+    "coverage_classification": {
+      "default": "unknown",
+      "title": "Coverage Classification",
+      "type": "string"
+    },
+    "hunts": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Hunts",
+      "type": "array"
+    },
+    "emulations": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Emulations",
+      "type": "array"
+    },
+    "candidates": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Candidates",
+      "type": "array"
+    }
+  },
+  "required": [
+    "behavior_id",
+    "applicability",
+    "reason"
+  ],
+  "title": "CoverageAssessment",
+  "type": "object"
+}

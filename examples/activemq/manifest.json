@@ -1,0 +1,339 @@
+{
+  "schema_version": "1.0",
+  "application": "0.1.0",
+  "package_id": "package_3761156315f0550f8df5b7f6de114294",
+  "assessment_id": "assessment_a99a0e9aef0b52f19f53ba0f749a8fc7",
+  "context": {
+    "customer_id": "fictional-bank",
+    "customer_snapshot": {
+      "additional_sectors": [],
+      "allow_live_processing": true,
+      "environments": [
+        {
+          "backend": "Splunk raw events",
+          "controls": [
+            {
+              "deployed_at": null,
+              "name": "Defender",
+              "status": "declared; not tested",
+              "version": "unknown"
+            }
+          ],
+          "exposed_services": [
+            "ActiveMQ"
+          ],
+          "field_map": {
+            "CommandLine": "CommandLine",
+            "Computer": "Computer",
+            "Image": "Image",
+            "OriginalFileName": "OriginalFileName",
+            "ParentImage": "ParentImage",
+            "User": "User",
+            "UtcTime": "UtcTime"
+          },
+          "id": "windows-ad",
+          "important_assets": [
+            "Domain controllers",
+            "Backup server"
+          ],
+          "name": "Windows / AD lab",
+          "notes": "Fictional. Sysmon process telemetry declared. PowerShell script-block and LSASS process-access telemetry deliberately missing. Index selected by analyst, no CIM claim.",
+          "platforms": [
+            "windows"
+          ],
+          "retention_days": 30,
+          "schema_version": "1.0",
+          "technologies": [
+            "ActiveMQ",
+            "Active Directory",
+            "PowerShell",
+            "RDP"
+          ],
+          "telemetry": {
+            "dns_query": [
+              "QueryName",
+              "Image"
+            ],
+            "process_creation": [
+              "Image",
+              "OriginalFileName",
+              "ParentImage",
+              "CommandLine",
+              "User",
+              "Computer",
+              "UtcTime"
+            ],
+            "proxy": [
+              "url",
+              "src_ip"
+            ]
+          },
+          "version": 1
+        }
+      ],
+      "id": "fictional-bank",
+      "intelligence_requirements": [
+        "ransomware",
+        "credential access"
+      ],
+      "misp_destination": null,
+      "name": "Northstar Bank \u00b7 fictional",
+      "priorities": [
+        "Protect backups and privileged identities"
+      ],
+      "schema_version": "1.0",
+      "sector": "financial-services",
+      "subsector": null,
+      "version": 1
+    },
+    "customer_version": 1,
+    "destination": null,
+    "environment_id": "windows-ad",
+    "environment_snapshot": {
+      "backend": "Splunk raw events",
+      "controls": [
+        {
+          "deployed_at": null,
+          "name": "Defender",
+          "status": "declared; not tested",
+          "version": "unknown"
+        }
+      ],
+      "exposed_services": [
+        "ActiveMQ"
+      ],
+      "field_map": {
+        "CommandLine": "CommandLine",
+        "Computer": "Computer",
+        "Image": "Image",
+        "OriginalFileName": "OriginalFileName",
+        "ParentImage": "ParentImage",
+        "User": "User",
+        "UtcTime": "UtcTime"
+      },
+      "id": "windows-ad",
+      "important_assets": [
+        "Domain controllers",
+        "Backup server"
+      ],
+      "name": "Windows / AD lab",
+      "notes": "Fictional. Sysmon process telemetry declared. PowerShell script-block and LSASS process-access telemetry deliberately missing. Index selected by analyst, no CIM claim.",
+      "platforms": [
+        "windows"
+      ],
+      "retention_days": 30,
+      "schema_version": "1.0",
+      "technologies": [
+        "ActiveMQ",
+        "Active Directory",
+        "PowerShell",
+        "RDP"
+      ],
+      "telemetry": {
+        "dns_query": [
+          "QueryName",
+          "Image"
+        ],
+        "process_creation": [
+          "Image",
+          "OriginalFileName",
+          "ParentImage",
+          "CommandLine",
+          "User",
+          "Computer",
+          "UtcTime"
+        ],
+        "proxy": [
+          "url",
+          "src_ip"
+        ]
+      },
+      "version": 1
+    },
+    "environment_version": 1,
+    "policy_version": "relevance-1",
+    "schema_version": "1.0"
+  },
+  "source_revision": "rev_828789f3de1b5901929eaea7dbd172ed",
+  "content_revision_id": "content_8548e28fd43c50b4b8e44db8c0932896",
+  "source_hash": "9eac251c92911a4a7f8f5dac811635dee09a5881bc5feeda1f9181954885961c",
+  "normalized_hash": "0985a97edadfe3b7044b2538855b540f6fdecb9c4eec9e73afeba714d4ecbaba",
+  "extraction_id": "extract_153772ecaef85329bee7ada906583ddc",
+  "mode": "replay",
+  "provider": "developer-curated-replay-v1",
+  "model": null,
+  "prompt_version": "extract-1.0",
+  "provider_implementation_hash": "0b19a1fb99ed49e37d780fea8a2177e332419524e410c4cb078894c08e407756",
+  "extraction_schema_hash": "871c1b874f66a89554d021cdf6047ed23bc59fe06c1cd4b297611e5406a5bccc",
+  "parser_version": "parser-1.4",
+  "catalogs": {
+    "retrieved_at": "2026-10-08T17:09:10.608588+00:00",
+    "revisions": {
+      "sigma": "8a4813404ea3074890e0cda9272d4d1a8b2941d6",
+      "attack": "6cda5ad8462c79e14fbb872f4e09059b18e0cfc4",
+      "atomic": "388942adbd9641f4dfdcf079d7efe9a75ec0ac43"
+    },
+    "files": [
+      {
+        "kind": "sigma",
+        "path": "catalogs/sigma/rules__windows__process_creation__proc_creation_win_certutil_download.yml",
+        "upstream_path": "rules/windows/process_creation/proc_creation_win_certutil_download.yml",
+        "sha256": "1262c65c22592b28f2c63906462f07f9c0d95e8fa065405505d18979a5f278af",
+        "url": "https://github.com/SigmaHQ/sigma/blob/8a4813404ea3074890e0cda9272d4d1a8b2941d6/rules/windows/process_creation/proc_creation_win_certutil_download.yml"
+      },
+      {
+        "kind": "sigma",
+        "path": "catalogs/sigma/rules__windows__process_creation__proc_creation_win_certutil_download_direct_ip.yml",
+        "upstream_path": "rules/windows/process_creation/proc_creation_win_certutil_download_direct_ip.yml",
+        "sha256": "e541e6f3383f9ab530f44b20dcee5046be96410ab9a48d78d3437ec85ea48fa0",
+        "url": "https://github.com/SigmaHQ/sigma/blob/8a4813404ea3074890e0cda9272d4d1a8b2941d6/rules/windows/process_creation/proc_creation_win_certutil_download_direct_ip.yml"
+      },
+      {
+        "kind": "sigma",
+        "path": "catalogs/sigma/rules__windows__process_creation__proc_creation_win_certutil_download_file_sharing_domains.yml",
+        "upstream_path": "rules/windows/process_creation/proc_creation_win_certutil_download_file_sharing_domains.yml",
+        "sha256": "8a36aad4a29cf0a1cc3259b3f5a3431d9f3178ef2108d43bae0915ce7b2a290b",
+        "url": "https://github.com/SigmaHQ/sigma/blob/8a4813404ea3074890e0cda9272d4d1a8b2941d6/rules/windows/process_creation/proc_creation_win_certutil_download_file_sharing_domains.yml"
+      },
+      {
+        "kind": "sigma",
+        "path": "catalogs/sigma/rules__windows__process_creation__proc_creation_win_remote_access_tools_anydesk.yml",
+        "upstream_path": "rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk.yml",
+        "sha256": "882fcd6053bd702a2bab15bd55e5bac67ff5a7aa5317d76e1c6b0b7355f8edee",
+        "url": "https://github.com/SigmaHQ/sigma/blob/8a4813404ea3074890e0cda9272d4d1a8b2941d6/rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk.yml"
+      },
+      {
+        "kind": "sigma",
+        "path": "catalogs/sigma/rules__windows__process_creation__proc_creation_win_remote_access_tools_anydesk_piped_password_via_cli.yml",
+        "upstream_path": "rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk_piped_password_via_cli.yml",
+        "sha256": "6bdc7deac5c76fcfd1429920844d6d1db69ada5f3a67660191b1bf94e5037f60",
+        "url": "https://github.com/SigmaHQ/sigma/blob/8a4813404ea3074890e0cda9272d4d1a8b2941d6/rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk_piped_password_via_cli.yml"
+      },
+      {
+        "kind": "sigma",
+        "path": "catalogs/sigma/rules__windows__process_creation__proc_creation_win_remote_access_tools_anydesk_revoked_cert.yml",
+        "upstream_path": "rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk_revoked_cert.yml",
+        "sha256": "608bae60088fcd13373066d4aa2e7830c1f77fcf82b9823540636d902e4415d6",
+        "url": "https://github.com/SigmaHQ/sigma/blob/8a4813404ea3074890e0cda9272d4d1a8b2941d6/rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk_revoked_cert.yml"
+      },
+      {
+        "kind": "sigma",
+        "path": "catalogs/sigma/rules__windows__process_creation__proc_creation_win_remote_access_tools_anydesk_silent_install.yml",
+        "upstream_path": "rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk_silent_install.yml",
+        "sha256": "52a2359ef3132f90c763807ef0e263e98bded89c597c8733bd858bd9e7ee0e60",
+        "url": "https://github.com/SigmaHQ/sigma/blob/8a4813404ea3074890e0cda9272d4d1a8b2941d6/rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk_silent_install.yml"
+      },
+      {
+        "kind": "sigma",
+        "path": "catalogs/sigma/rules__windows__process_creation__proc_creation_win_remote_access_tools_anydesk_susp_exec.yml",
+        "upstream_path": "rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk_susp_exec.yml",
+        "sha256": "109c82eb9cc6c657bea76e3cb02b696bd94cc3068fd6fba5bdd39e8246686f0a",
+        "url": "https://github.com/SigmaHQ/sigma/blob/8a4813404ea3074890e0cda9272d4d1a8b2941d6/rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk_susp_exec.yml"
+      },
+      {
+        "kind": "atomic",
+        "path": "catalogs/atomic/T1105.yaml",
+        "upstream_path": "atomics/T1105/T1105.yaml",
+        "sha256": "6010f653b3589e6dd17acb0ba39b027626824573cf402cf6165c415a928a691d",
+        "url": "https://github.com/redcanaryco/atomic-red-team/blob/388942adbd9641f4dfdcf079d7efe9a75ec0ac43/atomics/T1105/T1105.yaml"
+      },
+      {
+        "kind": "atomic",
+        "path": "catalogs/atomic/T1059.001.yaml",
+        "upstream_path": "atomics/T1059.001/T1059.001.yaml",
+        "sha256": "6ad0fe0ed7bba5feaf44bf8b0e81ca320dcdaf0a78bd78ed6f7c83950f5d812b",
+        "url": "https://github.com/redcanaryco/atomic-red-team/blob/388942adbd9641f4dfdcf079d7efe9a75ec0ac43/atomics/T1059.001/T1059.001.yaml"
+      },
+      {
+        "kind": "atomic",
+        "path": "catalogs/atomic/T1087.002.yaml",
+        "upstream_path": "atomics/T1087.002/T1087.002.yaml",
+        "sha256": "2fb9f241d5d4db1dee955be8f4a74341c014fdd2151ec64847cc385e6820f095",
+        "url": "https://github.com/redcanaryco/atomic-red-team/blob/388942adbd9641f4dfdcf079d7efe9a75ec0ac43/atomics/T1087.002/T1087.002.yaml"
+      }
+    ],
+    "sigma_scope": "bounded subset"
+  },
+  "created_at": "2026-10-08T18:21:47.735546+00:00",
+  "environment_hash": "009bd17a4600943a00a488140f474d6a2cd754f30dbf58bef9cd8a5e313217f1",
+  "review_status": "needs analyst review",
+  "live_splunk": "NOT RUN",
+  "live_model": "NOT RUN",
+  "live_misp": "NOT RUN",
+  "source_gaps": [
+    "Limited developer-curated derivative, not the full report; original contains image-only evidence",
+    "C2 address discrepancy .52 versus .62 requires source review"
+  ],
+  "artifacts": {
+    "cti.stix21.json": "ff9f8360d267a8271fa9eb65351dc0881a5302f6ac96057e125a399743f337fe",
+    "cti.misp.json": "9e13997c46ebc78050418dc3145367fb9003f1d0d0c0ce2097f8b2d2af71bbcd",
+    "hunt.json": "134382b025a9063456306a0b22765298be4b332ec128d35d24a6e2b6a165558c",
+    "purple-team.json": "376c77f4dc98a486744c378da04c42d0c6f34c7f6bfd40bc8d6ffed4b4f45239",
+    "hunt.md": "2e5c801fe2e22e3ce92745af75100df4f15f95025cdae08bc024072846da7239",
+    "purple-team.md": "270d8a01c9edbcff8af0e48b199e74b2e1160d8f41e965eb049fba685e3445cb",
+    "compatibility.json": "fad7b1006c0c48c0380f15273033c62cf3e7a4164fe01fda7eb9b2274411f595",
+    "evidence.json": "235bcbe751f7a13b355760c470c293c9b35c05dd1816a402bb7b09af9e44bb06",
+    "coverage.json": "278964410eaf801da697b16910b36cca9e984e48efc609ae04e204fd4bed5050",
+    "sigma.json": "0bab1cf938757101b63d4da9d32df6975fe5e3743a89cc91e100695ad9b9d2d6",
+    "misp-converted.json": "30d411f7e17b83a3ffaefec20a1aa17e536b06851820c9709599371ed02c1ca3"
+  },
+  "validation": {
+    "stix": {
+      "valid": true,
+      "objects": 14,
+      "warnings": [
+        "attack-pattern--0ebaa81f-c2e9-46a5-87fd-aedba93b6e46: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+        "attack-pattern--e8cbeae5-acd6-483d-8928-1c8c72c2a97f: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+        "attack-pattern--04d004d8-af4a-47fd-a38a-dda671bc188a: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+        "attack-pattern--0b4e2919-656a-4d2d-a6d6-b0cdc9000e28: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+        "attack-pattern--883cd03c-70dd-497c-b02e-49c6ea83fb9e: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+        "attack-pattern--7017db54-53c4-4285-9530-4d7329dd8315: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+        "attack-pattern--ed556ce0-fcc8-4fdc-8a51-0ad966ef64fc: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+        "attack-pattern--303af3b9-7ac7-45be-b305-c4068064f9b0: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+        "relationship--4cc53c29-94de-4f6d-9944-d7b72105b79e: {202} 'ipv4-addr' is not a suggested relationship target object for 'indicator' objects with the 'based-on' relationship.",
+        "report--00931cc7-d1e7-4dba-9140-76d64514d13e: {302} External reference 'The DFIR Report' has a URL but no hash."
+      ],
+      "patterns_valid": true,
+      "references_valid": true
+    },
+    "native_misp": {
+      "valid": true,
+      "attributes": 3,
+      "native": "PyMISP event + bundled schema-lax.json; EventReport checked by PyMISP models",
+      "live_import": "NOT RUN"
+    },
+    "converter": {
+      "status": "completed",
+      "library": "misp-stix",
+      "events": 1,
+      "native_values": [
+        "166.62.100.52",
+        "166.62.100.62"
+      ],
+      "missing_values": [],
+      "preserved_values": [
+        "166.62.100.52",
+        "166.62.100.62"
+      ],
+      "behavior_comparison": {
+        "source_attack_patterns": 8,
+        "preserved_by_identity_or_name": 8,
+        "missing_ids": [],
+        "note": "ATT&CK cluster/name retention is not preservation of exact procedure semantics"
+      },
+      "native_eventreport_exactly_preserved": false,
+      "behavior_context": "Native EventReport and converted objects differ; inspect converted export. No universal compatibility claim.",
+      "warnings": "{}",
+      "errors": "defaultdict(<class 'list'>, {})",
+      "live_misp_import": "NOT RUN"
+    },
+    "omissions": [],
+    "review_warnings": [
+      "Prerecorded, developer/model-curated annotations; not a new AI inference. Owner has not reviewed this case.",
+      "Limited developer-curated derivative, not the full report; original contains image-only evidence",
+      "C2 address discrepancy .52 versus .62 requires source review"
+    ],
+    "readiness": "review required",
+    "claim": "Validated serialization is not semantic truth or universal TIP compatibility"
+  }
+}

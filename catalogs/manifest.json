@@ -1,0 +1,88 @@
+{
+  "retrieved_at": "2026-10-08T17:09:10.608588+00:00",
+  "revisions": {
+    "sigma": "8a4813404ea3074890e0cda9272d4d1a8b2941d6",
+    "attack": "6cda5ad8462c79e14fbb872f4e09059b18e0cfc4",
+    "atomic": "388942adbd9641f4dfdcf079d7efe9a75ec0ac43"
+  },
+  "files": [
+    {
+      "kind": "sigma",
+      "path": "catalogs/sigma/rules__windows__process_creation__proc_creation_win_certutil_download.yml",
+      "upstream_path": "rules/windows/process_creation/proc_creation_win_certutil_download.yml",
+      "sha256": "1262c65c22592b28f2c63906462f07f9c0d95e8fa065405505d18979a5f278af",
+      "url": "https://github.com/SigmaHQ/sigma/blob/8a4813404ea3074890e0cda9272d4d1a8b2941d6/rules/windows/process_creation/proc_creation_win_certutil_download.yml"
+    },
+    {
+      "kind": "sigma",
+      "path": "catalogs/sigma/rules__windows__process_creation__proc_creation_win_certutil_download_direct_ip.yml",
+      "upstream_path": "rules/windows/process_creation/proc_creation_win_certutil_download_direct_ip.yml",
+      "sha256": "e541e6f3383f9ab530f44b20dcee5046be96410ab9a48d78d3437ec85ea48fa0",
+      "url": "https://github.com/SigmaHQ/sigma/blob/8a4813404ea3074890e0cda9272d4d1a8b2941d6/rules/windows/process_creation/proc_creation_win_certutil_download_direct_ip.yml"
+    },
+    {
+      "kind": "sigma",
+      "path": "catalogs/sigma/rules__windows__process_creation__proc_creation_win_certutil_download_file_sharing_domains.yml",
+      "upstream_path": "rules/windows/process_creation/proc_creation_win_certutil_download_file_sharing_domains.yml",
+      "sha256": "8a36aad4a29cf0a1cc3259b3f5a3431d9f3178ef2108d43bae0915ce7b2a290b",
+      "url": "https://github.com/SigmaHQ/sigma/blob/8a4813404ea3074890e0cda9272d4d1a8b2941d6/rules/windows/process_creation/proc_creation_win_certutil_download_file_sharing_domains.yml"
+    },
+    {
+      "kind": "sigma",
+      "path": "catalogs/sigma/rules__windows__process_creation__proc_creation_win_remote_access_tools_anydesk.yml",
+      "upstream_path": "rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk.yml",
+      "sha256": "882fcd6053bd702a2bab15bd55e5bac67ff5a7aa5317d76e1c6b0b7355f8edee",
+      "url": "https://github.com/SigmaHQ/sigma/blob/8a4813404ea3074890e0cda9272d4d1a8b2941d6/rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk.yml"
+    },
+    {
+      "kind": "sigma",
+      "path": "catalogs/sigma/rules__windows__process_creation__proc_creation_win_remote_access_tools_anydesk_piped_password_via_cli.yml",
+      "upstream_path": "rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk_piped_password_via_cli.yml",
+      "sha256": "6bdc7deac5c76fcfd1429920844d6d1db69ada5f3a67660191b1bf94e5037f60",
+      "url": "https://github.com/SigmaHQ/sigma/blob/8a4813404ea3074890e0cda9272d4d1a8b2941d6/rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk_piped_password_via_cli.yml"
+    },
+    {
+      "kind": "sigma",
+      "path": "catalogs/sigma/rules__windows__process_creation__proc_creation_win_remote_access_tools_anydesk_revoked_cert.yml",
+      "upstream_path": "rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk_revoked_cert.yml",
+      "sha256": "608bae60088fcd13373066d4aa2e7830c1f77fcf82b9823540636d902e4415d6",
+      "url": "https://github.com/SigmaHQ/sigma/blob/8a4813404ea3074890e0cda9272d4d1a8b2941d6/rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk_revoked_cert.yml"
+    },
+    {
+      "kind": "sigma",
+      "path": "catalogs/sigma/rules__windows__process_creation__proc_creation_win_remote_access_tools_anydesk_silent_install.yml",
+      "upstream_path": "rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk_silent_install.yml",
+      "sha256": "52a2359ef3132f90c763807ef0e263e98bded89c597c8733bd858bd9e7ee0e60",
+      "url": "https://github.com/SigmaHQ/sigma/blob/8a4813404ea3074890e0cda9272d4d1a8b2941d6/rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk_silent_install.yml"
+    },
+    {
+      "kind": "sigma",
+      "path": "catalogs/sigma/rules__windows__process_creation__proc_creation_win_remote_access_tools_anydesk_susp_exec.yml",
+      "upstream_path": "rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk_susp_exec.yml",
+      "sha256": "109c82eb9cc6c657bea76e3cb02b696bd94cc3068fd6fba5bdd39e8246686f0a",
+      "url": "https://github.com/SigmaHQ/sigma/blob/8a4813404ea3074890e0cda9272d4d1a8b2941d6/rules/windows/process_creation/proc_creation_win_remote_access_tools_anydesk_susp_exec.yml"
+    },
+    {
+      "kind": "atomic",
+      "path": "catalogs/atomic/T1105.yaml",
+      "upstream_path": "atomics/T1105/T1105.yaml",
+      "sha256": "6010f653b3589e6dd17acb0ba39b027626824573cf402cf6165c415a928a691d",
+      "url": "https://github.com/redcanaryco/atomic-red-team/blob/388942adbd9641f4dfdcf079d7efe9a75ec0ac43/atomics/T1105/T1105.yaml"
+    },
+    {
+      "kind": "atomic",
+      "path": "catalogs/atomic/T1059.001.yaml",
+      "upstream_path": "atomics/T1059.001/T1059.001.yaml",
+      "sha256": "6ad0fe0ed7bba5feaf44bf8b0e81ca320dcdaf0a78bd78ed6f7c83950f5d812b",
+      "url": "https://github.com/redcanaryco/atomic-red-team/blob/388942adbd9641f4dfdcf079d7efe9a75ec0ac43/atomics/T1059.001/T1059.001.yaml"
+    },
+    {
+      "kind": "atomic",
+      "path": "catalogs/atomic/T1087.002.yaml",
+      "upstream_path": "atomics/T1087.002/T1087.002.yaml",
+      "sha256": "2fb9f241d5d4db1dee955be8f4a74341c014fdd2151ec64847cc385e6820f095",
+      "url": "https://github.com/redcanaryco/atomic-red-team/blob/388942adbd9641f4dfdcf079d7efe9a75ec0ac43/atomics/T1087.002/T1087.002.yaml"
+    }
+  ],
+  "sigma_scope": "bounded subset"
+}

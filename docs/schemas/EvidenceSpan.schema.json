@@ -1,0 +1,94 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "revision_id": {
+      "title": "Revision Id",
+      "type": "string"
+    },
+    "text": {
+      "title": "Text",
+      "type": "string"
+    },
+    "heading_path": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Heading Path",
+      "type": "array"
+    },
+    "kind": {
+      "default": "paragraph",
+      "title": "Kind",
+      "type": "string"
+    },
+    "start": {
+      "title": "Start",
+      "type": "integer"
+    },
+    "end": {
+      "title": "End",
+      "type": "integer"
+    },
+    "offset_space": {
+      "const": "normalized_unicode",
+      "default": "normalized_unicode",
+      "title": "Offset Space",
+      "type": "string"
+    },
+    "raw_start": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Raw Start"
+    },
+    "raw_end": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Raw End"
+    },
+    "segment": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Segment"
+    }
+  },
+  "required": [
+    "id",
+    "revision_id",
+    "text",
+    "start",
+    "end"
+  ],
+  "title": "EvidenceSpan",
+  "type": "object"
+}

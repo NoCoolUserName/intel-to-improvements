@@ -1,0 +1,17 @@
+[project]
+name = "intel-to-improvements"
+version = "0.1.0"
+description = "Evidence-led local CTI workbench"
+requires-python = ">=3.12"
+dependencies = ["fastapi", "uvicorn", "pydantic>=2", "httpx", "beautifulsoup4", "lxml", "stix2", "stix2-validator==3.2.0", "pymisp", "pysigma", "pysigma-backend-splunk", "openai", "python-multipart", "pypdf", "PyYAML", "python-dotenv", "misp-stix"]
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov"]
+[project.scripts]
+iti = "iti.cli:main"
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+[tool.setuptools]
+packages = ["iti"]
+[tool.pytest.ini_options]
+testpaths = ["tests"]

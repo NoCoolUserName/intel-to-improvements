@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+command -v python3 >/dev/null || { echo 'Python 3.12+ required'; exit 1; }
+command -v node >/dev/null || { echo 'Node 22.12+ required'; exit 1; }
+python3 -m venv .venv
+.venv/bin/python -m pip install --cache-dir runtime/pip-cache uv
+UV_CACHE_DIR=runtime/uv-cache .venv/bin/uv sync --frozen --extra dev
+npm --prefix web ci --cache "$PWD/runtime/npm-cache"
+npm --prefix web run build
+printf '\nReady: ./scripts/iti demo && ./scripts/run\n'

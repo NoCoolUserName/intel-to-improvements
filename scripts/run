@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+if [ ! -x .venv/bin/python ] || [ ! -f web/dist/index.html ]; then ./scripts/bootstrap; fi
+exec ./scripts/iti run

@@ -1,0 +1,104 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "version": {
+      "default": 1,
+      "title": "Version",
+      "type": "integer"
+    },
+    "platforms": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Platforms",
+      "type": "array"
+    },
+    "technologies": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Technologies",
+      "type": "array"
+    },
+    "exposed_services": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Exposed Services",
+      "type": "array"
+    },
+    "important_assets": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Important Assets",
+      "type": "array"
+    },
+    "telemetry": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "default": {},
+      "title": "Telemetry",
+      "type": "object"
+    },
+    "retention_days": {
+      "default": 30,
+      "title": "Retention Days",
+      "type": "integer"
+    },
+    "controls": {
+      "default": [],
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Controls",
+      "type": "array"
+    },
+    "field_map": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {},
+      "title": "Field Map",
+      "type": "object"
+    },
+    "backend": {
+      "default": "portable analyst procedure",
+      "title": "Backend",
+      "type": "string"
+    },
+    "notes": {
+      "default": "Declared availability; not checked by a live test",
+      "title": "Notes",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "platforms"
+  ],
+  "title": "EnvironmentProfile",
+  "type": "object"
+}

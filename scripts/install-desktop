@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+"""Build a local macOS app launcher, optionally install it on the Desktop."""
+import argparse
+from pathlib import Path
+import plistlib
+import shlex
+import shutil
+import stat
+import sys
+
+root = Path(__file__).resolve().parent.parent
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--build-only', action='store_true', help='Build inside runtime/desktop; do not install to Desktop')
+args = parser.parse_args()
+if sys.platform != 'darwin':
+    parser.error('This app bundle is for macOS. On Linux run ./scripts/run and bookmark http://127.0.0.1:8000.')
+app = root / 'runtime/desktop/Intel to Improvements.app'
+resources = app / 'Contents/Resources'
+macos = app / 'Contents/MacOS'
+resources.mkdir(parents=True, exist_ok=True)
+macos.mkdir(parents=True, exist_ok=True)
+shutil.copy2(root / 'desktop/Info.plist', app / 'Contents/Info.plist')
+shutil.copy2(root / 'desktop/AppIcon.icns', resources / 'AppIcon.icns')
+# Store the actual selected checkout path; never infer it from the owner's name.
+python = root / '.venv/bin/python'
+if not python.exists():
+    parser.error('Run ./scripts/bootstrap before installing the Desktop launcher')
+launch = macos / 'launch'
+launch.write_text('#!/bin/sh\nexec ' + shlex.quote(str(python)) + ' ' + shlex.quote(str(root / 'scripts/desktop-launcher.py')) + '\n')
+launch.chmod(launch.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+with (app / 'Contents/Info.plist').open('rb') as file:
+    assert plistlib.load(file)['CFBundleExecutable'] == 'launch'
+if args.build_only:
+    print(app)
+else:
+    target = Path.home() / 'Desktop' / app.name
+    # Refuse to overwrite an unrelated application at the requested location.
+    if target.exists():
+        try:
+            with (target / 'Contents/Info.plist').open('rb') as file:
+                existing = plistlib.load(file)
+            if existing.get('CFBundleIdentifier') != 'local.intel-to-improvements.launcher':
+                parser.error('An unrelated app already exists at ' + str(target))
+        except (OSError, ValueError):
+            parser.error('Cannot safely update existing Desktop item: ' + str(target))
+    shutil.copytree(app, target, dirs_exist_ok=True)
+    print('Installed: ' + str(target))

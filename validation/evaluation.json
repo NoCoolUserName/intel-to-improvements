@@ -1,0 +1,562 @@
+{
+  "schema_version": "1.0",
+  "executed_at": "2026-10-08T18:21:46.723471+00:00",
+  "fixture_count": 5,
+  "gold_labeler": "developer/model-curated by direct inspection of source text; owner has not reviewed",
+  "gold_hash": "dd1faf9e12bcc82b49086ba80ab657379ad6ded2e2fb773ff233f69de66b88e9",
+  "labeled_behavior_subset": {
+    "tp": 12,
+    "fp": 0,
+    "fn": 1,
+    "precision": 1.0,
+    "recall": 0.9230769230769231
+  },
+  "fixtures": [
+    {
+      "fixture": "activemq-derived",
+      "held_out": false,
+      "mode": "replay",
+      "status": "completed",
+      "behaviors": {
+        "expected": [
+          "activemq",
+          "anydesk",
+          "certutil",
+          "java_shell",
+          "lsass",
+          "powershell",
+          "rdp",
+          "remote_service"
+        ],
+        "actual": [
+          "activemq",
+          "anydesk",
+          "certutil",
+          "java_shell",
+          "lsass",
+          "powershell",
+          "rdp",
+          "remote_service"
+        ],
+        "true_positive": 8,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "indicators": {
+        "expected": [
+          "166.62.100.52",
+          "166.62.100.62"
+        ],
+        "actual": [
+          "166.62.100.52"
+        ],
+        "false_assertions": [],
+        "missed": [
+          "166.62.100.62"
+        ]
+      },
+      "evidence_references_valid": true,
+      "attribution_checks": {
+        "confirmed_actor_assertions": 0,
+        "qualifiers_retained": [
+          "Source assessment, not confirmed actor attribution",
+          "Requires source review"
+        ]
+      },
+      "abstained_from_plans": false,
+      "expected_omissions": [
+        "confirmed LockBit operator attribution",
+        "malicious Advanced IP Scanner classification"
+      ],
+      "schema_results": {
+        "stix": {
+          "valid": true,
+          "objects": 14,
+          "warnings": [
+            "attack-pattern--300e038b-d3e7-40d2-bbdd-27cad19e650c: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "attack-pattern--d5f8d62f-ac7f-4c44-a351-f74b838fb5fa: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "attack-pattern--ce325238-1550-4981-aa88-8ba91b976df6: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "attack-pattern--8dd1bc6e-55fa-438f-ac71-11a94b70b782: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "attack-pattern--5d50d43a-3bc9-4758-83d0-2eabe08203f5: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "attack-pattern--8b91d2df-a019-4a9f-91e0-c84ce4821308: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "attack-pattern--a197a90c-cbbb-4abb-8085-0ec64505f5c7: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "attack-pattern--e33c57a1-a045-4942-aae1-172cafa0175b: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "relationship--9fdce02e-d157-4dda-acbb-8a41d9ea2416: {202} 'ipv4-addr' is not a suggested relationship target object for 'indicator' objects with the 'based-on' relationship.",
+            "report--df26cb41-2916-458f-93ae-5175ef50be96: {302} External reference 'The DFIR Report' has a URL but no hash."
+          ],
+          "patterns_valid": true,
+          "references_valid": true
+        },
+        "native_misp": {
+          "valid": true,
+          "attributes": 3,
+          "native": "PyMISP event + bundled schema-lax.json; EventReport checked by PyMISP models",
+          "live_import": "NOT RUN"
+        },
+        "converter": {
+          "status": "completed",
+          "library": "misp-stix",
+          "events": 1,
+          "native_values": [
+            "166.62.100.52",
+            "166.62.100.62"
+          ],
+          "missing_values": [],
+          "preserved_values": [
+            "166.62.100.52",
+            "166.62.100.62"
+          ],
+          "behavior_comparison": {
+            "source_attack_patterns": 8,
+            "preserved_by_identity_or_name": 8,
+            "missing_ids": [],
+            "note": "ATT&CK cluster/name retention is not preservation of exact procedure semantics"
+          },
+          "native_eventreport_exactly_preserved": false,
+          "behavior_context": "Native EventReport and converted objects differ; inspect converted export. No universal compatibility claim.",
+          "warnings": "{}",
+          "errors": "defaultdict(<class 'list'>, {})",
+          "live_misp_import": "NOT RUN"
+        },
+        "omissions": [],
+        "review_warnings": [
+          "Prerecorded, developer/model-curated annotations; not a new AI inference. Owner has not reviewed this case.",
+          "Limited developer-curated derivative, not the full report; original contains image-only evidence",
+          "C2 address discrepancy .52 versus .62 requires source review"
+        ],
+        "readiness": "review required",
+        "claim": "Validated serialization is not semantic truth or universal TIP compatibility"
+      },
+      "retrieval": {
+        "searched_rules": 8,
+        "source_cited_found": [
+          "19b08b1c-861d-4e75-a1ef-ea0c1baf202b",
+          "114e7f1c-f137-48c8-8f54-3088c24ce4b9"
+        ],
+        "source_cited_missing": [],
+        "independent_candidates": 7
+      },
+      "source_completeness": "partial"
+    },
+    {
+      "fixture": "no-ioc",
+      "held_out": false,
+      "mode": "offline",
+      "status": "completed",
+      "behaviors": {
+        "expected": [
+          "certutil",
+          "java_shell",
+          "powershell"
+        ],
+        "actual": [
+          "certutil",
+          "java_shell",
+          "powershell"
+        ],
+        "true_positive": 3,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "indicators": {
+        "expected": [],
+        "actual": [],
+        "false_assertions": [],
+        "missed": []
+      },
+      "evidence_references_valid": true,
+      "attribution_checks": {
+        "confirmed_actor_assertions": 0,
+        "qualifiers_retained": [
+          "Preserve source uncertainty or negation; no confirmed actor attribution"
+        ]
+      },
+      "abstained_from_plans": false,
+      "expected_omissions": [
+        "embedded instruction",
+        "invented indicators"
+      ],
+      "schema_results": {
+        "stix": {
+          "valid": true,
+          "objects": 5,
+          "warnings": [
+            "attack-pattern--5b524307-4a64-48c1-8001-f12567977735: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "attack-pattern--114ded9f-8cc8-4206-a393-cfc28c279d37: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "attack-pattern--369f6000-b7c4-4958-a4ab-b9e276be9551: {302} External reference 'MITRE ATT&CK' has a URL but no hash."
+          ],
+          "patterns_valid": true,
+          "references_valid": true
+        },
+        "native_misp": {
+          "valid": true,
+          "attributes": 0,
+          "native": "PyMISP event + bundled schema-lax.json; EventReport checked by PyMISP models",
+          "live_import": "NOT RUN"
+        },
+        "converter": {
+          "status": "completed",
+          "library": "misp-stix",
+          "events": 1,
+          "native_values": [],
+          "missing_values": [],
+          "preserved_values": [],
+          "behavior_comparison": {
+            "source_attack_patterns": 3,
+            "preserved_by_identity_or_name": 3,
+            "missing_ids": [],
+            "note": "ATT&CK cluster/name retention is not preservation of exact procedure semantics"
+          },
+          "native_eventreport_exactly_preserved": false,
+          "behavior_context": "Native EventReport and converted objects differ; inspect converted export. No universal compatibility claim.",
+          "warnings": "{}",
+          "errors": "defaultdict(<class 'list'>, {})",
+          "live_misp_import": "NOT RUN"
+        },
+        "omissions": [],
+        "review_warnings": [
+          "Bounded deterministic text recognition, not live AI. Unrecognized behaviors are omitted; analyst review required."
+        ],
+        "readiness": "review required",
+        "claim": "Validated serialization is not semantic truth or universal TIP compatibility"
+      },
+      "retrieval": {
+        "searched_rules": 8,
+        "source_cited_found": [],
+        "source_cited_missing": [],
+        "independent_candidates": 3
+      },
+      "source_completeness": "complete-for-supported-content"
+    },
+    {
+      "fixture": "insufficient",
+      "held_out": false,
+      "mode": "offline",
+      "status": "completed",
+      "behaviors": {
+        "expected": [],
+        "actual": [],
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": null,
+        "recall": null
+      },
+      "indicators": {
+        "expected": [],
+        "actual": [],
+        "false_assertions": [],
+        "missed": []
+      },
+      "evidence_references_valid": true,
+      "attribution_checks": {
+        "confirmed_actor_assertions": 0,
+        "qualifiers_retained": []
+      },
+      "abstained_from_plans": true,
+      "expected_omissions": [
+        "any emulation scenario"
+      ],
+      "schema_results": {
+        "stix": {
+          "valid": true,
+          "objects": 2,
+          "warnings": [],
+          "patterns_valid": true,
+          "references_valid": true
+        },
+        "native_misp": {
+          "valid": true,
+          "attributes": 0,
+          "native": "PyMISP event + bundled schema-lax.json; EventReport checked by PyMISP models",
+          "live_import": "NOT RUN"
+        },
+        "converter": {
+          "status": "completed",
+          "library": "misp-stix",
+          "events": 1,
+          "native_values": [],
+          "missing_values": [],
+          "preserved_values": [],
+          "behavior_comparison": {
+            "source_attack_patterns": 0,
+            "preserved_by_identity_or_name": 0,
+            "missing_ids": [],
+            "note": "ATT&CK cluster/name retention is not preservation of exact procedure semantics"
+          },
+          "native_eventreport_exactly_preserved": false,
+          "behavior_context": "Native EventReport and converted objects differ; inspect converted export. No universal compatibility claim.",
+          "warnings": "{}",
+          "errors": "defaultdict(<class 'list'>, {})",
+          "live_misp_import": "NOT RUN"
+        },
+        "omissions": [],
+        "review_warnings": [
+          "Bounded deterministic text recognition, not live AI. Unrecognized behaviors are omitted; analyst review required.",
+          "Insufficient supported behavioral evidence: no defensible hunt/emulation generated"
+        ],
+        "readiness": "review required",
+        "claim": "Validated serialization is not semantic truth or universal TIP compatibility"
+      },
+      "retrieval": {
+        "searched_rules": 8,
+        "source_cited_found": [],
+        "source_cited_missing": [],
+        "independent_candidates": 0
+      },
+      "source_completeness": "complete-for-supported-content"
+    },
+    {
+      "fixture": "held-out",
+      "held_out": true,
+      "mode": "offline",
+      "status": "completed",
+      "behaviors": {
+        "expected": [
+          "anydesk"
+        ],
+        "actual": [
+          "anydesk"
+        ],
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0
+      },
+      "indicators": {
+        "expected": [],
+        "actual": [],
+        "false_assertions": [],
+        "missed": []
+      },
+      "evidence_references_valid": true,
+      "attribution_checks": {
+        "confirmed_actor_assertions": 0,
+        "qualifiers_retained": [
+          "Preserve source uncertainty or negation; no confirmed actor attribution",
+          "Preserve source uncertainty or negation; no confirmed actor attribution"
+        ]
+      },
+      "abstained_from_plans": false,
+      "expected_omissions": [
+        "certutil behavior (negated)",
+        "lsass behavior (negated)",
+        "confirmed Fern attribution"
+      ],
+      "schema_results": {
+        "stix": {
+          "valid": true,
+          "objects": 7,
+          "warnings": [
+            "attack-pattern--6f1ebed8-55c9-48e5-a408-e028121a370d: {302} External reference 'MITRE ATT&CK' has a URL but no hash."
+          ],
+          "patterns_valid": true,
+          "references_valid": true
+        },
+        "native_misp": {
+          "valid": true,
+          "attributes": 4,
+          "native": "PyMISP event + bundled schema-lax.json; EventReport checked by PyMISP models",
+          "live_import": "NOT RUN"
+        },
+        "converter": {
+          "status": "completed",
+          "library": "misp-stix",
+          "events": 1,
+          "native_values": [
+            "10.20.30.40",
+            "198.51.100.44",
+            "example.com",
+            "https://example.com/help"
+          ],
+          "missing_values": [],
+          "preserved_values": [
+            "10.20.30.40",
+            "198.51.100.44",
+            "example.com",
+            "https://example.com/help"
+          ],
+          "behavior_comparison": {
+            "source_attack_patterns": 1,
+            "preserved_by_identity_or_name": 1,
+            "missing_ids": [],
+            "note": "ATT&CK cluster/name retention is not preservation of exact procedure semantics"
+          },
+          "native_eventreport_exactly_preserved": false,
+          "behavior_context": "Native EventReport and converted objects differ; inspect converted export. No universal compatibility claim.",
+          "warnings": "{}",
+          "errors": "defaultdict(<class 'list'>, {})",
+          "live_misp_import": "NOT RUN"
+        },
+        "omissions": [],
+        "review_warnings": [
+          "Bounded deterministic text recognition, not live AI. Unrecognized behaviors are omitted; analyst review required."
+        ],
+        "readiness": "review required",
+        "claim": "Validated serialization is not semantic truth or universal TIP compatibility"
+      },
+      "retrieval": {
+        "searched_rules": 8,
+        "source_cited_found": [],
+        "source_cited_missing": [],
+        "independent_candidates": 3
+      },
+      "source_completeness": "complete-for-supported-content"
+    },
+    {
+      "fixture": "held-out-cloud",
+      "held_out": true,
+      "mode": "offline",
+      "status": "completed",
+      "behaviors": {
+        "expected": [
+          "cloud_account"
+        ],
+        "actual": [],
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 1,
+        "precision": null,
+        "recall": 0.0
+      },
+      "indicators": {
+        "expected": [],
+        "actual": [],
+        "false_assertions": [],
+        "missed": []
+      },
+      "evidence_references_valid": true,
+      "attribution_checks": {
+        "confirmed_actor_assertions": 0,
+        "qualifiers_retained": []
+      },
+      "abstained_from_plans": true,
+      "expected_omissions": [
+        "invented Windows equivalent",
+        "inferred sector targeting"
+      ],
+      "schema_results": {
+        "stix": {
+          "valid": true,
+          "objects": 2,
+          "warnings": [],
+          "patterns_valid": true,
+          "references_valid": true
+        },
+        "native_misp": {
+          "valid": true,
+          "attributes": 0,
+          "native": "PyMISP event + bundled schema-lax.json; EventReport checked by PyMISP models",
+          "live_import": "NOT RUN"
+        },
+        "converter": {
+          "status": "completed",
+          "library": "misp-stix",
+          "events": 1,
+          "native_values": [],
+          "missing_values": [],
+          "preserved_values": [],
+          "behavior_comparison": {
+            "source_attack_patterns": 0,
+            "preserved_by_identity_or_name": 0,
+            "missing_ids": [],
+            "note": "ATT&CK cluster/name retention is not preservation of exact procedure semantics"
+          },
+          "native_eventreport_exactly_preserved": false,
+          "behavior_context": "Native EventReport and converted objects differ; inspect converted export. No universal compatibility claim.",
+          "warnings": "{}",
+          "errors": "defaultdict(<class 'list'>, {})",
+          "live_misp_import": "NOT RUN"
+        },
+        "omissions": [],
+        "review_warnings": [
+          "Bounded deterministic text recognition, not live AI. Unrecognized behaviors are omitted; analyst review required.",
+          "Insufficient supported behavioral evidence: no defensible hunt/emulation generated"
+        ],
+        "readiness": "review required",
+        "claim": "Validated serialization is not semantic truth or universal TIP compatibility"
+      },
+      "retrieval": {
+        "searched_rules": 8,
+        "source_cited_found": [],
+        "source_cited_missing": [],
+        "independent_candidates": 0
+      },
+      "source_completeness": "complete-for-supported-content"
+    }
+  ],
+  "synthetic_detection": {
+    "rule_id": "19b08b1c-861d-4e75-a1ef-ea0c1baf202b",
+    "rule_version": "1262c65c22592b28f2c63906462f07f9c0d95e8fa065405505d18979a5f278af",
+    "cases": {
+      "positive": {
+        "result": "match",
+        "missing_fields": [],
+        "method": "synthetic log match",
+        "scope": "restricted stateless Sigma semantics; no SIEM, deployment, prevention or SOC validation",
+        "event": {
+          "Image": "C:\\Windows\\System32\\certutil.exe",
+          "OriginalFileName": "CertUtil.exe",
+          "CommandLine": "certutil.exe -urlcache -split -f https://example.invalid/harmless.txt harmless.txt"
+        }
+      },
+      "negative": {
+        "result": "no match",
+        "missing_fields": [],
+        "method": "synthetic log match",
+        "scope": "restricted stateless Sigma semantics; no SIEM, deployment, prevention or SOC validation",
+        "event": {
+          "Image": "C:\\Windows\\System32\\certutil.exe",
+          "OriginalFileName": "CertUtil.exe",
+          "CommandLine": "certutil.exe -store My"
+        }
+      },
+      "missing-field": {
+        "result": "inconclusive",
+        "missing_fields": [
+          "CommandLine"
+        ],
+        "method": "synthetic log match",
+        "scope": "restricted stateless Sigma semantics; no SIEM, deployment, prevention or SOC validation",
+        "event": {
+          "Image": "C:\\Windows\\System32\\certutil.exe",
+          "OriginalFileName": "CertUtil.exe"
+        }
+      }
+    },
+    "executed_live": false
+  },
+  "live_model_evaluation": {
+    "status": "NOT VERIFIED",
+    "reason": "No successful configured live-provider acceptance run recorded; deterministic results are not model accuracy"
+  },
+  "limitations": [
+    "Four small authored/limited-derived fixtures only; not representative detection or CTI accuracy",
+    "Replay recovery is not new inference",
+    "Gold labels developer/model-curated, not independently human-reviewed",
+    "Exact span references and quotes cannot establish semantic truth",
+    "Source-cited rule retrieval is not independent discovery ability",
+    "Restricted matcher supports a small stateless subset, not all Sigma or a SIEM",
+    "No live Gmail handoff, live MISP instance, live Splunk or prevention/SOC exercise claimed"
+  ],
+  "versions": {
+    "fastapi": "0.143.0",
+    "pydantic": "2.14.0",
+    "stix2": "3.0.2",
+    "stix2-validator": "3.2.0",
+    "pymisp": "2.5.34.4",
+    "misp-stix": "2026.9.16",
+    "pysigma": "1.5.1",
+    "pysigma-backend-splunk": "2.1.0",
+    "openai": "3.26.1",
+    "pypdf": "6.19.0",
+    "pytest": "9.1.1",
+    "python": "3.14.6",
+    "platform": "macOS-26.4.1-arm64-arm-64bit-Mach-O"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "executed_at": "2026-10-08T18:24:00.597684+00:00",
+  "transport": "actual local HTTP API, not browser automation",
+  "checks": [
+    "health",
+    "profiles",
+    "replay ingestion, assessment, evidence",
+    "package generation",
+    "all artifact downloads and ZIP",
+    "cross-customer artifact rejection",
+    "actual synthetic positive/negative/missing-field execution",
+    "synthetic remains separate from live coverage",
+    "improvement recorded with scope and retest",
+    "synthetic Gmail request / preview / process / idempotent reimport"
+  ],
+  "assessment_id": "assessment_a99a0e9aef0b52f19f53ba0f749a8fc7",
+  "package_id": "package_3761156315f0550f8df5b7f6de114294",
+  "synthetic_test_results": {
+    "rule_id": "19b08b1c-861d-4e75-a1ef-ea0c1baf202b",
+    "rule_version": "1262c65c22592b28f2c63906462f07f9c0d95e8fa065405505d18979a5f278af",
+    "cases": {
+      "positive": {
+        "result": "match",
+        "missing_fields": [],
+        "method": "synthetic log match",
+        "scope": "restricted stateless Sigma semantics; no SIEM, deployment, prevention or SOC validation",
+        "event": {
+          "Image": "C:\\Windows\\System32\\certutil.exe",
+          "OriginalFileName": "CertUtil.exe",
+          "CommandLine": "certutil.exe -urlcache -split -f https://example.invalid/harmless.txt harmless.txt"
+        }
+      },
+      "negative": {
+        "result": "no match",
+        "missing_fields": [],
+        "method": "synthetic log match",
+        "scope": "restricted stateless Sigma semantics; no SIEM, deployment, prevention or SOC validation",
+        "event": {
+          "Image": "C:\\Windows\\System32\\certutil.exe",
+          "OriginalFileName": "CertUtil.exe",
+          "CommandLine": "certutil.exe -store My"
+        }
+      },
+      "missing-field": {
+        "result": "inconclusive",
+        "missing_fields": [
+          "CommandLine"
+        ],
+        "method": "synthetic log match",
+        "scope": "restricted stateless Sigma semantics; no SIEM, deployment, prevention or SOC validation",
+        "event": {
+          "Image": "C:\\Windows\\System32\\certutil.exe",
+          "OriginalFileName": "CertUtil.exe"
+        }
+      }
+    },
+    "executed_live": false
+  },
+  "live_coverage_confirmed": false,
+  "browser_screenshot": "NOT RUN: IAB unavailable; native Chrome access rejected by Computer Use permissions",
+  "gmail_live_retrieval": "NOT RUN: no operator retrieval scope supplied"
+}

@@ -1,0 +1,68 @@
+{
+  "9eac251c92911a4a7f8f5dac811635dee09a5881bc5feeda1f9181954885961c": {
+    "labeling": "developer/model-curated, not owner-reviewed",
+    "behaviors": [
+      {
+        "key": "activemq",
+        "anchor": "two intrusions",
+        "claim": "The report describes exploitation of vulnerable ActiveMQ on Windows.",
+        "sequence": 1
+      },
+      {
+        "key": "certutil",
+        "anchor": "CertUtil downloaded",
+        "claim": "CertUtil downloaded a payload.",
+        "sequence": 2
+      },
+      {
+        "key": "java_shell",
+        "anchor": "Java was the parent",
+        "claim": "Java parentage accompanied command execution.",
+        "sequence": 2
+      },
+      {
+        "key": "lsass",
+        "anchor": "LSASS memory",
+        "claim": "Processes accessed LSASS memory.",
+        "sequence": 3
+      },
+      {
+        "key": "remote_service",
+        "anchor": "Remote services launched",
+        "claim": "Remote services launched payloads on other Windows hosts.",
+        "sequence": 4
+      },
+      {
+        "key": "powershell",
+        "anchor": "Obfuscated PowerShell",
+        "claim": "Obfuscated PowerShell appeared during remote-service activity.",
+        "sequence": 4
+      },
+      {
+        "key": "anydesk",
+        "anchor": "AnyDesk was installed",
+        "claim": "AnyDesk installed an automatically starting service.",
+        "sequence": 5
+      },
+      {
+        "key": "rdp",
+        "anchor": "RDP sessions carried",
+        "claim": "RDP sessions carried ransomware execution.",
+        "sequence": 6
+      }
+    ],
+    "claims": [
+      {
+        "anchor": "Attribution to",
+        "text": "The source assesses independent use of a leaked builder; attribution to the established LockBit operation is not confirmed.",
+        "qualifier": "Source assessment, not confirmed actor attribution"
+      },
+      {
+        "anchor": "separate narrative",
+        "text": "C2 address representations differ between source sections; retain both as qualified historical leads.",
+        "kind": "conflicting",
+        "qualifier": "Requires source review"
+      }
+    ]
+  }
+}

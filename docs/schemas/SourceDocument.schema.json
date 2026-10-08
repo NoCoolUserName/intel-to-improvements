@@ -1,0 +1,304 @@
+{
+  "$defs": {
+    "EvidenceSpan": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "revision_id": {
+          "title": "Revision Id",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "heading_path": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Heading Path",
+          "type": "array"
+        },
+        "kind": {
+          "default": "paragraph",
+          "title": "Kind",
+          "type": "string"
+        },
+        "start": {
+          "title": "Start",
+          "type": "integer"
+        },
+        "end": {
+          "title": "End",
+          "type": "integer"
+        },
+        "offset_space": {
+          "const": "normalized_unicode",
+          "default": "normalized_unicode",
+          "title": "Offset Space",
+          "type": "string"
+        },
+        "raw_start": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Raw Start"
+        },
+        "raw_end": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Raw End"
+        },
+        "segment": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Segment"
+        }
+      },
+      "required": [
+        "id",
+        "revision_id",
+        "text",
+        "start",
+        "end"
+      ],
+      "title": "EvidenceSpan",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "revision_id": {
+      "title": "Revision Id",
+      "type": "string"
+    },
+    "content_revision_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Content Revision Id"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "origin": {
+      "title": "Origin",
+      "type": "string"
+    },
+    "final_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Final Url"
+    },
+    "redirects": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Redirects",
+      "type": "array"
+    },
+    "publisher": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Publisher"
+    },
+    "authors": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Authors",
+      "type": "array"
+    },
+    "retrieved_at": {
+      "title": "Retrieved At",
+      "type": "string"
+    },
+    "published_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Published At"
+    },
+    "publication_precision": {
+      "default": "unknown",
+      "title": "Publication Precision",
+      "type": "string"
+    },
+    "incident_time": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Incident Time"
+    },
+    "incident_precision": {
+      "default": "unknown",
+      "title": "Incident Precision",
+      "type": "string"
+    },
+    "serials": {
+      "default": [],
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Serials",
+      "type": "array"
+    },
+    "content_hash": {
+      "title": "Content Hash",
+      "type": "string"
+    },
+    "representation": {
+      "title": "Representation",
+      "type": "string"
+    },
+    "hash_basis": {
+      "default": "selected input bytes",
+      "title": "Hash Basis",
+      "type": "string"
+    },
+    "completeness": {
+      "enum": [
+        "complete-for-supported-content",
+        "partial",
+        "failed"
+      ],
+      "title": "Completeness",
+      "type": "string"
+    },
+    "gaps": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Gaps",
+      "type": "array"
+    },
+    "scope": {
+      "title": "Scope",
+      "type": "string"
+    },
+    "normalized": {
+      "title": "Normalized",
+      "type": "string"
+    },
+    "spans": {
+      "items": {
+        "$ref": "#/$defs/EvidenceSpan"
+      },
+      "title": "Spans",
+      "type": "array"
+    },
+    "imported_objects": {
+      "default": [],
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Imported Objects",
+      "type": "array"
+    },
+    "conversion_losses": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Conversion Losses",
+      "type": "array"
+    },
+    "metadata": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Metadata",
+      "type": "object"
+    }
+  },
+  "required": [
+    "id",
+    "revision_id",
+    "title",
+    "origin",
+    "retrieved_at",
+    "content_hash",
+    "representation",
+    "completeness",
+    "scope",
+    "normalized",
+    "spans"
+  ],
+  "title": "SourceDocument",
+  "type": "object"
+}

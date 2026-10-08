@@ -1,0 +1,245 @@
+{
+  "$defs": {
+    "EvidenceAttachment": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "reference": {
+          "title": "Reference",
+          "type": "string"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "live system",
+            "lab execution",
+            "synthetic fixture replay",
+            "analyst attestation"
+          ],
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "reference",
+        "description",
+        "kind"
+      ],
+      "title": "EvidenceAttachment",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "id": {
+      "default": "",
+      "title": "Id",
+      "type": "string"
+    },
+    "behavior_id": {
+      "title": "Behavior Id",
+      "type": "string"
+    },
+    "environment_version": {
+      "title": "Environment Version",
+      "type": "integer"
+    },
+    "control_id": {
+      "title": "Control Id",
+      "type": "string"
+    },
+    "control_version": {
+      "title": "Control Version",
+      "type": "string"
+    },
+    "procedure": {
+      "title": "Procedure",
+      "type": "string"
+    },
+    "expected": {
+      "title": "Expected",
+      "type": "string"
+    },
+    "actual": {
+      "title": "Actual",
+      "type": "string"
+    },
+    "executed_at": {
+      "title": "Executed At",
+      "type": "string"
+    },
+    "recorded_at": {
+      "default": "",
+      "title": "Recorded At",
+      "type": "string"
+    },
+    "method": {
+      "enum": [
+        "synthetic log match",
+        "lab emulation",
+        "observed SIEM alert",
+        "observed prevention",
+        "analyst attestation"
+      ],
+      "title": "Method",
+      "type": "string"
+    },
+    "result": {
+      "enum": [
+        "passed",
+        "failed",
+        "inconclusive"
+      ],
+      "title": "Result",
+      "type": "string"
+    },
+    "dimension": {
+      "enum": [
+        "telemetry",
+        "detection",
+        "prevention",
+        "soc_acknowledged",
+        "soc_response",
+        "deployment"
+      ],
+      "title": "Dimension",
+      "type": "string"
+    },
+    "scope": {
+      "title": "Scope",
+      "type": "string"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/EvidenceAttachment"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "variant": {
+      "title": "Variant",
+      "type": "string"
+    },
+    "exercise": {
+      "default": "coordinated",
+      "enum": [
+        "blind",
+        "coordinated"
+      ],
+      "title": "Exercise",
+      "type": "string"
+    },
+    "attempted_action": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Attempted Action"
+    },
+    "control_outcome": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Control Outcome"
+    },
+    "exercise_event_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Exercise Event At"
+    },
+    "baseline": {
+      "default": false,
+      "title": "Baseline",
+      "type": "boolean"
+    },
+    "control_deployed_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Control Deployed At"
+    },
+    "improvement_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Improvement Id"
+    }
+  },
+  "required": [
+    "behavior_id",
+    "environment_version",
+    "control_id",
+    "control_version",
+    "procedure",
+    "expected",
+    "actual",
+    "executed_at",
+    "method",
+    "result",
+    "dimension",
+    "scope",
+    "evidence",
+    "variant"
+  ],
+  "title": "TestRun",
+  "type": "object"
+}

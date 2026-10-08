@@ -1,0 +1,3 @@
+type,value,role,context
+ipv4,198.51.100[.]42,benign,Documentation-only test address
+domain,example[.]org,benign,Documentation example

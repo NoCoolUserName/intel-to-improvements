@@ -1,0 +1,178 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "behavior_id": {
+      "title": "Behavior Id",
+      "type": "string"
+    },
+    "evidence": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "assumptions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Assumptions",
+      "type": "array"
+    },
+    "question": {
+      "title": "Question",
+      "type": "string"
+    },
+    "hypothesis": {
+      "title": "Hypothesis",
+      "type": "string"
+    },
+    "priority": {
+      "title": "Priority",
+      "type": "string"
+    },
+    "rationale": {
+      "title": "Rationale",
+      "type": "string"
+    },
+    "scope": {
+      "title": "Scope",
+      "type": "string"
+    },
+    "prerequisites": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Prerequisites",
+      "type": "array"
+    },
+    "required_fields": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Required Fields",
+      "type": "array"
+    },
+    "retention_days": {
+      "title": "Retention Days",
+      "type": "integer"
+    },
+    "steps": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Steps",
+      "type": "array"
+    },
+    "query": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Query"
+    },
+    "query_origin": {
+      "title": "Query Origin",
+      "type": "string"
+    },
+    "backend": {
+      "title": "Backend",
+      "type": "string"
+    },
+    "field_mapping": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Field Mapping",
+      "type": "object"
+    },
+    "parameters": {
+      "additionalProperties": true,
+      "title": "Parameters",
+      "type": "object"
+    },
+    "expected": {
+      "title": "Expected",
+      "type": "string"
+    },
+    "benign": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Benign",
+      "type": "array"
+    },
+    "negative_controls": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Negative Controls",
+      "type": "array"
+    },
+    "branches": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Branches",
+      "type": "object"
+    },
+    "preserve": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Preserve",
+      "type": "array"
+    },
+    "escalation": {
+      "title": "Escalation",
+      "type": "string"
+    },
+    "closure": {
+      "title": "Closure",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "behavior_id",
+    "evidence",
+    "assumptions",
+    "question",
+    "hypothesis",
+    "priority",
+    "rationale",
+    "scope",
+    "prerequisites",
+    "required_fields",
+    "retention_days",
+    "steps",
+    "query_origin",
+    "backend",
+    "field_mapping",
+    "parameters",
+    "expected",
+    "benign",
+    "negative_controls",
+    "branches",
+    "preserve",
+    "escalation",
+    "closure"
+  ],
+  "title": "HuntStep",
+  "type": "object"
+}

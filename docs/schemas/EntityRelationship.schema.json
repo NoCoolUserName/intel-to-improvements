@@ -1,0 +1,96 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "text": {
+      "title": "Text",
+      "type": "string"
+    },
+    "evidence": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "kind": {
+      "default": "source_reported",
+      "enum": [
+        "source_reported",
+        "analyst_inference",
+        "proposed",
+        "unsupported",
+        "conflicting"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "qualifier": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Qualifier"
+    },
+    "extraction_confidence": {
+      "default": "medium",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "title": "Extraction Confidence",
+      "type": "string"
+    },
+    "confidence_rationale": {
+      "title": "Confidence Rationale",
+      "type": "string"
+    },
+    "source_reliability": {
+      "default": "not independently assessed",
+      "title": "Source Reliability",
+      "type": "string"
+    },
+    "review_required": {
+      "default": false,
+      "title": "Review Required",
+      "type": "boolean"
+    },
+    "source_ref": {
+      "title": "Source Ref",
+      "type": "string"
+    },
+    "target_ref": {
+      "title": "Target Ref",
+      "type": "string"
+    },
+    "relationship": {
+      "title": "Relationship",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "text",
+    "evidence",
+    "confidence_rationale",
+    "source_ref",
+    "target_ref",
+    "relationship"
+  ],
+  "title": "EntityRelationship",
+  "type": "object"
+}

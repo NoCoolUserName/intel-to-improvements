@@ -1,0 +1,59 @@
+{
+  "stix": {
+    "valid": true,
+    "objects": 14,
+    "warnings": [
+      "attack-pattern--0ebaa81f-c2e9-46a5-87fd-aedba93b6e46: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+      "attack-pattern--e8cbeae5-acd6-483d-8928-1c8c72c2a97f: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+      "attack-pattern--04d004d8-af4a-47fd-a38a-dda671bc188a: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+      "attack-pattern--0b4e2919-656a-4d2d-a6d6-b0cdc9000e28: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+      "attack-pattern--883cd03c-70dd-497c-b02e-49c6ea83fb9e: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+      "attack-pattern--7017db54-53c4-4285-9530-4d7329dd8315: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+      "attack-pattern--ed556ce0-fcc8-4fdc-8a51-0ad966ef64fc: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+      "attack-pattern--303af3b9-7ac7-45be-b305-c4068064f9b0: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+      "relationship--4cc53c29-94de-4f6d-9944-d7b72105b79e: {202} 'ipv4-addr' is not a suggested relationship target object for 'indicator' objects with the 'based-on' relationship.",
+      "report--00931cc7-d1e7-4dba-9140-76d64514d13e: {302} External reference 'The DFIR Report' has a URL but no hash."
+    ],
+    "patterns_valid": true,
+    "references_valid": true
+  },
+  "native_misp": {
+    "valid": true,
+    "attributes": 3,
+    "native": "PyMISP event + bundled schema-lax.json; EventReport checked by PyMISP models",
+    "live_import": "NOT RUN"
+  },
+  "converter": {
+    "status": "completed",
+    "library": "misp-stix",
+    "events": 1,
+    "native_values": [
+      "166.62.100.52",
+      "166.62.100.62"
+    ],
+    "missing_values": [],
+    "preserved_values": [
+      "166.62.100.52",
+      "166.62.100.62"
+    ],
+    "behavior_comparison": {
+      "source_attack_patterns": 8,
+      "preserved_by_identity_or_name": 8,
+      "missing_ids": [],
+      "note": "ATT&CK cluster/name retention is not preservation of exact procedure semantics"
+    },
+    "native_eventreport_exactly_preserved": false,
+    "behavior_context": "Native EventReport and converted objects differ; inspect converted export. No universal compatibility claim.",
+    "warnings": "{}",
+    "errors": "defaultdict(<class 'list'>, {})",
+    "live_misp_import": "NOT RUN"
+  },
+  "omissions": [],
+  "review_warnings": [
+    "Prerecorded, developer/model-curated annotations; not a new AI inference. Owner has not reviewed this case.",
+    "Limited developer-curated derivative, not the full report; original contains image-only evidence",
+    "C2 address discrepancy .52 versus .62 requires source review"
+  ],
+  "readiness": "review required",
+  "claim": "Validated serialization is not semantic truth or universal TIP compatibility"
+}

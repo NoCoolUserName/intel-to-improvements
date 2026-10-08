@@ -1,0 +1,77 @@
+{
+  "labeler": "developer/model-curated by direct inspection of source text; owner has not reviewed",
+  "real_source": "https://thedfirreport.com/2026/02/23/apache-activemq-exploit-leads-to-lockbit-ransomware/",
+  "fixtures": {
+    "activemq-derived": {
+      "mode": "replay",
+      "behaviors": [
+        "activemq",
+        "certutil",
+        "java_shell",
+        "lsass",
+        "remote_service",
+        "powershell",
+        "anydesk",
+        "rdp"
+      ],
+      "malicious_indicators": [
+        "166.62.100.52",
+        "166.62.100.62"
+      ],
+      "expected_omissions": [
+        "confirmed LockBit operator attribution",
+        "malicious Advanced IP Scanner classification"
+      ],
+      "held_out": false
+    },
+    "no-ioc": {
+      "mode": "offline",
+      "behaviors": [
+        "certutil",
+        "java_shell",
+        "powershell"
+      ],
+      "malicious_indicators": [],
+      "expected_omissions": [
+        "embedded instruction",
+        "invented indicators"
+      ],
+      "held_out": false
+    },
+    "insufficient": {
+      "mode": "offline",
+      "behaviors": [],
+      "malicious_indicators": [],
+      "expected_omissions": [
+        "any emulation scenario"
+      ],
+      "held_out": false
+    },
+    "held-out": {
+      "mode": "offline",
+      "behaviors": [
+        "anydesk"
+      ],
+      "malicious_indicators": [],
+      "expected_omissions": [
+        "certutil behavior (negated)",
+        "lsass behavior (negated)",
+        "confirmed Fern attribution"
+      ],
+      "held_out": true
+    },
+    "held-out-cloud": {
+      "mode": "offline",
+      "behaviors": [
+        "cloud_account"
+      ],
+      "malicious_indicators": [],
+      "expected_omissions": [
+        "invented Windows equivalent",
+        "inferred sector targeting"
+      ],
+      "held_out": true,
+      "scope_note": "Added after recognizer implementation; no extractor template is added. Expected miss measures bounded analyzer limitation."
+    }
+  }
+}

@@ -1,0 +1,988 @@
+{
+  "context": {
+    "customer_id": "fictional-bank",
+    "customer_snapshot": {
+      "additional_sectors": [],
+      "allow_live_processing": true,
+      "environments": [
+        {
+          "backend": "Splunk raw events",
+          "controls": [
+            {
+              "deployed_at": null,
+              "name": "Defender",
+              "status": "declared; not tested",
+              "version": "unknown"
+            }
+          ],
+          "exposed_services": [
+            "ActiveMQ"
+          ],
+          "field_map": {
+            "CommandLine": "CommandLine",
+            "Computer": "Computer",
+            "Image": "Image",
+            "OriginalFileName": "OriginalFileName",
+            "ParentImage": "ParentImage",
+            "User": "User",
+            "UtcTime": "UtcTime"
+          },
+          "id": "windows-ad",
+          "important_assets": [
+            "Domain controllers",
+            "Backup server"
+          ],
+          "name": "Windows / AD lab",
+          "notes": "Fictional. Sysmon process telemetry declared. PowerShell script-block and LSASS process-access telemetry deliberately missing. Index selected by analyst, no CIM claim.",
+          "platforms": [
+            "windows"
+          ],
+          "retention_days": 30,
+          "schema_version": "1.0",
+          "technologies": [
+            "ActiveMQ",
+            "Active Directory",
+            "PowerShell",
+            "RDP"
+          ],
+          "telemetry": {
+            "dns_query": [
+              "QueryName",
+              "Image"
+            ],
+            "process_creation": [
+              "Image",
+              "OriginalFileName",
+              "ParentImage",
+              "CommandLine",
+              "User",
+              "Computer",
+              "UtcTime"
+            ],
+            "proxy": [
+              "url",
+              "src_ip"
+            ]
+          },
+          "version": 1
+        }
+      ],
+      "id": "fictional-bank",
+      "intelligence_requirements": [
+        "ransomware",
+        "credential access"
+      ],
+      "misp_destination": null,
+      "name": "Northstar Bank \u00b7 fictional",
+      "priorities": [
+        "Protect backups and privileged identities"
+      ],
+      "schema_version": "1.0",
+      "sector": "financial-services",
+      "subsector": null,
+      "version": 1
+    },
+    "customer_version": 1,
+    "destination": null,
+    "environment_id": "windows-ad",
+    "environment_snapshot": {
+      "backend": "Splunk raw events",
+      "controls": [
+        {
+          "deployed_at": null,
+          "name": "Defender",
+          "status": "declared; not tested",
+          "version": "unknown"
+        }
+      ],
+      "exposed_services": [
+        "ActiveMQ"
+      ],
+      "field_map": {
+        "CommandLine": "CommandLine",
+        "Computer": "Computer",
+        "Image": "Image",
+        "OriginalFileName": "OriginalFileName",
+        "ParentImage": "ParentImage",
+        "User": "User",
+        "UtcTime": "UtcTime"
+      },
+      "id": "windows-ad",
+      "important_assets": [
+        "Domain controllers",
+        "Backup server"
+      ],
+      "name": "Windows / AD lab",
+      "notes": "Fictional. Sysmon process telemetry declared. PowerShell script-block and LSASS process-access telemetry deliberately missing. Index selected by analyst, no CIM claim.",
+      "platforms": [
+        "windows"
+      ],
+      "retention_days": 30,
+      "schema_version": "1.0",
+      "technologies": [
+        "ActiveMQ",
+        "Active Directory",
+        "PowerShell",
+        "RDP"
+      ],
+      "telemetry": {
+        "dns_query": [
+          "QueryName",
+          "Image"
+        ],
+        "process_creation": [
+          "Image",
+          "OriginalFileName",
+          "ParentImage",
+          "CommandLine",
+          "User",
+          "Computer",
+          "UtcTime"
+        ],
+        "proxy": [
+          "url",
+          "src_ip"
+        ]
+      },
+      "version": 1
+    },
+    "environment_version": 1,
+    "policy_version": "relevance-1",
+    "schema_version": "1.0"
+  },
+  "source_gaps": [
+    "Limited developer-curated derivative, not the full report; original contains image-only evidence",
+    "C2 address discrepancy .52 versus .62 requires source review"
+  ],
+  "hunts": [
+    {
+      "schema_version": "1.0",
+      "id": "hunt_a39ded2da5915478bd30a5eb4d11e746",
+      "behavior_id": "behavior_ee153d6de3ee5cb58cd98a3bd214e1e4",
+      "evidence": [
+        "span_5f0a75f789005e0a8ac065f40713d402"
+      ],
+      "assumptions": [
+        "Environment declaration is accurate",
+        "Analyst has approved access to retained logs",
+        "Source representation may be partial"
+      ],
+      "question": "Was this reported behavior present in our environment?",
+      "hypothesis": "An unauthorized operator may reproduce this observed behavior: The report describes exploitation of vulnerable ActiveMQ on Windows.",
+      "priority": "high",
+      "rationale": "Potential privileged access or business disruption; hypothesis is not a finding of compromise",
+      "scope": "Northstar Bank \u00b7 fictional / Windows / AD lab; approved asset list only",
+      "prerequisites": [
+        "proxy",
+        "Confirm event timestamps and retention boundaries"
+      ],
+      "required_fields": [
+        "url",
+        "src_ip"
+      ],
+      "retention_days": 30,
+      "steps": [
+        {
+          "order": 1,
+          "question": "Can this search answer the question for the selected time and host scope?",
+          "procedure": "Check source configuration and known benign events for each required field. Compare earliest retained event with the incident window. Record missing intervals and ingestion lag.",
+          "on_missing": "Stop automated interpretation; record telemetry gap and request source owner validation."
+        },
+        {
+          "order": 2,
+          "question": "Is there evidence of The report describes exploitation of vulnerable ActiveMQ on Windows.?",
+          "procedure": "Review proxy records for the source-described behavior on in-scope hosts. No tested backend query is available for this behavior. Preserve candidate records and exact procedure.",
+          "on_hit": "Preserve original events and query time bounds; pivot to process ancestry and user session.",
+          "on_no_hit": "If telemetry checks passed, record no matching evidence within the bounded search only; otherwise inconclusive."
+        },
+        {
+          "order": 3,
+          "question": "Do source indicators corroborate the behavior?",
+          "procedure": "Search normalized malicious-role indicators in retained DNS/proxy/endpoint evidence. Never resolve or visit them. Treat historical values as leads, not automatic block recommendations.",
+          "parameters": [
+            {
+              "type": "ipv4",
+              "value": "166.62.100.52",
+              "role": "malicious"
+            }
+          ],
+          "on_no_hit": "No corroboration in retained data; continue behavior investigation."
+        },
+        {
+          "order": 4,
+          "question": "Is the observed action authorized and isolated, or part of a related sequence?",
+          "procedure": "Correlate host, user, process GUID/PID and event time with service installation, network connections and identity activity. Compare maintenance tickets and known tool owners. Do not infer unobserved stages.",
+          "on_suspicious": "Escalate with evidence, uncertainty and affected assets; request approved response containment.",
+          "on_benign": "Document authorization, matching control example and remaining visibility gaps."
+        }
+      ],
+      "query": null,
+      "query_origin": "hand-authored analyst procedure; no executable query available",
+      "backend": "Splunk raw events",
+      "field_mapping": {
+        "CommandLine": "CommandLine",
+        "Computer": "Computer",
+        "Image": "Image",
+        "OriginalFileName": "OriginalFileName",
+        "ParentImage": "ParentImage",
+        "User": "User",
+        "UtcTime": "UtcTime"
+      },
+      "parameters": {
+        "INDEX": "operator-selected actual raw-event index",
+        "EARLIEST": "operator-selected supported window",
+        "LATEST": "operator-selected window end"
+      },
+      "expected": "Behavior-consistent process/service/session evidence with host and user correlation",
+      "benign": [
+        "Authorized administration or software deployment",
+        "Security lab tests with documented scope"
+      ],
+      "negative_controls": [
+        "Known benign administrative action",
+        "Known event with required field deliberately omitted"
+      ],
+      "branches": {
+        "suspicious": "Preserve and escalate; correlate subsequent steps",
+        "no_hit_sufficient_telemetry": "Bounded no-evidence finding, never proof of no compromise",
+        "missing_telemetry": "Inconclusive; open improvement",
+        "benign": "Record authorization and residual gaps"
+      },
+      "preserve": [
+        "Raw event export and hash",
+        "Query/procedure, UTC time bounds, timezone",
+        "Host/user/process identifiers",
+        "Analyst reasoning and ticket reference"
+      ],
+      "escalation": "Unauthorized behavior with corroborating context or suspicious privileged activity merits IR review",
+      "closure": "Close this hypothesis only with bounded findings, data sufficiency and unresolved gaps recorded"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "hunt_645d2cb38bef5e2b901062fa66aafadc",
+      "behavior_id": "behavior_efa888780f4c50ccaf41a33c6043bf7f",
+      "evidence": [
+        "span_a958d48ad5c15d1986b44a86b0cddb77"
+      ],
+      "assumptions": [
+        "Environment declaration is accurate",
+        "Analyst has approved access to retained logs",
+        "Source representation may be partial"
+      ],
+      "question": "Was this reported behavior present in our environment?",
+      "hypothesis": "An unauthorized operator may reproduce this observed behavior: CertUtil downloaded a payload.",
+      "priority": "medium",
+      "rationale": "Potential privileged access or business disruption; hypothesis is not a finding of compromise",
+      "scope": "Northstar Bank \u00b7 fictional / Windows / AD lab; approved asset list only",
+      "prerequisites": [
+        "process_creation",
+        "Confirm event timestamps and retention boundaries"
+      ],
+      "required_fields": [
+        "CommandLine",
+        "Image",
+        "OriginalFileName"
+      ],
+      "retention_days": 30,
+      "steps": [
+        {
+          "order": 1,
+          "question": "Can this search answer the question for the selected time and host scope?",
+          "procedure": "Check source configuration and known benign events for each required field. Compare earliest retained event with the incident window. Record missing intervals and ingestion lag.",
+          "on_missing": "Stop automated interpretation; record telemetry gap and request source owner validation."
+        },
+        {
+          "order": 2,
+          "question": "Is there evidence of CertUtil downloaded a payload.?",
+          "procedure": "index=$INDEX$ earliest=$EARLIEST$ latest=$LATEST$ EventCode=1 (Image=\"*\\\\certutil.exe\" OR OriginalFileName=\"CertUtil.exe\" CommandLine IN (\"*urlcache *\", \"*verifyctl *\", \"*URL *\") CommandLine=\"*http*\")",
+          "on_hit": "Preserve original events and query time bounds; pivot to process ancestry and user session.",
+          "on_no_hit": "If telemetry checks passed, record no matching evidence within the bounded search only; otherwise inconclusive."
+        },
+        {
+          "order": 3,
+          "question": "Do source indicators corroborate the behavior?",
+          "procedure": "Search normalized malicious-role indicators in retained DNS/proxy/endpoint evidence. Never resolve or visit them. Treat historical values as leads, not automatic block recommendations.",
+          "parameters": [
+            {
+              "type": "ipv4",
+              "value": "166.62.100.52",
+              "role": "malicious"
+            }
+          ],
+          "on_no_hit": "No corroboration in retained data; continue behavior investigation."
+        },
+        {
+          "order": 4,
+          "question": "Is the observed action authorized and isolated, or part of a related sequence?",
+          "procedure": "Correlate host, user, process GUID/PID and event time with service installation, network connections and identity activity. Compare maintenance tickets and known tool owners. Do not infer unobserved stages.",
+          "on_suspicious": "Escalate with evidence, uncertainty and affected assets; request approved response containment.",
+          "on_benign": "Document authorization, matching control example and remaining visibility gaps."
+        }
+      ],
+      "query": "index=$INDEX$ earliest=$EARLIEST$ latest=$LATEST$ EventCode=1 (Image=\"*\\\\certutil.exe\" OR OriginalFileName=\"CertUtil.exe\" CommandLine IN (\"*urlcache *\", \"*verifyctl *\", \"*URL *\") CommandLine=\"*http*\")",
+      "query_origin": "pySigma conversion + explicit raw EventCode/index/time template",
+      "backend": "Splunk raw events",
+      "field_mapping": {
+        "CommandLine": "CommandLine",
+        "Computer": "Computer",
+        "Image": "Image",
+        "OriginalFileName": "OriginalFileName",
+        "ParentImage": "ParentImage",
+        "User": "User",
+        "UtcTime": "UtcTime"
+      },
+      "parameters": {
+        "INDEX": "operator-selected actual raw-event index",
+        "EARLIEST": "operator-selected supported window",
+        "LATEST": "operator-selected window end"
+      },
+      "expected": "Behavior-consistent process/service/session evidence with host and user correlation",
+      "benign": [
+        "Authorized administration or software deployment",
+        "Security lab tests with documented scope"
+      ],
+      "negative_controls": [
+        "Known benign administrative action",
+        "Known event with required field deliberately omitted"
+      ],
+      "branches": {
+        "suspicious": "Preserve and escalate; correlate subsequent steps",
+        "no_hit_sufficient_telemetry": "Bounded no-evidence finding, never proof of no compromise",
+        "missing_telemetry": "Inconclusive; open improvement",
+        "benign": "Record authorization and residual gaps"
+      },
+      "preserve": [
+        "Raw event export and hash",
+        "Query/procedure, UTC time bounds, timezone",
+        "Host/user/process identifiers",
+        "Analyst reasoning and ticket reference"
+      ],
+      "escalation": "Unauthorized behavior with corroborating context or suspicious privileged activity merits IR review",
+      "closure": "Close this hypothesis only with bounded findings, data sufficiency and unresolved gaps recorded"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "hunt_8e83eec2b4725704ae24d98303806b50",
+      "behavior_id": "behavior_7eac9ec8e2c45cb78b360058f151a3be",
+      "evidence": [
+        "span_a958d48ad5c15d1986b44a86b0cddb77"
+      ],
+      "assumptions": [
+        "Environment declaration is accurate",
+        "Analyst has approved access to retained logs",
+        "Source representation may be partial"
+      ],
+      "question": "Was this reported behavior present in our environment?",
+      "hypothesis": "An unauthorized operator may reproduce this observed behavior: Java parentage accompanied command execution.",
+      "priority": "medium",
+      "rationale": "Potential privileged access or business disruption; hypothesis is not a finding of compromise",
+      "scope": "Northstar Bank \u00b7 fictional / Windows / AD lab; approved asset list only",
+      "prerequisites": [
+        "process_creation",
+        "Confirm event timestamps and retention boundaries"
+      ],
+      "required_fields": [
+        "Image",
+        "OriginalFileName",
+        "ParentImage",
+        "CommandLine",
+        "User",
+        "Computer",
+        "UtcTime"
+      ],
+      "retention_days": 30,
+      "steps": [
+        {
+          "order": 1,
+          "question": "Can this search answer the question for the selected time and host scope?",
+          "procedure": "Check source configuration and known benign events for each required field. Compare earliest retained event with the incident window. Record missing intervals and ingestion lag.",
+          "on_missing": "Stop automated interpretation; record telemetry gap and request source owner validation."
+        },
+        {
+          "order": 2,
+          "question": "Is there evidence of Java parentage accompanied command execution.?",
+          "procedure": "Review process_creation records for the source-described behavior on in-scope hosts. No tested backend query is available for this behavior. Preserve candidate records and exact procedure.",
+          "on_hit": "Preserve original events and query time bounds; pivot to process ancestry and user session.",
+          "on_no_hit": "If telemetry checks passed, record no matching evidence within the bounded search only; otherwise inconclusive."
+        },
+        {
+          "order": 3,
+          "question": "Do source indicators corroborate the behavior?",
+          "procedure": "Search normalized malicious-role indicators in retained DNS/proxy/endpoint evidence. Never resolve or visit them. Treat historical values as leads, not automatic block recommendations.",
+          "parameters": [
+            {
+              "type": "ipv4",
+              "value": "166.62.100.52",
+              "role": "malicious"
+            }
+          ],
+          "on_no_hit": "No corroboration in retained data; continue behavior investigation."
+        },
+        {
+          "order": 4,
+          "question": "Is the observed action authorized and isolated, or part of a related sequence?",
+          "procedure": "Correlate host, user, process GUID/PID and event time with service installation, network connections and identity activity. Compare maintenance tickets and known tool owners. Do not infer unobserved stages.",
+          "on_suspicious": "Escalate with evidence, uncertainty and affected assets; request approved response containment.",
+          "on_benign": "Document authorization, matching control example and remaining visibility gaps."
+        }
+      ],
+      "query": null,
+      "query_origin": "hand-authored analyst procedure; no executable query available",
+      "backend": "Splunk raw events",
+      "field_mapping": {
+        "CommandLine": "CommandLine",
+        "Computer": "Computer",
+        "Image": "Image",
+        "OriginalFileName": "OriginalFileName",
+        "ParentImage": "ParentImage",
+        "User": "User",
+        "UtcTime": "UtcTime"
+      },
+      "parameters": {
+        "INDEX": "operator-selected actual raw-event index",
+        "EARLIEST": "operator-selected supported window",
+        "LATEST": "operator-selected window end"
+      },
+      "expected": "Behavior-consistent process/service/session evidence with host and user correlation",
+      "benign": [
+        "Authorized administration or software deployment",
+        "Security lab tests with documented scope"
+      ],
+      "negative_controls": [
+        "Known benign administrative action",
+        "Known event with required field deliberately omitted"
+      ],
+      "branches": {
+        "suspicious": "Preserve and escalate; correlate subsequent steps",
+        "no_hit_sufficient_telemetry": "Bounded no-evidence finding, never proof of no compromise",
+        "missing_telemetry": "Inconclusive; open improvement",
+        "benign": "Record authorization and residual gaps"
+      },
+      "preserve": [
+        "Raw event export and hash",
+        "Query/procedure, UTC time bounds, timezone",
+        "Host/user/process identifiers",
+        "Analyst reasoning and ticket reference"
+      ],
+      "escalation": "Unauthorized behavior with corroborating context or suspicious privileged activity merits IR review",
+      "closure": "Close this hypothesis only with bounded findings, data sufficiency and unresolved gaps recorded"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "hunt_852d8f1b20f451c0a76af02bc39ec3dc",
+      "behavior_id": "behavior_19541a05f89350228e60ff7aa5280579",
+      "evidence": [
+        "span_498643b16e395ea891910ee45f2c558c"
+      ],
+      "assumptions": [
+        "Environment declaration is accurate",
+        "Analyst has approved access to retained logs",
+        "Source representation may be partial"
+      ],
+      "question": "Was this reported behavior present in our environment?",
+      "hypothesis": "An unauthorized operator may reproduce this observed behavior: Processes accessed LSASS memory.",
+      "priority": "high",
+      "rationale": "Potential privileged access or business disruption; hypothesis is not a finding of compromise",
+      "scope": "Northstar Bank \u00b7 fictional / Windows / AD lab; approved asset list only",
+      "prerequisites": [
+        "process_access",
+        "Confirm event timestamps and retention boundaries"
+      ],
+      "required_fields": [],
+      "retention_days": 30,
+      "steps": [
+        {
+          "order": 1,
+          "question": "Can this search answer the question for the selected time and host scope?",
+          "procedure": "Check source configuration and known benign events for each required field. Compare earliest retained event with the incident window. Record missing intervals and ingestion lag.",
+          "on_missing": "Stop automated interpretation; record telemetry gap and request source owner validation."
+        },
+        {
+          "order": 2,
+          "question": "Is there evidence of Processes accessed LSASS memory.?",
+          "procedure": "Review process_access records for the source-described behavior on in-scope hosts. No tested backend query is available for this behavior. Preserve candidate records and exact procedure.",
+          "on_hit": "Preserve original events and query time bounds; pivot to process ancestry and user session.",
+          "on_no_hit": "If telemetry checks passed, record no matching evidence within the bounded search only; otherwise inconclusive."
+        },
+        {
+          "order": 3,
+          "question": "Do source indicators corroborate the behavior?",
+          "procedure": "Search normalized malicious-role indicators in retained DNS/proxy/endpoint evidence. Never resolve or visit them. Treat historical values as leads, not automatic block recommendations.",
+          "parameters": [
+            {
+              "type": "ipv4",
+              "value": "166.62.100.52",
+              "role": "malicious"
+            }
+          ],
+          "on_no_hit": "No corroboration in retained data; continue behavior investigation."
+        },
+        {
+          "order": 4,
+          "question": "Is the observed action authorized and isolated, or part of a related sequence?",
+          "procedure": "Correlate host, user, process GUID/PID and event time with service installation, network connections and identity activity. Compare maintenance tickets and known tool owners. Do not infer unobserved stages.",
+          "on_suspicious": "Escalate with evidence, uncertainty and affected assets; request approved response containment.",
+          "on_benign": "Document authorization, matching control example and remaining visibility gaps."
+        }
+      ],
+      "query": null,
+      "query_origin": "hand-authored analyst procedure; no executable query available",
+      "backend": "Splunk raw events",
+      "field_mapping": {
+        "CommandLine": "CommandLine",
+        "Computer": "Computer",
+        "Image": "Image",
+        "OriginalFileName": "OriginalFileName",
+        "ParentImage": "ParentImage",
+        "User": "User",
+        "UtcTime": "UtcTime"
+      },
+      "parameters": {
+        "INDEX": "operator-selected actual raw-event index",
+        "EARLIEST": "operator-selected supported window",
+        "LATEST": "operator-selected window end"
+      },
+      "expected": "Behavior-consistent process/service/session evidence with host and user correlation",
+      "benign": [
+        "Authorized administration or software deployment",
+        "Security lab tests with documented scope"
+      ],
+      "negative_controls": [
+        "Known benign administrative action",
+        "Known event with required field deliberately omitted"
+      ],
+      "branches": {
+        "suspicious": "Preserve and escalate; correlate subsequent steps",
+        "no_hit_sufficient_telemetry": "Bounded no-evidence finding, never proof of no compromise",
+        "missing_telemetry": "Inconclusive; open improvement",
+        "benign": "Record authorization and residual gaps"
+      },
+      "preserve": [
+        "Raw event export and hash",
+        "Query/procedure, UTC time bounds, timezone",
+        "Host/user/process identifiers",
+        "Analyst reasoning and ticket reference"
+      ],
+      "escalation": "Unauthorized behavior with corroborating context or suspicious privileged activity merits IR review",
+      "closure": "Close this hypothesis only with bounded findings, data sufficiency and unresolved gaps recorded"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "hunt_a382da706e4958778e254494e2952fb1",
+      "behavior_id": "behavior_aad5e0ce01025b5e80506bfd6184e1ef",
+      "evidence": [
+        "span_3e85678c09ec5a0f8c67b052e2983d29"
+      ],
+      "assumptions": [
+        "Environment declaration is accurate",
+        "Analyst has approved access to retained logs",
+        "Source representation may be partial"
+      ],
+      "question": "Was this reported behavior present in our environment?",
+      "hypothesis": "An unauthorized operator may reproduce this observed behavior: Remote services launched payloads on other Windows hosts.",
+      "priority": "medium",
+      "rationale": "Potential privileged access or business disruption; hypothesis is not a finding of compromise",
+      "scope": "Northstar Bank \u00b7 fictional / Windows / AD lab; approved asset list only",
+      "prerequisites": [
+        "service_install",
+        "process_creation",
+        "Confirm event timestamps and retention boundaries"
+      ],
+      "required_fields": [
+        "Company",
+        "Description",
+        "Image",
+        "Product"
+      ],
+      "retention_days": 30,
+      "steps": [
+        {
+          "order": 1,
+          "question": "Can this search answer the question for the selected time and host scope?",
+          "procedure": "Check source configuration and known benign events for each required field. Compare earliest retained event with the incident window. Record missing intervals and ingestion lag.",
+          "on_missing": "Stop automated interpretation; record telemetry gap and request source owner validation."
+        },
+        {
+          "order": 2,
+          "question": "Is there evidence of Remote services launched payloads on other Windows hosts.?",
+          "procedure": "index=$INDEX$ earliest=$EARLIEST$ latest=$LATEST$ EventCode=1 (Image IN (\"*\\\\AnyDesk.exe\", \"*\\\\AnyDeskMSI.exe\") OR Description=\"AnyDesk\" OR Product=\"AnyDesk\" OR Company=\"AnyDesk Software GmbH\")",
+          "on_hit": "Preserve original events and query time bounds; pivot to process ancestry and user session.",
+          "on_no_hit": "If telemetry checks passed, record no matching evidence within the bounded search only; otherwise inconclusive."
+        },
+        {
+          "order": 3,
+          "question": "Do source indicators corroborate the behavior?",
+          "procedure": "Search normalized malicious-role indicators in retained DNS/proxy/endpoint evidence. Never resolve or visit them. Treat historical values as leads, not automatic block recommendations.",
+          "parameters": [
+            {
+              "type": "ipv4",
+              "value": "166.62.100.52",
+              "role": "malicious"
+            }
+          ],
+          "on_no_hit": "No corroboration in retained data; continue behavior investigation."
+        },
+        {
+          "order": 4,
+          "question": "Is the observed action authorized and isolated, or part of a related sequence?",
+          "procedure": "Correlate host, user, process GUID/PID and event time with service installation, network connections and identity activity. Compare maintenance tickets and known tool owners. Do not infer unobserved stages.",
+          "on_suspicious": "Escalate with evidence, uncertainty and affected assets; request approved response containment.",
+          "on_benign": "Document authorization, matching control example and remaining visibility gaps."
+        }
+      ],
+      "query": "index=$INDEX$ earliest=$EARLIEST$ latest=$LATEST$ EventCode=1 (Image IN (\"*\\\\AnyDesk.exe\", \"*\\\\AnyDeskMSI.exe\") OR Description=\"AnyDesk\" OR Product=\"AnyDesk\" OR Company=\"AnyDesk Software GmbH\")",
+      "query_origin": "pySigma conversion + explicit raw EventCode/index/time template",
+      "backend": "Splunk raw events",
+      "field_mapping": {
+        "CommandLine": "CommandLine",
+        "Computer": "Computer",
+        "Image": "Image",
+        "OriginalFileName": "OriginalFileName",
+        "ParentImage": "ParentImage",
+        "User": "User",
+        "UtcTime": "UtcTime"
+      },
+      "parameters": {
+        "INDEX": "operator-selected actual raw-event index",
+        "EARLIEST": "operator-selected supported window",
+        "LATEST": "operator-selected window end"
+      },
+      "expected": "Behavior-consistent process/service/session evidence with host and user correlation",
+      "benign": [
+        "Authorized administration or software deployment",
+        "Security lab tests with documented scope"
+      ],
+      "negative_controls": [
+        "Known benign administrative action",
+        "Known event with required field deliberately omitted"
+      ],
+      "branches": {
+        "suspicious": "Preserve and escalate; correlate subsequent steps",
+        "no_hit_sufficient_telemetry": "Bounded no-evidence finding, never proof of no compromise",
+        "missing_telemetry": "Inconclusive; open improvement",
+        "benign": "Record authorization and residual gaps"
+      },
+      "preserve": [
+        "Raw event export and hash",
+        "Query/procedure, UTC time bounds, timezone",
+        "Host/user/process identifiers",
+        "Analyst reasoning and ticket reference"
+      ],
+      "escalation": "Unauthorized behavior with corroborating context or suspicious privileged activity merits IR review",
+      "closure": "Close this hypothesis only with bounded findings, data sufficiency and unresolved gaps recorded"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "hunt_735a9bd7ae2d597d95e8715cf39d1cfa",
+      "behavior_id": "behavior_5d00d525ea505fab9e8d4308ac2a6463",
+      "evidence": [
+        "span_3e85678c09ec5a0f8c67b052e2983d29"
+      ],
+      "assumptions": [
+        "Environment declaration is accurate",
+        "Analyst has approved access to retained logs",
+        "Source representation may be partial"
+      ],
+      "question": "Was this reported behavior present in our environment?",
+      "hypothesis": "An unauthorized operator may reproduce this observed behavior: Obfuscated PowerShell appeared during remote-service activity.",
+      "priority": "medium",
+      "rationale": "Potential privileged access or business disruption; hypothesis is not a finding of compromise",
+      "scope": "Northstar Bank \u00b7 fictional / Windows / AD lab; approved asset list only",
+      "prerequisites": [
+        "process_creation",
+        "powershell_scriptblock",
+        "Confirm event timestamps and retention boundaries"
+      ],
+      "required_fields": [
+        "Image",
+        "OriginalFileName",
+        "ParentImage",
+        "CommandLine",
+        "User",
+        "Computer",
+        "UtcTime"
+      ],
+      "retention_days": 30,
+      "steps": [
+        {
+          "order": 1,
+          "question": "Can this search answer the question for the selected time and host scope?",
+          "procedure": "Check source configuration and known benign events for each required field. Compare earliest retained event with the incident window. Record missing intervals and ingestion lag.",
+          "on_missing": "Stop automated interpretation; record telemetry gap and request source owner validation."
+        },
+        {
+          "order": 2,
+          "question": "Is there evidence of Obfuscated PowerShell appeared during remote-service activity.?",
+          "procedure": "Review process_creation, powershell_scriptblock records for the source-described behavior on in-scope hosts. No tested backend query is available for this behavior. Preserve candidate records and exact procedure.",
+          "on_hit": "Preserve original events and query time bounds; pivot to process ancestry and user session.",
+          "on_no_hit": "If telemetry checks passed, record no matching evidence within the bounded search only; otherwise inconclusive."
+        },
+        {
+          "order": 3,
+          "question": "Do source indicators corroborate the behavior?",
+          "procedure": "Search normalized malicious-role indicators in retained DNS/proxy/endpoint evidence. Never resolve or visit them. Treat historical values as leads, not automatic block recommendations.",
+          "parameters": [
+            {
+              "type": "ipv4",
+              "value": "166.62.100.52",
+              "role": "malicious"
+            }
+          ],
+          "on_no_hit": "No corroboration in retained data; continue behavior investigation."
+        },
+        {
+          "order": 4,
+          "question": "Is the observed action authorized and isolated, or part of a related sequence?",
+          "procedure": "Correlate host, user, process GUID/PID and event time with service installation, network connections and identity activity. Compare maintenance tickets and known tool owners. Do not infer unobserved stages.",
+          "on_suspicious": "Escalate with evidence, uncertainty and affected assets; request approved response containment.",
+          "on_benign": "Document authorization, matching control example and remaining visibility gaps."
+        }
+      ],
+      "query": null,
+      "query_origin": "hand-authored analyst procedure; no executable query available",
+      "backend": "Splunk raw events",
+      "field_mapping": {
+        "CommandLine": "CommandLine",
+        "Computer": "Computer",
+        "Image": "Image",
+        "OriginalFileName": "OriginalFileName",
+        "ParentImage": "ParentImage",
+        "User": "User",
+        "UtcTime": "UtcTime"
+      },
+      "parameters": {
+        "INDEX": "operator-selected actual raw-event index",
+        "EARLIEST": "operator-selected supported window",
+        "LATEST": "operator-selected window end"
+      },
+      "expected": "Behavior-consistent process/service/session evidence with host and user correlation",
+      "benign": [
+        "Authorized administration or software deployment",
+        "Security lab tests with documented scope"
+      ],
+      "negative_controls": [
+        "Known benign administrative action",
+        "Known event with required field deliberately omitted"
+      ],
+      "branches": {
+        "suspicious": "Preserve and escalate; correlate subsequent steps",
+        "no_hit_sufficient_telemetry": "Bounded no-evidence finding, never proof of no compromise",
+        "missing_telemetry": "Inconclusive; open improvement",
+        "benign": "Record authorization and residual gaps"
+      },
+      "preserve": [
+        "Raw event export and hash",
+        "Query/procedure, UTC time bounds, timezone",
+        "Host/user/process identifiers",
+        "Analyst reasoning and ticket reference"
+      ],
+      "escalation": "Unauthorized behavior with corroborating context or suspicious privileged activity merits IR review",
+      "closure": "Close this hypothesis only with bounded findings, data sufficiency and unresolved gaps recorded"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "hunt_b6d1e63d0f1a58bca5d57c72ee5985fa",
+      "behavior_id": "behavior_3a87a565cd2e545f8eaa52b254a80000",
+      "evidence": [
+        "span_bc8057780dbc51f4b7e86f4a73e01948"
+      ],
+      "assumptions": [
+        "Environment declaration is accurate",
+        "Analyst has approved access to retained logs",
+        "Source representation may be partial"
+      ],
+      "question": "Was this reported behavior present in our environment?",
+      "hypothesis": "An unauthorized operator may reproduce this observed behavior: AnyDesk installed an automatically starting service.",
+      "priority": "medium",
+      "rationale": "Potential privileged access or business disruption; hypothesis is not a finding of compromise",
+      "scope": "Northstar Bank \u00b7 fictional / Windows / AD lab; approved asset list only",
+      "prerequisites": [
+        "process_creation",
+        "service_install",
+        "Confirm event timestamps and retention boundaries"
+      ],
+      "required_fields": [
+        "Company",
+        "Description",
+        "Image",
+        "Product"
+      ],
+      "retention_days": 30,
+      "steps": [
+        {
+          "order": 1,
+          "question": "Can this search answer the question for the selected time and host scope?",
+          "procedure": "Check source configuration and known benign events for each required field. Compare earliest retained event with the incident window. Record missing intervals and ingestion lag.",
+          "on_missing": "Stop automated interpretation; record telemetry gap and request source owner validation."
+        },
+        {
+          "order": 2,
+          "question": "Is there evidence of AnyDesk installed an automatically starting service.?",
+          "procedure": "index=$INDEX$ earliest=$EARLIEST$ latest=$LATEST$ EventCode=1 (Image IN (\"*\\\\AnyDesk.exe\", \"*\\\\AnyDeskMSI.exe\") OR Description=\"AnyDesk\" OR Product=\"AnyDesk\" OR Company=\"AnyDesk Software GmbH\")",
+          "on_hit": "Preserve original events and query time bounds; pivot to process ancestry and user session.",
+          "on_no_hit": "If telemetry checks passed, record no matching evidence within the bounded search only; otherwise inconclusive."
+        },
+        {
+          "order": 3,
+          "question": "Do source indicators corroborate the behavior?",
+          "procedure": "Search normalized malicious-role indicators in retained DNS/proxy/endpoint evidence. Never resolve or visit them. Treat historical values as leads, not automatic block recommendations.",
+          "parameters": [
+            {
+              "type": "ipv4",
+              "value": "166.62.100.52",
+              "role": "malicious"
+            }
+          ],
+          "on_no_hit": "No corroboration in retained data; continue behavior investigation."
+        },
+        {
+          "order": 4,
+          "question": "Is the observed action authorized and isolated, or part of a related sequence?",
+          "procedure": "Correlate host, user, process GUID/PID and event time with service installation, network connections and identity activity. Compare maintenance tickets and known tool owners. Do not infer unobserved stages.",
+          "on_suspicious": "Escalate with evidence, uncertainty and affected assets; request approved response containment.",
+          "on_benign": "Document authorization, matching control example and remaining visibility gaps."
+        }
+      ],
+      "query": "index=$INDEX$ earliest=$EARLIEST$ latest=$LATEST$ EventCode=1 (Image IN (\"*\\\\AnyDesk.exe\", \"*\\\\AnyDeskMSI.exe\") OR Description=\"AnyDesk\" OR Product=\"AnyDesk\" OR Company=\"AnyDesk Software GmbH\")",
+      "query_origin": "pySigma conversion + explicit raw EventCode/index/time template",
+      "backend": "Splunk raw events",
+      "field_mapping": {
+        "CommandLine": "CommandLine",
+        "Computer": "Computer",
+        "Image": "Image",
+        "OriginalFileName": "OriginalFileName",
+        "ParentImage": "ParentImage",
+        "User": "User",
+        "UtcTime": "UtcTime"
+      },
+      "parameters": {
+        "INDEX": "operator-selected actual raw-event index",
+        "EARLIEST": "operator-selected supported window",
+        "LATEST": "operator-selected window end"
+      },
+      "expected": "Behavior-consistent process/service/session evidence with host and user correlation",
+      "benign": [
+        "Authorized administration or software deployment",
+        "Security lab tests with documented scope"
+      ],
+      "negative_controls": [
+        "Known benign administrative action",
+        "Known event with required field deliberately omitted"
+      ],
+      "branches": {
+        "suspicious": "Preserve and escalate; correlate subsequent steps",
+        "no_hit_sufficient_telemetry": "Bounded no-evidence finding, never proof of no compromise",
+        "missing_telemetry": "Inconclusive; open improvement",
+        "benign": "Record authorization and residual gaps"
+      },
+      "preserve": [
+        "Raw event export and hash",
+        "Query/procedure, UTC time bounds, timezone",
+        "Host/user/process identifiers",
+        "Analyst reasoning and ticket reference"
+      ],
+      "escalation": "Unauthorized behavior with corroborating context or suspicious privileged activity merits IR review",
+      "closure": "Close this hypothesis only with bounded findings, data sufficiency and unresolved gaps recorded"
+    },
+    {
+      "schema_version": "1.0",
+      "id": "hunt_7bdde72a8b1a53aaa77999cc3ef1b662",
+      "behavior_id": "behavior_4a431faf3b075841bfe83bacfd7ed92a",
+      "evidence": [
+        "span_9a9409e03a4a508895e62df5bba7a4af"
+      ],
+      "assumptions": [
+        "Environment declaration is accurate",
+        "Analyst has approved access to retained logs",
+        "Source representation may be partial"
+      ],
+      "question": "Was this reported behavior present in our environment?",
+      "hypothesis": "An unauthorized operator may reproduce this observed behavior: RDP sessions carried ransomware execution.",
+      "priority": "high",
+      "rationale": "Potential privileged access or business disruption; hypothesis is not a finding of compromise",
+      "scope": "Northstar Bank \u00b7 fictional / Windows / AD lab; approved asset list only",
+      "prerequisites": [
+        "logon",
+        "process_creation",
+        "Confirm event timestamps and retention boundaries"
+      ],
+      "required_fields": [],
+      "retention_days": 30,
+      "steps": [
+        {
+          "order": 1,
+          "question": "Can this search answer the question for the selected time and host scope?",
+          "procedure": "Check source configuration and known benign events for each required field. Compare earliest retained event with the incident window. Record missing intervals and ingestion lag.",
+          "on_missing": "Stop automated interpretation; record telemetry gap and request source owner validation."
+        },
+        {
+          "order": 2,
+          "question": "Is there evidence of RDP sessions carried ransomware execution.?",
+          "procedure": "Review logon, process_creation records for the source-described behavior on in-scope hosts. No tested backend query is available for this behavior. Preserve candidate records and exact procedure.",
+          "on_hit": "Preserve original events and query time bounds; pivot to process ancestry and user session.",
+          "on_no_hit": "If telemetry checks passed, record no matching evidence within the bounded search only; otherwise inconclusive."
+        },
+        {
+          "order": 3,
+          "question": "Do source indicators corroborate the behavior?",
+          "procedure": "Search normalized malicious-role indicators in retained DNS/proxy/endpoint evidence. Never resolve or visit them. Treat historical values as leads, not automatic block recommendations.",
+          "parameters": [
+            {
+              "type": "ipv4",
+              "value": "166.62.100.52",
+              "role": "malicious"
+            }
+          ],
+          "on_no_hit": "No corroboration in retained data; continue behavior investigation."
+        },
+        {
+          "order": 4,
+          "question": "Is the observed action authorized and isolated, or part of a related sequence?",
+          "procedure": "Correlate host, user, process GUID/PID and event time with service installation, network connections and identity activity. Compare maintenance tickets and known tool owners. Do not infer unobserved stages.",
+          "on_suspicious": "Escalate with evidence, uncertainty and affected assets; request approved response containment.",
+          "on_benign": "Document authorization, matching control example and remaining visibility gaps."
+        }
+      ],
+      "query": null,
+      "query_origin": "hand-authored analyst procedure; no executable query available",
+      "backend": "Splunk raw events",
+      "field_mapping": {
+        "CommandLine": "CommandLine",
+        "Computer": "Computer",
+        "Image": "Image",
+        "OriginalFileName": "OriginalFileName",
+        "ParentImage": "ParentImage",
+        "User": "User",
+        "UtcTime": "UtcTime"
+      },
+      "parameters": {
+        "INDEX": "operator-selected actual raw-event index",
+        "EARLIEST": "operator-selected supported window",
+        "LATEST": "operator-selected window end"
+      },
+      "expected": "Behavior-consistent process/service/session evidence with host and user correlation",
+      "benign": [
+        "Authorized administration or software deployment",
+        "Security lab tests with documented scope"
+      ],
+      "negative_controls": [
+        "Known benign administrative action",
+        "Known event with required field deliberately omitted"
+      ],
+      "branches": {
+        "suspicious": "Preserve and escalate; correlate subsequent steps",
+        "no_hit_sufficient_telemetry": "Bounded no-evidence finding, never proof of no compromise",
+        "missing_telemetry": "Inconclusive; open improvement",
+        "benign": "Record authorization and residual gaps"
+      },
+      "preserve": [
+        "Raw event export and hash",
+        "Query/procedure, UTC time bounds, timezone",
+        "Host/user/process identifiers",
+        "Analyst reasoning and ticket reference"
+      ],
+      "escalation": "Unauthorized behavior with corroborating context or suspicious privileged activity merits IR review",
+      "closure": "Close this hypothesis only with bounded findings, data sufficiency and unresolved gaps recorded"
+    }
+  ]
+}

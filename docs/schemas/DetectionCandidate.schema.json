@@ -1,0 +1,156 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "behavior_id": {
+      "title": "Behavior Id",
+      "type": "string"
+    },
+    "evidence": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence",
+      "type": "array"
+    },
+    "retrieval": {
+      "title": "Retrieval",
+      "type": "string"
+    },
+    "match": {
+      "title": "Match",
+      "type": "string"
+    },
+    "explanation": {
+      "title": "Explanation",
+      "type": "string"
+    },
+    "source": {
+      "additionalProperties": true,
+      "title": "Source",
+      "type": "object"
+    },
+    "status": {
+      "title": "Status",
+      "type": "string"
+    },
+    "author": {
+      "title": "Author",
+      "type": "string"
+    },
+    "license": {
+      "title": "License",
+      "type": "string"
+    },
+    "logsource": {
+      "additionalProperties": true,
+      "title": "Logsource",
+      "type": "object"
+    },
+    "fields": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Fields",
+      "type": "array"
+    },
+    "condition": {
+      "title": "Condition"
+    },
+    "attack_tags": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Attack Tags",
+      "type": "array"
+    },
+    "limitations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Limitations",
+      "type": "array"
+    },
+    "environment_fit": {
+      "title": "Environment Fit",
+      "type": "string"
+    },
+    "syntax_valid": {
+      "title": "Syntax Valid",
+      "type": "boolean"
+    },
+    "conversion_supported": {
+      "title": "Conversion Supported",
+      "type": "boolean"
+    },
+    "environment_ready": {
+      "title": "Environment Ready",
+      "type": "boolean"
+    },
+    "execution_tested": {
+      "default": false,
+      "title": "Execution Tested",
+      "type": "boolean"
+    },
+    "query": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Query"
+    },
+    "conversion_error": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Conversion Error"
+    }
+  },
+  "required": [
+    "id",
+    "title",
+    "behavior_id",
+    "evidence",
+    "retrieval",
+    "match",
+    "explanation",
+    "source",
+    "status",
+    "author",
+    "license",
+    "logsource",
+    "fields",
+    "condition",
+    "attack_tags",
+    "limitations",
+    "environment_fit",
+    "syntax_valid",
+    "conversion_supported",
+    "environment_ready"
+  ],
+  "title": "DetectionCandidate",
+  "type": "object"
+}

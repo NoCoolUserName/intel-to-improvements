@@ -1,0 +1,220 @@
+{
+    "type": "bundle",
+    "id": "bundle--3537bc5e-e7bc-43a6-9de4-5fcc45202573",
+    "objects": [
+        {
+            "type": "identity",
+            "spec_version": "2.1",
+            "id": "identity--fc870037-f4c6-4326-b178-6a73addc9dc2",
+            "created": "2026-10-08T17:36:48.94308Z",
+            "modified": "2026-10-08T18:21:47.735546Z",
+            "name": "The DFIR Report",
+            "identity_class": "organization"
+        },
+        {
+            "type": "attack-pattern",
+            "spec_version": "2.1",
+            "id": "attack-pattern--0ebaa81f-c2e9-46a5-87fd-aedba93b6e46",
+            "created_by_ref": "identity--fc870037-f4c6-4326-b178-6a73addc9dc2",
+            "created": "2026-10-08T17:36:48.94308Z",
+            "modified": "2026-10-08T18:21:47.735546Z",
+            "name": "Exploit Public-Facing Application",
+            "description": "The report describes exploitation of vulnerable ActiveMQ on Windows.\nEvidence: span_5f0a75f789005e0a8ac065f40713d402\nMapping: analyst_proposed; ",
+            "external_references": [
+                {
+                    "source_name": "MITRE ATT&CK",
+                    "url": "https://attack.mitre.org/techniques/T1190/",
+                    "external_id": "T1190"
+                }
+            ]
+        },
+        {
+            "type": "attack-pattern",
+            "spec_version": "2.1",
+            "id": "attack-pattern--e8cbeae5-acd6-483d-8928-1c8c72c2a97f",
+            "created_by_ref": "identity--fc870037-f4c6-4326-b178-6a73addc9dc2",
+            "created": "2026-10-08T17:36:48.94308Z",
+            "modified": "2026-10-08T18:21:47.735546Z",
+            "name": "Ingress Tool Transfer",
+            "description": "CertUtil downloaded a payload.\nEvidence: span_a958d48ad5c15d1986b44a86b0cddb77\nMapping: analyst_proposed; ",
+            "external_references": [
+                {
+                    "source_name": "MITRE ATT&CK",
+                    "url": "https://attack.mitre.org/techniques/T1105/",
+                    "external_id": "T1105"
+                }
+            ]
+        },
+        {
+            "type": "attack-pattern",
+            "spec_version": "2.1",
+            "id": "attack-pattern--04d004d8-af4a-47fd-a38a-dda671bc188a",
+            "created_by_ref": "identity--fc870037-f4c6-4326-b178-6a73addc9dc2",
+            "created": "2026-10-08T17:36:48.94308Z",
+            "modified": "2026-10-08T18:21:47.735546Z",
+            "name": "Windows Command Shell",
+            "description": "Java parentage accompanied command execution.\nEvidence: span_a958d48ad5c15d1986b44a86b0cddb77\nMapping: analyst_proposed; ",
+            "external_references": [
+                {
+                    "source_name": "MITRE ATT&CK",
+                    "url": "https://attack.mitre.org/techniques/T1059/003/",
+                    "external_id": "T1059.003"
+                }
+            ]
+        },
+        {
+            "type": "attack-pattern",
+            "spec_version": "2.1",
+            "id": "attack-pattern--0b4e2919-656a-4d2d-a6d6-b0cdc9000e28",
+            "created_by_ref": "identity--fc870037-f4c6-4326-b178-6a73addc9dc2",
+            "created": "2026-10-08T17:36:48.94308Z",
+            "modified": "2026-10-08T18:21:47.735546Z",
+            "name": "LSASS Memory",
+            "description": "Processes accessed LSASS memory.\nEvidence: span_498643b16e395ea891910ee45f2c558c\nMapping: analyst_proposed; ",
+            "external_references": [
+                {
+                    "source_name": "MITRE ATT&CK",
+                    "url": "https://attack.mitre.org/techniques/T1003/001/",
+                    "external_id": "T1003.001"
+                }
+            ]
+        },
+        {
+            "type": "attack-pattern",
+            "spec_version": "2.1",
+            "id": "attack-pattern--883cd03c-70dd-497c-b02e-49c6ea83fb9e",
+            "created_by_ref": "identity--fc870037-f4c6-4326-b178-6a73addc9dc2",
+            "created": "2026-10-08T17:36:48.94308Z",
+            "modified": "2026-10-08T18:21:47.735546Z",
+            "name": "Service Execution",
+            "description": "Remote services launched payloads on other Windows hosts.\nEvidence: span_3e85678c09ec5a0f8c67b052e2983d29\nMapping: analyst_proposed; ",
+            "external_references": [
+                {
+                    "source_name": "MITRE ATT&CK",
+                    "url": "https://attack.mitre.org/techniques/T1569/002/",
+                    "external_id": "T1569.002"
+                }
+            ]
+        },
+        {
+            "type": "attack-pattern",
+            "spec_version": "2.1",
+            "id": "attack-pattern--7017db54-53c4-4285-9530-4d7329dd8315",
+            "created_by_ref": "identity--fc870037-f4c6-4326-b178-6a73addc9dc2",
+            "created": "2026-10-08T17:36:48.94308Z",
+            "modified": "2026-10-08T18:21:47.735546Z",
+            "name": "PowerShell",
+            "description": "Obfuscated PowerShell appeared during remote-service activity.\nEvidence: span_3e85678c09ec5a0f8c67b052e2983d29\nMapping: analyst_proposed; ",
+            "external_references": [
+                {
+                    "source_name": "MITRE ATT&CK",
+                    "url": "https://attack.mitre.org/techniques/T1059/001/",
+                    "external_id": "T1059.001"
+                }
+            ]
+        },
+        {
+            "type": "attack-pattern",
+            "spec_version": "2.1",
+            "id": "attack-pattern--ed556ce0-fcc8-4fdc-8a51-0ad966ef64fc",
+            "created_by_ref": "identity--fc870037-f4c6-4326-b178-6a73addc9dc2",
+            "created": "2026-10-08T17:36:48.94308Z",
+            "modified": "2026-10-08T18:21:47.735546Z",
+            "name": "Remote Desktop Software",
+            "description": "AnyDesk installed an automatically starting service.\nEvidence: span_bc8057780dbc51f4b7e86f4a73e01948\nMapping: analyst_proposed; ",
+            "external_references": [
+                {
+                    "source_name": "MITRE ATT&CK",
+                    "url": "https://attack.mitre.org/techniques/T1219/002/",
+                    "external_id": "T1219.002"
+                }
+            ]
+        },
+        {
+            "type": "attack-pattern",
+            "spec_version": "2.1",
+            "id": "attack-pattern--303af3b9-7ac7-45be-b305-c4068064f9b0",
+            "created_by_ref": "identity--fc870037-f4c6-4326-b178-6a73addc9dc2",
+            "created": "2026-10-08T17:36:48.94308Z",
+            "modified": "2026-10-08T18:21:47.735546Z",
+            "name": "Remote Desktop Protocol",
+            "description": "RDP sessions carried ransomware execution.\nEvidence: span_9a9409e03a4a508895e62df5bba7a4af\nMapping: analyst_proposed; ",
+            "external_references": [
+                {
+                    "source_name": "MITRE ATT&CK",
+                    "url": "https://attack.mitre.org/techniques/T1021/001/",
+                    "external_id": "T1021.001"
+                }
+            ]
+        },
+        {
+            "type": "ipv4-addr",
+            "spec_version": "2.1",
+            "id": "ipv4-addr--d73c6dfd-b606-5f14-a1f5-1fded6ef4c67",
+            "value": "166.62.100.52"
+        },
+        {
+            "type": "indicator",
+            "spec_version": "2.1",
+            "id": "indicator--34aa6c1e-5259-4d90-b86f-d91e8f36517b",
+            "created_by_ref": "identity--fc870037-f4c6-4326-b178-6a73addc9dc2",
+            "created": "2026-10-08T17:36:48.94308Z",
+            "modified": "2026-10-08T18:21:47.735546Z",
+            "name": "Historical source-reported ipv4",
+            "description": "The report identifies 166.62.100[.]52 as C2 and an AnyDesk login address. A separate narrative section names 166.62.100[.]62; retain this discrepancy for review.\nNot an automatic block recommendation. Review historical significance. Evidence: span_29b77c0e88265d32a3f8512aa634fe88",
+            "pattern": "[ipv4-addr:value = '166.62.100.52']",
+            "pattern_type": "stix",
+            "pattern_version": "2.1",
+            "valid_from": "2026-10-08T18:21:47.735546Z"
+        },
+        {
+            "type": "relationship",
+            "spec_version": "2.1",
+            "id": "relationship--4cc53c29-94de-4f6d-9944-d7b72105b79e",
+            "created": "2026-10-08T17:36:48.94308Z",
+            "modified": "2026-10-08T18:21:47.735546Z",
+            "relationship_type": "based-on",
+            "source_ref": "indicator--34aa6c1e-5259-4d90-b86f-d91e8f36517b",
+            "target_ref": "ipv4-addr--d73c6dfd-b606-5f14-a1f5-1fded6ef4c67"
+        },
+        {
+            "type": "ipv4-addr",
+            "spec_version": "2.1",
+            "id": "ipv4-addr--939658e0-9fed-51e9-9c36-786cd1f46154",
+            "value": "166.62.100.62"
+        },
+        {
+            "type": "report",
+            "spec_version": "2.1",
+            "id": "report--00931cc7-d1e7-4dba-9140-76d64514d13e",
+            "created_by_ref": "identity--fc870037-f4c6-4326-b178-6a73addc9dc2",
+            "created": "2026-10-08T17:36:48.94308Z",
+            "modified": "2026-10-08T18:21:47.735546Z",
+            "name": "ActiveMQ \u2192 LockBit \u00b7 limited derived case",
+            "description": "Source context; partial. Limited developer-curated derivative, not the full report; original contains image-only evidence C2 address discrepancy .52 versus .62 requires source review\nIncident time: mid-February 2024; recurrence 18 days later\nSource document: doc_cad182dfa5b05c799dd0997787aa9b87\nSerials: TB27524, PR39767\nPublication precision: day",
+            "report_types": [
+                "threat-report"
+            ],
+            "published": "2026-02-23T00:00:00Z",
+            "object_refs": [
+                "attack-pattern--0ebaa81f-c2e9-46a5-87fd-aedba93b6e46",
+                "attack-pattern--e8cbeae5-acd6-483d-8928-1c8c72c2a97f",
+                "attack-pattern--04d004d8-af4a-47fd-a38a-dda671bc188a",
+                "attack-pattern--0b4e2919-656a-4d2d-a6d6-b0cdc9000e28",
+                "attack-pattern--883cd03c-70dd-497c-b02e-49c6ea83fb9e",
+                "attack-pattern--7017db54-53c4-4285-9530-4d7329dd8315",
+                "attack-pattern--ed556ce0-fcc8-4fdc-8a51-0ad966ef64fc",
+                "attack-pattern--303af3b9-7ac7-45be-b305-c4068064f9b0",
+                "ipv4-addr--d73c6dfd-b606-5f14-a1f5-1fded6ef4c67",
+                "indicator--34aa6c1e-5259-4d90-b86f-d91e8f36517b",
+                "ipv4-addr--939658e0-9fed-51e9-9c36-786cd1f46154"
+            ],
+            "external_references": [
+                {
+                    "source_name": "The DFIR Report",
+                    "url": "https://thedfirreport.com/2026/02/23/apache-activemq-exploit-leads-to-lockbit-ransomware/#limited-derived"
+                }
+            ]
+        }
+    ]
+}

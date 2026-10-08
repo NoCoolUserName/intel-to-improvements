@@ -1,0 +1,353 @@
+{
+  "context": {
+    "customer_id": "fictional-bank",
+    "customer_snapshot": {
+      "additional_sectors": [],
+      "allow_live_processing": true,
+      "environments": [
+        {
+          "backend": "Splunk raw events",
+          "controls": [
+            {
+              "deployed_at": null,
+              "name": "Defender",
+              "status": "declared; not tested",
+              "version": "unknown"
+            }
+          ],
+          "exposed_services": [
+            "ActiveMQ"
+          ],
+          "field_map": {
+            "CommandLine": "CommandLine",
+            "Computer": "Computer",
+            "Image": "Image",
+            "OriginalFileName": "OriginalFileName",
+            "ParentImage": "ParentImage",
+            "User": "User",
+            "UtcTime": "UtcTime"
+          },
+          "id": "windows-ad",
+          "important_assets": [
+            "Domain controllers",
+            "Backup server"
+          ],
+          "name": "Windows / AD lab",
+          "notes": "Fictional. Sysmon process telemetry declared. PowerShell script-block and LSASS process-access telemetry deliberately missing. Index selected by analyst, no CIM claim.",
+          "platforms": [
+            "windows"
+          ],
+          "retention_days": 30,
+          "schema_version": "1.0",
+          "technologies": [
+            "ActiveMQ",
+            "Active Directory",
+            "PowerShell",
+            "RDP"
+          ],
+          "telemetry": {
+            "dns_query": [
+              "QueryName",
+              "Image"
+            ],
+            "process_creation": [
+              "Image",
+              "OriginalFileName",
+              "ParentImage",
+              "CommandLine",
+              "User",
+              "Computer",
+              "UtcTime"
+            ],
+            "proxy": [
+              "url",
+              "src_ip"
+            ]
+          },
+          "version": 1
+        }
+      ],
+      "id": "fictional-bank",
+      "intelligence_requirements": [
+        "ransomware",
+        "credential access"
+      ],
+      "misp_destination": null,
+      "name": "Northstar Bank \u00b7 fictional",
+      "priorities": [
+        "Protect backups and privileged identities"
+      ],
+      "schema_version": "1.0",
+      "sector": "financial-services",
+      "subsector": null,
+      "version": 1
+    },
+    "customer_version": 1,
+    "destination": null,
+    "environment_id": "windows-ad",
+    "environment_snapshot": {
+      "backend": "Splunk raw events",
+      "controls": [
+        {
+          "deployed_at": null,
+          "name": "Defender",
+          "status": "declared; not tested",
+          "version": "unknown"
+        }
+      ],
+      "exposed_services": [
+        "ActiveMQ"
+      ],
+      "field_map": {
+        "CommandLine": "CommandLine",
+        "Computer": "Computer",
+        "Image": "Image",
+        "OriginalFileName": "OriginalFileName",
+        "ParentImage": "ParentImage",
+        "User": "User",
+        "UtcTime": "UtcTime"
+      },
+      "id": "windows-ad",
+      "important_assets": [
+        "Domain controllers",
+        "Backup server"
+      ],
+      "name": "Windows / AD lab",
+      "notes": "Fictional. Sysmon process telemetry declared. PowerShell script-block and LSASS process-access telemetry deliberately missing. Index selected by analyst, no CIM claim.",
+      "platforms": [
+        "windows"
+      ],
+      "retention_days": 30,
+      "schema_version": "1.0",
+      "technologies": [
+        "ActiveMQ",
+        "Active Directory",
+        "PowerShell",
+        "RDP"
+      ],
+      "telemetry": {
+        "dns_query": [
+          "QueryName",
+          "Image"
+        ],
+        "process_creation": [
+          "Image",
+          "OriginalFileName",
+          "ParentImage",
+          "CommandLine",
+          "User",
+          "Computer",
+          "UtcTime"
+        ],
+        "proxy": [
+          "url",
+          "src_ip"
+        ]
+      },
+      "version": 1
+    },
+    "environment_version": 1,
+    "policy_version": "relevance-1",
+    "schema_version": "1.0"
+  },
+  "source_revision": "rev_828789f3de1b5901929eaea7dbd172ed",
+  "rows": [
+    {
+      "schema_version": "1.0",
+      "behavior_id": "behavior_ee153d6de3ee5cb58cd98a3bd214e1e4",
+      "applicability": "applicable",
+      "reason": "windows platform declared. Technology exposure and control behavior still require tests.",
+      "missing_prerequisites": [],
+      "telemetry_readiness": "declared; not checked",
+      "detection_readiness": "no relevant candidate in searched subset",
+      "deployment": "unknown",
+      "detection_test": "not tested",
+      "prevention_test": "not tested",
+      "soc_response": "not tested",
+      "synthetic_result": "not tested",
+      "coverage_classification": "unknown",
+      "hunts": [
+        "hunt_a39ded2da5915478bd30a5eb4d11e746"
+      ],
+      "emulations": [
+        "emulation_a39ded2da5915478bd30a5eb4d11e746"
+      ],
+      "candidates": []
+    },
+    {
+      "schema_version": "1.0",
+      "behavior_id": "behavior_efa888780f4c50ccaf41a33c6043bf7f",
+      "applicability": "applicable",
+      "reason": "windows platform declared. Technology exposure and control behavior still require tests.",
+      "missing_prerequisites": [],
+      "telemetry_readiness": "declared; not checked",
+      "detection_readiness": "candidate found; not deployed/verified",
+      "deployment": "unknown",
+      "detection_test": "not tested",
+      "prevention_test": "not tested",
+      "soc_response": "not tested",
+      "synthetic_result": "not tested",
+      "coverage_classification": "unknown",
+      "hunts": [
+        "hunt_645d2cb38bef5e2b901062fa66aafadc"
+      ],
+      "emulations": [
+        "emulation_645d2cb38bef5e2b901062fa66aafadc"
+      ],
+      "candidates": [
+        "19b08b1c-861d-4e75-a1ef-ea0c1baf202b",
+        "13e6fe51-d478-4c7e-b0f2-6da9b400a829",
+        "42a5f1e7-9603-4f6d-97ae-3f37d130d794"
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "behavior_id": "behavior_7eac9ec8e2c45cb78b360058f151a3be",
+      "applicability": "applicable",
+      "reason": "windows platform declared. Technology exposure and control behavior still require tests.",
+      "missing_prerequisites": [],
+      "telemetry_readiness": "declared; not checked",
+      "detection_readiness": "no relevant candidate in searched subset",
+      "deployment": "unknown",
+      "detection_test": "not tested",
+      "prevention_test": "not tested",
+      "soc_response": "not tested",
+      "synthetic_result": "not tested",
+      "coverage_classification": "unknown",
+      "hunts": [
+        "hunt_8e83eec2b4725704ae24d98303806b50"
+      ],
+      "emulations": [
+        "emulation_8e83eec2b4725704ae24d98303806b50"
+      ],
+      "candidates": []
+    },
+    {
+      "schema_version": "1.0",
+      "behavior_id": "behavior_19541a05f89350228e60ff7aa5280579",
+      "applicability": "applicable",
+      "reason": "windows platform declared. Technology exposure and control behavior still require tests.",
+      "missing_prerequisites": [
+        "process_access"
+      ],
+      "telemetry_readiness": "missing declared sources: process_access",
+      "detection_readiness": "no relevant candidate in searched subset",
+      "deployment": "unknown",
+      "detection_test": "not tested",
+      "prevention_test": "not tested",
+      "soc_response": "not tested",
+      "synthetic_result": "not tested",
+      "coverage_classification": "unknown",
+      "hunts": [
+        "hunt_852d8f1b20f451c0a76af02bc39ec3dc"
+      ],
+      "emulations": [
+        "emulation_852d8f1b20f451c0a76af02bc39ec3dc"
+      ],
+      "candidates": []
+    },
+    {
+      "schema_version": "1.0",
+      "behavior_id": "behavior_aad5e0ce01025b5e80506bfd6184e1ef",
+      "applicability": "applicable",
+      "reason": "windows platform declared. Technology exposure and control behavior still require tests.",
+      "missing_prerequisites": [
+        "service_install"
+      ],
+      "telemetry_readiness": "missing declared sources: service_install",
+      "detection_readiness": "candidate found; not deployed/verified",
+      "deployment": "unknown",
+      "detection_test": "not tested",
+      "prevention_test": "not tested",
+      "soc_response": "not tested",
+      "synthetic_result": "not tested",
+      "coverage_classification": "unknown",
+      "hunts": [
+        "hunt_a382da706e4958778e254494e2952fb1"
+      ],
+      "emulations": [
+        "emulation_a382da706e4958778e254494e2952fb1"
+      ],
+      "candidates": [
+        "b52e84a3-029e-4529-b09b-71d19dd27e94",
+        "065b00ca-5d5c-4557-ac95-64a6d0b64d86"
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "behavior_id": "behavior_5d00d525ea505fab9e8d4308ac2a6463",
+      "applicability": "applicable",
+      "reason": "windows platform declared. Technology exposure and control behavior still require tests.",
+      "missing_prerequisites": [
+        "powershell_scriptblock"
+      ],
+      "telemetry_readiness": "missing declared sources: powershell_scriptblock",
+      "detection_readiness": "no relevant candidate in searched subset",
+      "deployment": "unknown",
+      "detection_test": "not tested",
+      "prevention_test": "not tested",
+      "soc_response": "not tested",
+      "synthetic_result": "not tested",
+      "coverage_classification": "unknown",
+      "hunts": [
+        "hunt_735a9bd7ae2d597d95e8715cf39d1cfa"
+      ],
+      "emulations": [
+        "emulation_735a9bd7ae2d597d95e8715cf39d1cfa"
+      ],
+      "candidates": []
+    },
+    {
+      "schema_version": "1.0",
+      "behavior_id": "behavior_3a87a565cd2e545f8eaa52b254a80000",
+      "applicability": "applicable",
+      "reason": "windows platform declared. Technology exposure and control behavior still require tests.",
+      "missing_prerequisites": [
+        "service_install"
+      ],
+      "telemetry_readiness": "missing declared sources: service_install",
+      "detection_readiness": "candidate found; not deployed/verified",
+      "deployment": "unknown",
+      "detection_test": "not tested",
+      "prevention_test": "not tested",
+      "soc_response": "not tested",
+      "synthetic_result": "not tested",
+      "coverage_classification": "unknown",
+      "hunts": [
+        "hunt_b6d1e63d0f1a58bca5d57c72ee5985fa"
+      ],
+      "emulations": [
+        "emulation_b6d1e63d0f1a58bca5d57c72ee5985fa"
+      ],
+      "candidates": [
+        "b52e84a3-029e-4529-b09b-71d19dd27e94",
+        "b1377339-fda6-477a-b455-ac0923f9ec2c",
+        "41f407b5-3096-44ea-a74f-96d04fbc41be"
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "behavior_id": "behavior_4a431faf3b075841bfe83bacfd7ed92a",
+      "applicability": "applicable",
+      "reason": "windows platform declared. Technology exposure and control behavior still require tests.",
+      "missing_prerequisites": [
+        "logon"
+      ],
+      "telemetry_readiness": "missing declared sources: logon",
+      "detection_readiness": "no relevant candidate in searched subset",
+      "deployment": "unknown",
+      "detection_test": "not tested",
+      "prevention_test": "not tested",
+      "soc_response": "not tested",
+      "synthetic_result": "not tested",
+      "coverage_classification": "unknown",
+      "hunts": [
+        "hunt_7bdde72a8b1a53aaa77999cc3ef1b662"
+      ],
+      "emulations": [
+        "emulation_7bdde72a8b1a53aaa77999cc3ef1b662"
+      ],
+      "candidates": []
+    }
+  ]
+}

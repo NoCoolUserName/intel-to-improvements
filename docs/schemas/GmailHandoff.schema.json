@@ -1,0 +1,367 @@
+{
+  "$defs": {
+    "GmailScope": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "query": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Query",
+          "type": "string"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "after": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "After"
+        },
+        "before": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Before"
+        },
+        "max_messages": {
+          "default": 5,
+          "maximum": 25,
+          "minimum": 1,
+          "title": "Max Messages",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "title": "GmailScope",
+      "type": "object"
+    },
+    "HandoffMessage": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "message_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message Id"
+        },
+        "thread_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Thread Id"
+        },
+        "account": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Account"
+        },
+        "rfc_message_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rfc Message Id"
+        },
+        "sender": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sender"
+        },
+        "subject": {
+          "title": "Subject",
+          "type": "string"
+        },
+        "message_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message Date"
+        },
+        "labels": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Labels",
+          "type": "array"
+        },
+        "source_links": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Links",
+          "type": "array"
+        },
+        "report_serials": {
+          "default": [],
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Report Serials",
+          "type": "array"
+        },
+        "representation": {
+          "enum": [
+            "connector-provided text",
+            "HTML",
+            "raw MIME",
+            "snippet"
+          ],
+          "title": "Representation",
+          "type": "string"
+        },
+        "body": {
+          "maxLength": 500000,
+          "title": "Body",
+          "type": "string"
+        },
+        "completeness": {
+          "enum": [
+            "complete-for-supported-content",
+            "partial",
+            "failed"
+          ],
+          "title": "Completeness",
+          "type": "string"
+        },
+        "gaps": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Gaps",
+          "type": "array"
+        },
+        "attachments": {
+          "default": [],
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Attachments",
+          "type": "array"
+        },
+        "part_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Part Id"
+        }
+      },
+      "required": [
+        "subject",
+        "representation",
+        "body",
+        "completeness"
+      ],
+      "title": "HandoffMessage",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "request_id": {
+      "title": "Request Id",
+      "type": "string"
+    },
+    "batch_id": {
+      "title": "Batch Id",
+      "type": "string"
+    },
+    "part": {
+      "default": 1,
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Part",
+      "type": "integer"
+    },
+    "requested_scope": {
+      "$ref": "#/$defs/GmailScope"
+    },
+    "context": {
+      "additionalProperties": true,
+      "title": "Context",
+      "type": "object"
+    },
+    "retrieved_at": {
+      "title": "Retrieved At",
+      "type": "string"
+    },
+    "account": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Account"
+    },
+    "messages": {
+      "items": {
+        "$ref": "#/$defs/HandoffMessage"
+      },
+      "maxItems": 25,
+      "title": "Messages",
+      "type": "array"
+    },
+    "returned_count": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Returned Count"
+    },
+    "retrieved_count": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Retrieved Count"
+    },
+    "failed_count": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Failed Count"
+    },
+    "omitted_count": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Omitted Count"
+    },
+    "pagination_status": {
+      "title": "Pagination Status",
+      "type": "string"
+    },
+    "limitations": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Limitations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "request_id",
+    "batch_id",
+    "requested_scope",
+    "context",
+    "retrieved_at",
+    "messages",
+    "pagination_status"
+  ],
+  "title": "GmailHandoff",
+  "type": "object"
+}

@@ -1,0 +1,886 @@
+{
+  "context": {
+    "customer_id": "fictional-bank",
+    "customer_snapshot": {
+      "additional_sectors": [],
+      "allow_live_processing": true,
+      "environments": [
+        {
+          "backend": "Splunk raw events",
+          "controls": [
+            {
+              "deployed_at": null,
+              "name": "Defender",
+              "status": "declared; not tested",
+              "version": "unknown"
+            }
+          ],
+          "exposed_services": [
+            "ActiveMQ"
+          ],
+          "field_map": {
+            "CommandLine": "CommandLine",
+            "Computer": "Computer",
+            "Image": "Image",
+            "OriginalFileName": "OriginalFileName",
+            "ParentImage": "ParentImage",
+            "User": "User",
+            "UtcTime": "UtcTime"
+          },
+          "id": "windows-ad",
+          "important_assets": [
+            "Domain controllers",
+            "Backup server"
+          ],
+          "name": "Windows / AD lab",
+          "notes": "Fictional. Sysmon process telemetry declared. PowerShell script-block and LSASS process-access telemetry deliberately missing. Index selected by analyst, no CIM claim.",
+          "platforms": [
+            "windows"
+          ],
+          "retention_days": 30,
+          "schema_version": "1.0",
+          "technologies": [
+            "ActiveMQ",
+            "Active Directory",
+            "PowerShell",
+            "RDP"
+          ],
+          "telemetry": {
+            "dns_query": [
+              "QueryName",
+              "Image"
+            ],
+            "process_creation": [
+              "Image",
+              "OriginalFileName",
+              "ParentImage",
+              "CommandLine",
+              "User",
+              "Computer",
+              "UtcTime"
+            ],
+            "proxy": [
+              "url",
+              "src_ip"
+            ]
+          },
+          "version": 1
+        }
+      ],
+      "id": "fictional-bank",
+      "intelligence_requirements": [
+        "ransomware",
+        "credential access"
+      ],
+      "misp_destination": null,
+      "name": "Northstar Bank \u00b7 fictional",
+      "priorities": [
+        "Protect backups and privileged identities"
+      ],
+      "schema_version": "1.0",
+      "sector": "financial-services",
+      "subsector": null,
+      "version": 1
+    },
+    "customer_version": 1,
+    "destination": null,
+    "environment_id": "windows-ad",
+    "environment_snapshot": {
+      "backend": "Splunk raw events",
+      "controls": [
+        {
+          "deployed_at": null,
+          "name": "Defender",
+          "status": "declared; not tested",
+          "version": "unknown"
+        }
+      ],
+      "exposed_services": [
+        "ActiveMQ"
+      ],
+      "field_map": {
+        "CommandLine": "CommandLine",
+        "Computer": "Computer",
+        "Image": "Image",
+        "OriginalFileName": "OriginalFileName",
+        "ParentImage": "ParentImage",
+        "User": "User",
+        "UtcTime": "UtcTime"
+      },
+      "id": "windows-ad",
+      "important_assets": [
+        "Domain controllers",
+        "Backup server"
+      ],
+      "name": "Windows / AD lab",
+      "notes": "Fictional. Sysmon process telemetry declared. PowerShell script-block and LSASS process-access telemetry deliberately missing. Index selected by analyst, no CIM claim.",
+      "platforms": [
+        "windows"
+      ],
+      "retention_days": 30,
+      "schema_version": "1.0",
+      "technologies": [
+        "ActiveMQ",
+        "Active Directory",
+        "PowerShell",
+        "RDP"
+      ],
+      "telemetry": {
+        "dns_query": [
+          "QueryName",
+          "Image"
+        ],
+        "process_creation": [
+          "Image",
+          "OriginalFileName",
+          "ParentImage",
+          "CommandLine",
+          "User",
+          "Computer",
+          "UtcTime"
+        ],
+        "proxy": [
+          "url",
+          "src_ip"
+        ]
+      },
+      "version": 1
+    },
+    "environment_version": 1,
+    "policy_version": "relevance-1",
+    "schema_version": "1.0"
+  },
+  "source_gaps": [
+    "Limited developer-curated derivative, not the full report; original contains image-only evidence",
+    "C2 address discrepancy .52 versus .62 requires source review"
+  ],
+  "scenarios": [
+    {
+      "schema_version": "1.0",
+      "id": "emulation_a39ded2da5915478bd30a5eb4d11e746",
+      "behavior_id": "behavior_ee153d6de3ee5cb58cd98a3bd214e1e4",
+      "evidence": [
+        "span_5f0a75f789005e0a8ac065f40713d402"
+      ],
+      "assumptions": [
+        "Human-led isolated lab only",
+        "Written lab scope approved outside this application"
+      ],
+      "objective": "Can the declared control observe this variant of The report describes exploitation of vulnerable ActiveMQ on Windows.?",
+      "applicability": "windows platform declared. Technology exposure and control behavior still require tests.",
+      "technique_id": "T1190",
+      "prerequisites": [
+        "Disposable Windows lab snapshot",
+        "Human test owner",
+        "No production credentials or attacker callbacks"
+      ],
+      "telemetry_checks": [
+        "proxy"
+      ],
+      "lab_scope": "Named disposable lab hosts and analyst-owned test data only",
+      "test_data": "Harmless text file / synthetic events with example.invalid; never retrieve attacker infrastructure",
+      "steps": [
+        "Do not execute the reported exploit, credential extraction, lateral payload or ransomware.",
+        "Replay a separately labeled synthetic event in the local matcher or approved isolated SIEM test index.",
+        "For actual control validation, have the control owner approve a benign vendor-supported simulation and document attempted action plus enforcement outcome.",
+        "Record this as a telemetry/control approximation; it does not reproduce compromise or ransomware prevention."
+      ],
+      "expected_observables": [
+        "Process/service/session event with UTC time and stable host identity",
+        "Required fields populated or explicit inconclusive result"
+      ],
+      "expected_detection": "Evaluate named candidate rule independently from SIEM alert delivery",
+      "expected_prevention": "Unknown until attempted benign control simulation and enforcing-control outcome are evidenced",
+      "benign_controls": [
+        "Authorized admin equivalent",
+        "Missing-field fixture to expose insufficient telemetry"
+      ],
+      "stop_conditions": [
+        "Any unexpected production connection",
+        "Unapproved privileged change",
+        "Unexpected file modification outside lab directory"
+      ],
+      "cleanup": [
+        "Remove only the named harmless test file",
+        "Stop analyst-owned lab HTTP server if used",
+        "Restore disposable snapshot for any approved configuration changes",
+        "Preserve evidence before cleanup"
+      ],
+      "atomic_candidates": [],
+      "limitations": [
+        "Synthetic replay is not adversary emulation",
+        "No full ATT&CK technique coverage claim",
+        "Missing Atomic match is an explicit catalog gap",
+        "Dangerous stage not reproduced; use benign telemetry/control objective"
+      ],
+      "exercise_designation": "coordinated",
+      "evidence_template": {
+        "environment_version": 1,
+        "behavior_id": "behavior_ee153d6de3ee5cb58cd98a3bd214e1e4",
+        "control_id": "",
+        "control_version": "",
+        "procedure": "",
+        "expected": "",
+        "actual": "",
+        "executed_at": "UTC with offset",
+        "recorded_at": "assigned by application",
+        "method": "synthetic log match | lab emulation | observed SIEM alert | observed prevention | analyst attestation",
+        "evidence_reference": "",
+        "variant": "",
+        "exercise": "coordinated or blind"
+      }
+    },
+    {
+      "schema_version": "1.0",
+      "id": "emulation_645d2cb38bef5e2b901062fa66aafadc",
+      "behavior_id": "behavior_efa888780f4c50ccaf41a33c6043bf7f",
+      "evidence": [
+        "span_a958d48ad5c15d1986b44a86b0cddb77"
+      ],
+      "assumptions": [
+        "Human-led isolated lab only",
+        "Written lab scope approved outside this application"
+      ],
+      "objective": "Can the declared control observe this variant of CertUtil downloaded a payload.?",
+      "applicability": "windows platform declared. Technology exposure and control behavior still require tests.",
+      "technique_id": "T1105",
+      "prerequisites": [
+        "Disposable Windows lab snapshot",
+        "Human test owner",
+        "No production credentials or attacker callbacks"
+      ],
+      "telemetry_checks": [
+        "process_creation"
+      ],
+      "lab_scope": "Named disposable lab hosts and analyst-owned test data only",
+      "test_data": "Harmless text file / synthetic events with example.invalid; never retrieve attacker infrastructure",
+      "steps": [
+        "In an isolated Windows lab, create a harmless text file on an analyst-controlled HTTP server with no Internet egress.",
+        "Confirm Sysmon process events arrive and Image/OriginalFileName/CommandLine fields survive ingestion.",
+        "After human approval, use certutil -urlcache -split -f http://<LAB_HOST>:<LAB_PORT>/harmless.txt <LAB_DIRECTORY>\\iti-harmless.txt. Substitute only the approved lab address.",
+        "Run the benign comparison certutil -store My. Preserve both process records, actual alert outcome and relevant control logs."
+      ],
+      "expected_observables": [
+        "Process/service/session event with UTC time and stable host identity",
+        "Required fields populated or explicit inconclusive result"
+      ],
+      "expected_detection": "Evaluate named candidate rule independently from SIEM alert delivery",
+      "expected_prevention": "Unknown until attempted benign control simulation and enforcing-control outcome are evidenced",
+      "benign_controls": [
+        "Authorized admin equivalent",
+        "Missing-field fixture to expose insufficient telemetry"
+      ],
+      "stop_conditions": [
+        "Any unexpected production connection",
+        "Unapproved privileged change",
+        "Unexpected file modification outside lab directory"
+      ],
+      "cleanup": [
+        "Remove only the named harmless test file",
+        "Stop analyst-owned lab HTTP server if used",
+        "Restore disposable snapshot for any approved configuration changes",
+        "Preserve evidence before cleanup"
+      ],
+      "atomic_candidates": [
+        {
+          "guid": "dd3b61dd-7bbc-48cd-ab51-49ad1a776df0",
+          "name": "certutil download (urlcache)",
+          "path": "atomics/T1105/T1105.yaml",
+          "url": "https://github.com/redcanaryco/atomic-red-team/blob/388942adbd9641f4dfdcf079d7efe9a75ec0ac43/atomics/T1105/T1105.yaml",
+          "revision": "388942adbd9641f4dfdcf079d7efe9a75ec0ac43",
+          "platforms": [
+            "windows"
+          ],
+          "prerequisites": [],
+          "inputs": {
+            "remote_file": {
+              "description": "URL of file to copy",
+              "type": "url",
+              "default": "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt"
+            },
+            "local_path": {
+              "description": "Local path to place file",
+              "type": "path",
+              "default": "Atomic-license.txt"
+            }
+          },
+          "cleanup": "del #{local_path} >nul 2>&1\n",
+          "executor": "command_prompt",
+          "fit": "partial behavior approximation",
+          "limitations": "Atomic defaults may fetch external content. Do not run defaults; use the separate benign plan and lab-controlled content. Same technique is not full intrusion reproduction."
+        },
+        {
+          "guid": "ffd492e3-0455-4518-9fb1-46527c9f241b",
+          "name": "certutil download (verifyctl)",
+          "path": "atomics/T1105/T1105.yaml",
+          "url": "https://github.com/redcanaryco/atomic-red-team/blob/388942adbd9641f4dfdcf079d7efe9a75ec0ac43/atomics/T1105/T1105.yaml",
+          "revision": "388942adbd9641f4dfdcf079d7efe9a75ec0ac43",
+          "platforms": [
+            "windows"
+          ],
+          "prerequisites": [],
+          "inputs": {
+            "remote_file": {
+              "description": "URL of file to copy",
+              "type": "url",
+              "default": "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/LICENSE.txt"
+            },
+            "local_path": {
+              "description": "Local path to place file",
+              "type": "path",
+              "default": "Atomic-license.txt"
+            }
+          },
+          "cleanup": "Remove-Item \"certutil-$(Get-Date -format yyyy_MM_dd)\" -Force -Recurse -ErrorAction Ignore\n",
+          "executor": "powershell",
+          "fit": "partial behavior approximation",
+          "limitations": "Atomic defaults may fetch external content. Do not run defaults; use the separate benign plan and lab-controlled content. Same technique is not full intrusion reproduction."
+        }
+      ],
+      "limitations": [
+        "Synthetic replay is not adversary emulation",
+        "No full ATT&CK technique coverage claim",
+        "Missing Atomic match is an explicit catalog gap"
+      ],
+      "exercise_designation": "coordinated",
+      "evidence_template": {
+        "environment_version": 1,
+        "behavior_id": "behavior_efa888780f4c50ccaf41a33c6043bf7f",
+        "control_id": "",
+        "control_version": "",
+        "procedure": "",
+        "expected": "",
+        "actual": "",
+        "executed_at": "UTC with offset",
+        "recorded_at": "assigned by application",
+        "method": "synthetic log match | lab emulation | observed SIEM alert | observed prevention | analyst attestation",
+        "evidence_reference": "",
+        "variant": "",
+        "exercise": "coordinated or blind"
+      }
+    },
+    {
+      "schema_version": "1.0",
+      "id": "emulation_8e83eec2b4725704ae24d98303806b50",
+      "behavior_id": "behavior_7eac9ec8e2c45cb78b360058f151a3be",
+      "evidence": [
+        "span_a958d48ad5c15d1986b44a86b0cddb77"
+      ],
+      "assumptions": [
+        "Human-led isolated lab only",
+        "Written lab scope approved outside this application"
+      ],
+      "objective": "Can the declared control observe this variant of Java parentage accompanied command execution.?",
+      "applicability": "windows platform declared. Technology exposure and control behavior still require tests.",
+      "technique_id": "T1059.003",
+      "prerequisites": [
+        "Disposable Windows lab snapshot",
+        "Human test owner",
+        "No production credentials or attacker callbacks"
+      ],
+      "telemetry_checks": [
+        "process_creation"
+      ],
+      "lab_scope": "Named disposable lab hosts and analyst-owned test data only",
+      "test_data": "Harmless text file / synthetic events with example.invalid; never retrieve attacker infrastructure",
+      "steps": [
+        "Verify telemetry with an approved benign process event in an isolated Windows VM.",
+        "Have the analyst create a harmless command/process variant matching the relevant rule conditions, using only approved local tools and no persistence.",
+        "Run a known benign negative control.",
+        "Preserve raw records and separately record rule match, alert delivery, prevention and SOC handling if actually observed."
+      ],
+      "expected_observables": [
+        "Process/service/session event with UTC time and stable host identity",
+        "Required fields populated or explicit inconclusive result"
+      ],
+      "expected_detection": "Evaluate named candidate rule independently from SIEM alert delivery",
+      "expected_prevention": "Unknown until attempted benign control simulation and enforcing-control outcome are evidenced",
+      "benign_controls": [
+        "Authorized admin equivalent",
+        "Missing-field fixture to expose insufficient telemetry"
+      ],
+      "stop_conditions": [
+        "Any unexpected production connection",
+        "Unapproved privileged change",
+        "Unexpected file modification outside lab directory"
+      ],
+      "cleanup": [
+        "Remove only the named harmless test file",
+        "Stop analyst-owned lab HTTP server if used",
+        "Restore disposable snapshot for any approved configuration changes",
+        "Preserve evidence before cleanup"
+      ],
+      "atomic_candidates": [],
+      "limitations": [
+        "Synthetic replay is not adversary emulation",
+        "No full ATT&CK technique coverage claim",
+        "Missing Atomic match is an explicit catalog gap"
+      ],
+      "exercise_designation": "coordinated",
+      "evidence_template": {
+        "environment_version": 1,
+        "behavior_id": "behavior_7eac9ec8e2c45cb78b360058f151a3be",
+        "control_id": "",
+        "control_version": "",
+        "procedure": "",
+        "expected": "",
+        "actual": "",
+        "executed_at": "UTC with offset",
+        "recorded_at": "assigned by application",
+        "method": "synthetic log match | lab emulation | observed SIEM alert | observed prevention | analyst attestation",
+        "evidence_reference": "",
+        "variant": "",
+        "exercise": "coordinated or blind"
+      }
+    },
+    {
+      "schema_version": "1.0",
+      "id": "emulation_852d8f1b20f451c0a76af02bc39ec3dc",
+      "behavior_id": "behavior_19541a05f89350228e60ff7aa5280579",
+      "evidence": [
+        "span_498643b16e395ea891910ee45f2c558c"
+      ],
+      "assumptions": [
+        "Human-led isolated lab only",
+        "Written lab scope approved outside this application"
+      ],
+      "objective": "Can the declared control observe this variant of Processes accessed LSASS memory.?",
+      "applicability": "windows platform declared. Technology exposure and control behavior still require tests.",
+      "technique_id": "T1003.001",
+      "prerequisites": [
+        "Disposable Windows lab snapshot",
+        "Human test owner",
+        "No production credentials or attacker callbacks"
+      ],
+      "telemetry_checks": [
+        "process_access"
+      ],
+      "lab_scope": "Named disposable lab hosts and analyst-owned test data only",
+      "test_data": "Harmless text file / synthetic events with example.invalid; never retrieve attacker infrastructure",
+      "steps": [
+        "Do not execute the reported exploit, credential extraction, lateral payload or ransomware.",
+        "Replay a separately labeled synthetic event in the local matcher or approved isolated SIEM test index.",
+        "For actual control validation, have the control owner approve a benign vendor-supported simulation and document attempted action plus enforcement outcome.",
+        "Record this as a telemetry/control approximation; it does not reproduce compromise or ransomware prevention."
+      ],
+      "expected_observables": [
+        "Process/service/session event with UTC time and stable host identity",
+        "Required fields populated or explicit inconclusive result"
+      ],
+      "expected_detection": "Evaluate named candidate rule independently from SIEM alert delivery",
+      "expected_prevention": "Unknown until attempted benign control simulation and enforcing-control outcome are evidenced",
+      "benign_controls": [
+        "Authorized admin equivalent",
+        "Missing-field fixture to expose insufficient telemetry"
+      ],
+      "stop_conditions": [
+        "Any unexpected production connection",
+        "Unapproved privileged change",
+        "Unexpected file modification outside lab directory"
+      ],
+      "cleanup": [
+        "Remove only the named harmless test file",
+        "Stop analyst-owned lab HTTP server if used",
+        "Restore disposable snapshot for any approved configuration changes",
+        "Preserve evidence before cleanup"
+      ],
+      "atomic_candidates": [],
+      "limitations": [
+        "Synthetic replay is not adversary emulation",
+        "No full ATT&CK technique coverage claim",
+        "Missing Atomic match is an explicit catalog gap",
+        "Dangerous stage not reproduced; use benign telemetry/control objective"
+      ],
+      "exercise_designation": "coordinated",
+      "evidence_template": {
+        "environment_version": 1,
+        "behavior_id": "behavior_19541a05f89350228e60ff7aa5280579",
+        "control_id": "",
+        "control_version": "",
+        "procedure": "",
+        "expected": "",
+        "actual": "",
+        "executed_at": "UTC with offset",
+        "recorded_at": "assigned by application",
+        "method": "synthetic log match | lab emulation | observed SIEM alert | observed prevention | analyst attestation",
+        "evidence_reference": "",
+        "variant": "",
+        "exercise": "coordinated or blind"
+      }
+    },
+    {
+      "schema_version": "1.0",
+      "id": "emulation_a382da706e4958778e254494e2952fb1",
+      "behavior_id": "behavior_aad5e0ce01025b5e80506bfd6184e1ef",
+      "evidence": [
+        "span_3e85678c09ec5a0f8c67b052e2983d29"
+      ],
+      "assumptions": [
+        "Human-led isolated lab only",
+        "Written lab scope approved outside this application"
+      ],
+      "objective": "Can the declared control observe this variant of Remote services launched payloads on other Windows hosts.?",
+      "applicability": "windows platform declared. Technology exposure and control behavior still require tests.",
+      "technique_id": "T1569.002",
+      "prerequisites": [
+        "Disposable Windows lab snapshot",
+        "Human test owner",
+        "No production credentials or attacker callbacks"
+      ],
+      "telemetry_checks": [
+        "service_install",
+        "process_creation"
+      ],
+      "lab_scope": "Named disposable lab hosts and analyst-owned test data only",
+      "test_data": "Harmless text file / synthetic events with example.invalid; never retrieve attacker infrastructure",
+      "steps": [
+        "Do not execute the reported exploit, credential extraction, lateral payload or ransomware.",
+        "Replay a separately labeled synthetic event in the local matcher or approved isolated SIEM test index.",
+        "For actual control validation, have the control owner approve a benign vendor-supported simulation and document attempted action plus enforcement outcome.",
+        "Record this as a telemetry/control approximation; it does not reproduce compromise or ransomware prevention."
+      ],
+      "expected_observables": [
+        "Process/service/session event with UTC time and stable host identity",
+        "Required fields populated or explicit inconclusive result"
+      ],
+      "expected_detection": "Evaluate named candidate rule independently from SIEM alert delivery",
+      "expected_prevention": "Unknown until attempted benign control simulation and enforcing-control outcome are evidenced",
+      "benign_controls": [
+        "Authorized admin equivalent",
+        "Missing-field fixture to expose insufficient telemetry"
+      ],
+      "stop_conditions": [
+        "Any unexpected production connection",
+        "Unapproved privileged change",
+        "Unexpected file modification outside lab directory"
+      ],
+      "cleanup": [
+        "Remove only the named harmless test file",
+        "Stop analyst-owned lab HTTP server if used",
+        "Restore disposable snapshot for any approved configuration changes",
+        "Preserve evidence before cleanup"
+      ],
+      "atomic_candidates": [],
+      "limitations": [
+        "Synthetic replay is not adversary emulation",
+        "No full ATT&CK technique coverage claim",
+        "Missing Atomic match is an explicit catalog gap",
+        "Dangerous stage not reproduced; use benign telemetry/control objective"
+      ],
+      "exercise_designation": "coordinated",
+      "evidence_template": {
+        "environment_version": 1,
+        "behavior_id": "behavior_aad5e0ce01025b5e80506bfd6184e1ef",
+        "control_id": "",
+        "control_version": "",
+        "procedure": "",
+        "expected": "",
+        "actual": "",
+        "executed_at": "UTC with offset",
+        "recorded_at": "assigned by application",
+        "method": "synthetic log match | lab emulation | observed SIEM alert | observed prevention | analyst attestation",
+        "evidence_reference": "",
+        "variant": "",
+        "exercise": "coordinated or blind"
+      }
+    },
+    {
+      "schema_version": "1.0",
+      "id": "emulation_735a9bd7ae2d597d95e8715cf39d1cfa",
+      "behavior_id": "behavior_5d00d525ea505fab9e8d4308ac2a6463",
+      "evidence": [
+        "span_3e85678c09ec5a0f8c67b052e2983d29"
+      ],
+      "assumptions": [
+        "Human-led isolated lab only",
+        "Written lab scope approved outside this application"
+      ],
+      "objective": "Can the declared control observe this variant of Obfuscated PowerShell appeared during remote-service activity.?",
+      "applicability": "windows platform declared. Technology exposure and control behavior still require tests.",
+      "technique_id": "T1059.001",
+      "prerequisites": [
+        "Disposable Windows lab snapshot",
+        "Human test owner",
+        "No production credentials or attacker callbacks"
+      ],
+      "telemetry_checks": [
+        "process_creation",
+        "powershell_scriptblock"
+      ],
+      "lab_scope": "Named disposable lab hosts and analyst-owned test data only",
+      "test_data": "Harmless text file / synthetic events with example.invalid; never retrieve attacker infrastructure",
+      "steps": [
+        "Verify telemetry with an approved benign process event in an isolated Windows VM.",
+        "Have the analyst create a harmless command/process variant matching the relevant rule conditions, using only approved local tools and no persistence.",
+        "Run a known benign negative control.",
+        "Preserve raw records and separately record rule match, alert delivery, prevention and SOC handling if actually observed."
+      ],
+      "expected_observables": [
+        "Process/service/session event with UTC time and stable host identity",
+        "Required fields populated or explicit inconclusive result"
+      ],
+      "expected_detection": "Evaluate named candidate rule independently from SIEM alert delivery",
+      "expected_prevention": "Unknown until attempted benign control simulation and enforcing-control outcome are evidenced",
+      "benign_controls": [
+        "Authorized admin equivalent",
+        "Missing-field fixture to expose insufficient telemetry"
+      ],
+      "stop_conditions": [
+        "Any unexpected production connection",
+        "Unapproved privileged change",
+        "Unexpected file modification outside lab directory"
+      ],
+      "cleanup": [
+        "Remove only the named harmless test file",
+        "Stop analyst-owned lab HTTP server if used",
+        "Restore disposable snapshot for any approved configuration changes",
+        "Preserve evidence before cleanup"
+      ],
+      "atomic_candidates": [
+        {
+          "guid": "1c0a870f-dc74-49cf-9afc-eccc45e58790",
+          "name": "ATHPowerShellCommandLineParameter -Command parameter variations with encoded arguments",
+          "path": "atomics/T1059.001/T1059.001.yaml",
+          "url": "https://github.com/redcanaryco/atomic-red-team/blob/388942adbd9641f4dfdcf079d7efe9a75ec0ac43/atomics/T1059.001/T1059.001.yaml",
+          "revision": "388942adbd9641f4dfdcf079d7efe9a75ec0ac43",
+          "platforms": [
+            "windows"
+          ],
+          "prerequisites": [
+            {
+              "description": "The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter must be exported in the module.",
+              "prereq_command": "$RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable\nif (-not $RequiredModule) {exit 1}\nif (-not $RequiredModule.ExportedCommands['Out-ATHPowerShellCommandLineParameter']) {exit 1} else {exit 0}",
+              "get_prereq_command": "Install-Module -Name AtomicTestHarnesses -Scope CurrentUser -Force\n"
+            }
+          ],
+          "inputs": {
+            "command_line_switch_type": {
+              "description": "The type of supported command-line switch to use",
+              "type": "string",
+              "default": "Hyphen"
+            },
+            "command_param_variation": {
+              "description": "The \"Command\" parameter variation to use",
+              "type": "string",
+              "default": "C"
+            },
+            "encoded_arguments_param_variation": {
+              "description": "The \"EncodedArguments\" parameter variation to use",
+              "type": "string",
+              "default": "EA"
+            }
+          },
+          "cleanup": null,
+          "executor": "powershell",
+          "fit": "partial behavior approximation",
+          "limitations": "Atomic defaults may fetch external content. Do not run defaults; use the separate benign plan and lab-controlled content. Same technique is not full intrusion reproduction."
+        },
+        {
+          "guid": "86a43bad-12e3-4e85-b97c-4d5cf25b95c3",
+          "name": "ATHPowerShellCommandLineParameter -EncodedCommand parameter variations",
+          "path": "atomics/T1059.001/T1059.001.yaml",
+          "url": "https://github.com/redcanaryco/atomic-red-team/blob/388942adbd9641f4dfdcf079d7efe9a75ec0ac43/atomics/T1059.001/T1059.001.yaml",
+          "revision": "388942adbd9641f4dfdcf079d7efe9a75ec0ac43",
+          "platforms": [
+            "windows"
+          ],
+          "prerequisites": [
+            {
+              "description": "The AtomicTestHarnesses module must be installed and Out-ATHPowerShellCommandLineParameter must be exported in the module.",
+              "prereq_command": "$RequiredModule = Get-Module -Name AtomicTestHarnesses -ListAvailable\nif (-not $RequiredModule) {exit 1}\nif (-not $RequiredModule.ExportedCommands['Out-ATHPowerShellCommandLineParameter']) {exit 1} else {exit 0}",
+              "get_prereq_command": "Install-Module -Name AtomicTestHarnesses -Scope CurrentUser -Force\n"
+            }
+          ],
+          "inputs": {
+            "command_line_switch_type": {
+              "description": "The type of supported command-line switch to use",
+              "type": "string",
+              "default": "Hyphen"
+            },
+            "encoded_command_param_variation": {
+              "description": "The \"EncodedCommand\" parameter variation to use",
+              "type": "string",
+              "default": "E"
+            }
+          },
+          "cleanup": null,
+          "executor": "powershell",
+          "fit": "partial behavior approximation",
+          "limitations": "Atomic defaults may fetch external content. Do not run defaults; use the separate benign plan and lab-controlled content. Same technique is not full intrusion reproduction."
+        }
+      ],
+      "limitations": [
+        "Synthetic replay is not adversary emulation",
+        "No full ATT&CK technique coverage claim",
+        "Missing Atomic match is an explicit catalog gap"
+      ],
+      "exercise_designation": "coordinated",
+      "evidence_template": {
+        "environment_version": 1,
+        "behavior_id": "behavior_5d00d525ea505fab9e8d4308ac2a6463",
+        "control_id": "",
+        "control_version": "",
+        "procedure": "",
+        "expected": "",
+        "actual": "",
+        "executed_at": "UTC with offset",
+        "recorded_at": "assigned by application",
+        "method": "synthetic log match | lab emulation | observed SIEM alert | observed prevention | analyst attestation",
+        "evidence_reference": "",
+        "variant": "",
+        "exercise": "coordinated or blind"
+      }
+    },
+    {
+      "schema_version": "1.0",
+      "id": "emulation_b6d1e63d0f1a58bca5d57c72ee5985fa",
+      "behavior_id": "behavior_3a87a565cd2e545f8eaa52b254a80000",
+      "evidence": [
+        "span_bc8057780dbc51f4b7e86f4a73e01948"
+      ],
+      "assumptions": [
+        "Human-led isolated lab only",
+        "Written lab scope approved outside this application"
+      ],
+      "objective": "Can the declared control observe this variant of AnyDesk installed an automatically starting service.?",
+      "applicability": "windows platform declared. Technology exposure and control behavior still require tests.",
+      "technique_id": "T1219.002",
+      "prerequisites": [
+        "Disposable Windows lab snapshot",
+        "Human test owner",
+        "No production credentials or attacker callbacks"
+      ],
+      "telemetry_checks": [
+        "process_creation",
+        "service_install"
+      ],
+      "lab_scope": "Named disposable lab hosts and analyst-owned test data only",
+      "test_data": "Harmless text file / synthetic events with example.invalid; never retrieve attacker infrastructure",
+      "steps": [
+        "Verify telemetry with an approved benign process event in an isolated Windows VM.",
+        "Have the analyst create a harmless command/process variant matching the relevant rule conditions, using only approved local tools and no persistence.",
+        "Run a known benign negative control.",
+        "Preserve raw records and separately record rule match, alert delivery, prevention and SOC handling if actually observed."
+      ],
+      "expected_observables": [
+        "Process/service/session event with UTC time and stable host identity",
+        "Required fields populated or explicit inconclusive result"
+      ],
+      "expected_detection": "Evaluate named candidate rule independently from SIEM alert delivery",
+      "expected_prevention": "Unknown until attempted benign control simulation and enforcing-control outcome are evidenced",
+      "benign_controls": [
+        "Authorized admin equivalent",
+        "Missing-field fixture to expose insufficient telemetry"
+      ],
+      "stop_conditions": [
+        "Any unexpected production connection",
+        "Unapproved privileged change",
+        "Unexpected file modification outside lab directory"
+      ],
+      "cleanup": [
+        "Remove only the named harmless test file",
+        "Stop analyst-owned lab HTTP server if used",
+        "Restore disposable snapshot for any approved configuration changes",
+        "Preserve evidence before cleanup"
+      ],
+      "atomic_candidates": [],
+      "limitations": [
+        "Synthetic replay is not adversary emulation",
+        "No full ATT&CK technique coverage claim",
+        "Missing Atomic match is an explicit catalog gap"
+      ],
+      "exercise_designation": "coordinated",
+      "evidence_template": {
+        "environment_version": 1,
+        "behavior_id": "behavior_3a87a565cd2e545f8eaa52b254a80000",
+        "control_id": "",
+        "control_version": "",
+        "procedure": "",
+        "expected": "",
+        "actual": "",
+        "executed_at": "UTC with offset",
+        "recorded_at": "assigned by application",
+        "method": "synthetic log match | lab emulation | observed SIEM alert | observed prevention | analyst attestation",
+        "evidence_reference": "",
+        "variant": "",
+        "exercise": "coordinated or blind"
+      }
+    },
+    {
+      "schema_version": "1.0",
+      "id": "emulation_7bdde72a8b1a53aaa77999cc3ef1b662",
+      "behavior_id": "behavior_4a431faf3b075841bfe83bacfd7ed92a",
+      "evidence": [
+        "span_9a9409e03a4a508895e62df5bba7a4af"
+      ],
+      "assumptions": [
+        "Human-led isolated lab only",
+        "Written lab scope approved outside this application"
+      ],
+      "objective": "Can the declared control observe this variant of RDP sessions carried ransomware execution.?",
+      "applicability": "windows platform declared. Technology exposure and control behavior still require tests.",
+      "technique_id": "T1021.001",
+      "prerequisites": [
+        "Disposable Windows lab snapshot",
+        "Human test owner",
+        "No production credentials or attacker callbacks"
+      ],
+      "telemetry_checks": [
+        "logon",
+        "process_creation"
+      ],
+      "lab_scope": "Named disposable lab hosts and analyst-owned test data only",
+      "test_data": "Harmless text file / synthetic events with example.invalid; never retrieve attacker infrastructure",
+      "steps": [
+        "Do not execute the reported exploit, credential extraction, lateral payload or ransomware.",
+        "Replay a separately labeled synthetic event in the local matcher or approved isolated SIEM test index.",
+        "For actual control validation, have the control owner approve a benign vendor-supported simulation and document attempted action plus enforcement outcome.",
+        "Record this as a telemetry/control approximation; it does not reproduce compromise or ransomware prevention."
+      ],
+      "expected_observables": [
+        "Process/service/session event with UTC time and stable host identity",
+        "Required fields populated or explicit inconclusive result"
+      ],
+      "expected_detection": "Evaluate named candidate rule independently from SIEM alert delivery",
+      "expected_prevention": "Unknown until attempted benign control simulation and enforcing-control outcome are evidenced",
+      "benign_controls": [
+        "Authorized admin equivalent",
+        "Missing-field fixture to expose insufficient telemetry"
+      ],
+      "stop_conditions": [
+        "Any unexpected production connection",
+        "Unapproved privileged change",
+        "Unexpected file modification outside lab directory"
+      ],
+      "cleanup": [
+        "Remove only the named harmless test file",
+        "Stop analyst-owned lab HTTP server if used",
+        "Restore disposable snapshot for any approved configuration changes",
+        "Preserve evidence before cleanup"
+      ],
+      "atomic_candidates": [],
+      "limitations": [
+        "Synthetic replay is not adversary emulation",
+        "No full ATT&CK technique coverage claim",
+        "Missing Atomic match is an explicit catalog gap",
+        "Dangerous stage not reproduced; use benign telemetry/control objective"
+      ],
+      "exercise_designation": "coordinated",
+      "evidence_template": {
+        "environment_version": 1,
+        "behavior_id": "behavior_4a431faf3b075841bfe83bacfd7ed92a",
+        "control_id": "",
+        "control_version": "",
+        "procedure": "",
+        "expected": "",
+        "actual": "",
+        "executed_at": "UTC with offset",
+        "recorded_at": "assigned by application",
+        "method": "synthetic log match | lab emulation | observed SIEM alert | observed prevention | analyst attestation",
+        "evidence_reference": "",
+        "variant": "",
+        "exercise": "coordinated or blind"
+      }
+    }
+  ]
+}

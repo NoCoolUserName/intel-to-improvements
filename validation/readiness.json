@@ -1,0 +1,91 @@
+{
+  "recorded_at": "2026-10-08T18:24:01.366716+00:00",
+  "runtime": "Apple Silicon macOS; loopback local execution",
+  "checks": {
+    "pytest": {
+      "status": "passed",
+      "tests": 48,
+      "failures": 0,
+      "errors": 0
+    },
+    "frontend": {
+      "status": "TypeScript and Vite production build passed",
+      "browser": "NOT RUN: IAB unavailable; Computer Use rejected Chrome access (not approved)",
+      "screenshot": null
+    },
+    "real_report": {
+      "status": "live URL retrieval and bounded offline processing completed",
+      "url": "https://thedfirreport.com/2026/02/23/apache-activemq-exploit-leads-to-lockbit-ransomware/",
+      "behaviors": 8,
+      "observables": 7,
+      "normalized_characters": 23884,
+      "gaps": [
+        "43 image-only evidence regions not interpreted; no OCR"
+      ],
+      "note": "Historical source facts, not local operational observations"
+    },
+    "gmail_plugin": {
+      "status": "user-confirmed configured and tested"
+    },
+    "gmail_handoff": {
+      "status": "synthetic workflow passed; live acceptance NOT RUN",
+      "reason": "No operator-scoped retrieval response received; no messages accessed",
+      "follow_up": "Copy runtime/gmail-request.txt into the existing Gmail-connected conversation; import downloaded handoff with ./scripts/iti gmail-import FILE --preview, then ./scripts/iti gmail-import FILE"
+    },
+    "live_model": {
+      "status": "NOT VERIFIED",
+      "actual_attempt": "failed",
+      "error": "Live extraction unavailable: configure OPENAI_API_KEY and OPENAI_MODEL. Failed live runs never fall back to replay.",
+      "follow_up": "Set OPENAI_API_KEY and OPENAI_MODEL in .env; ./scripts/iti ingest /absolute/path/to/unseen-report.txt --kind path --mode live"
+    },
+    "misp_native": {
+      "status": "PyMISP model + bundled lax schema passed on five fixtures"
+    },
+    "misp_converter": {
+      "status": "Completed on five fixtures",
+      "universal_tip_compatibility": false
+    },
+    "misp_live": {
+      "status": "NOT RUN",
+      "reason": "MISP instance/key/destination not configured",
+      "follow_up": "Configure customer destination and MISP_URL/MISP_API_KEY; reassess/generate; ./scripts/iti misp-check PACKAGE_ID --customer fictional-bank"
+    },
+    "sigma": {
+      "status": "actual local conversion and synthetic three-variant execution",
+      "catalog_rules": 8,
+      "live_splunk": "NOT RUN"
+    },
+    "prevention_soc": {
+      "status": "NOT RUN",
+      "reason": "No approved lab/live exercise or organizational evidence supplied"
+    },
+    "git": {
+      "status": "BLOCKED",
+      "reason": "Runtime .git path read-only; git init denied; existing identity preserved"
+    },
+    "dfir_index": {
+      "status": "actual bounded listing passed",
+      "returned": 5,
+      "limit": 5
+    }
+  },
+  "evaluation": {
+    "tp": 12,
+    "fp": 0,
+    "fn": 1,
+    "precision": 1.0,
+    "recall": 0.9230769230769231
+  },
+  "api_checks": [
+    "health",
+    "profiles",
+    "replay ingestion, assessment, evidence",
+    "package generation",
+    "all artifact downloads and ZIP",
+    "cross-customer artifact rejection",
+    "actual synthetic positive/negative/missing-field execution",
+    "synthetic remains separate from live coverage",
+    "improvement recorded with scope and retest",
+    "synthetic Gmail request / preview / process / idempotent reimport"
+  ]
+}
