@@ -1,0 +1,92 @@
+/* Brand-inspired palettes adapted for an evidence workbench. Original CSS stays intact. */
+:root[data-theme="sailpoint"] {
+  color-scheme: light;
+  --page: #f2f5f7; --surface: #ffffff; --surface-soft: #f2f5f7;
+  --surface-hover: #eaf2fc; --border: #dae1e9; --border-hover: #8baaca;
+  --text: #011c48; --muted: #415364; --accent: #0033a1; --accent-hover: #00287e;
+  --accent-text: #ffffff; --link: #004fb5; --focus: #0071ce;
+  --sidebar: #011c48; --sidebar-text: #e0ebfa; --sidebar-muted: #b4c7e5;
+  --sidebar-active: #16386b; --sidebar-hover: #102e59; --sidebar-border: #345582;
+  --mark-bg: #0033a1; --mark-text: #ffffff; --highlight: #54c0e8;
+  --badge-bg: #eaf2fc; --badge-text: #0033a1; --badge-border: #c5d7f2;
+  --success-bg: #e6f3eb; --success-text: #205e42; --success-border: #bcdcc9;
+  --warning-bg: #fff3d9; --warning-text: #795512; --warning-border: #e5d09d;
+  --error-bg: #fbe9e7; --error-text: #92362f; --error-border: #e9bbb6;
+  --scrim: #011c4866; --shadow: #011c4822;
+}
+:root[data-theme="dropzone"] {
+  color-scheme: dark;
+  --page: #14141c; --surface: #1c1f29; --surface-soft: #222531;
+  --surface-hover: #2b2e39; --border: #444855; --border-hover: #7e86a5;
+  --text: #f4f5fa; --muted: #b5bacb; --accent: #5664db; --accent-hover: #4b58c5;
+  --accent-text: #ffffff; --link: #aeb6ff; --focus: #9ba6ff;
+  --sidebar: #14141c; --sidebar-text: #dadada; --sidebar-muted: #b5bacb;
+  --sidebar-active: #292d48; --sidebar-hover: #222531; --sidebar-border: #444855;
+  --mark-bg: #292d48; --mark-text: #aeb6ff; --highlight: #1cb797;
+  --badge-bg: #292d48; --badge-text: #c7ceff; --badge-border: #4b557e;
+  --success-bg: #173d35; --success-text: #78e2c7; --success-border: #317865;
+  --warning-bg: #3c321f; --warning-text: #f4cf88; --warning-border: #806538;
+  --error-bg: #41272f; --error-text: #ffacbb; --error-border: #895363;
+  --scrim: #05060bb3; --shadow: #00000066;
+}
+/* Scope every override so choosing Original restores the existing design exactly. */
+:root[data-theme]:not([data-theme="original"]) {
+  background: var(--page); color: var(--text); accent-color: var(--accent);
+  & .sidebar { background: var(--sidebar); color: var(--sidebar-text); }
+  & .brand strong { color: var(--text-on-sidebar, #fff); }
+  & .brand-mark { background: var(--mark-bg); color: var(--mark-text); }
+  & .workspace-label, & .sidebar-footer small { color: var(--sidebar-muted); }
+  & .sidebar nav button { color: var(--sidebar-text); background: transparent; }
+  & .sidebar nav button:hover { background: var(--sidebar-hover); }
+  & .sidebar nav button.active { background: var(--sidebar-active); color: #fff; box-shadow: inset 3px 0 var(--highlight); }
+  & .sidebar-footer { border-color: var(--sidebar-border); }
+  & .live-dot { background: var(--highlight); }
+  & .topbar, & .casebar, & .stat, & .panel, & .drawer { background: var(--surface); border-color: var(--border); }
+  & button, & a.button { color: var(--text); background: var(--surface); border-color: var(--border); }
+  & button:hover, & a.button:hover { background: var(--surface-hover); border-color: var(--border-hover); }
+  & .primary, & button.primary, & a.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+  & .primary:hover, & button.primary:hover { background: var(--accent-hover); }
+  & a, & .text-link { color: var(--link); }
+  & .text-link, & .sequence, & .queue-item, & .close, & .banner button { background: transparent; }
+  & .text-link:hover { background: transparent; }
+  & .behavior { color: var(--text); }
+  & .context-group label, & .context-meta small, & .casebar label,
+  & .eyebrow, & p, & small, & .fine, & label, & .stat > span, & .stat em,
+  & dt, & ul, & .divider, & .evidence code, & footer { color: var(--muted); }
+  & input, & select, & textarea { background: var(--surface-soft); color: var(--text); border-color: var(--border); }
+  & .context-group select { background: transparent; }
+  & .badge, & .badge.neutral { background: var(--badge-bg); color: var(--badge-text); border-color: var(--badge-border); }
+  & .badge.teal, & .notice { background: var(--success-bg); color: var(--success-text); border-color: var(--success-border); }
+  & .badge.amber, & .warning { background: var(--warning-bg); color: var(--warning-text); border-color: var(--warning-border); }
+  & .badge.red, & .error { background: var(--error-bg); color: var(--error-text); border-color: var(--error-border); }
+  & .gap { color: var(--warning-text) !important; }
+  & th { background: var(--surface-soft); color: var(--muted); border-color: var(--border); }
+  & td, & .tabs, & .queue-item, & .job, & .sequence, & .history, & .evidence, & footer, & .artifact { border-color: var(--border); }
+  & .tabs button { background: transparent; color: var(--muted); }
+  & .tabs button.selected { color: var(--link); border-bottom-color: var(--accent); }
+  & .empty, & .file-input, & .request-box, & .demo-card, & .quote, & .preview,
+  & .json, & pre, & .evidence blockquote { background: var(--surface-soft); color: var(--text); border-color: var(--border); }
+  & .empty svg, & .steps li::marker { color: var(--link); }
+  & .demo-card select { background: var(--surface); }
+  & .sequence-number { background: var(--badge-bg); color: var(--badge-text); }
+  & .divider::before, & .divider::after { background: var(--border); }
+  & .evidence blockquote, & .quote { border-left-color: var(--accent); }
+  & .steps p { color: var(--muted); }
+  & .scrim { background: var(--scrim); }
+  & .drawer { box-shadow: -10px 0 70px var(--shadow); }
+  & button:focus-visible, & a:focus-visible, & input:focus-visible,
+  & select:focus-visible, & textarea:focus-visible { outline-color: var(--focus); }
+}
+.topbar-actions { display: flex; align-items: center; gap: 20px; }
+.theme-control { margin: 0; flex-shrink: 0; font-size: 9px; letter-spacing: 1.3px; }
+.theme-control select { width: 185px; font-size: 11px; letter-spacing: 0; margin-top: 4px; padding: 7px 25px 7px 9px; }
+@media (max-width: 1250px) { .context-meta { display: none; } }
+@media (max-width: 950px) {
+  .topbar { height: auto; flex-wrap: wrap; gap: 12px; }
+  .topbar-actions { margin-left: auto; }
+}
+@media (max-width: 760px) {
+  .topbar-actions { width: 100%; margin-left: 0; }
+  .theme-control { display: flex; align-items: center; gap: 12px; }
+  .theme-control select { margin-top: 0; }
+}

@@ -22,6 +22,10 @@ All Python dependencies are in `.venv`; `uv.lock` and `web/package-lock.json` pi
 
 On macOS, after bootstrap, run `./scripts/install-desktop`. This installs **Intel to Improvements.app** on your Desktop with the shield/ascending-arrow icon. Double-click it to start the loopback server if needed and open your default browser. It reuses an already-running workbench; closing the browser leaves the server running. Startup logs are in `runtime/launcher.log`. Reinstall after moving the checkout. `./scripts/install-desktop --build-only` builds the same app in `runtime/desktop/` without writing to Desktop. Linux users can run `./scripts/run` and bookmark the local URL. The web interface includes a matching SVG favicon and Apple touch icon.
 
+## Appearance
+
+Use the **Appearance** dropdown in the top bar on any page: **Original · Forest** keeps the existing design, **SailPoint · Ocean** uses navy/blue on light surfaces, and **Dropzone AI · Midnight** uses charcoal/violet/teal. Your choice is remembered in this browser and applies to tables, forms, drawers, and status labels. It is independent of customer selection. See [theme sources and accessibility checks](docs/THEMES.md).
+
 ## Commands
 
 ```sh

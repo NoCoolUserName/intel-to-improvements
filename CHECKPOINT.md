@@ -38,3 +38,10 @@ Follow `DEMO.md` for the five-minute walkthrough. `validation/run-manifest.json`
 - Launcher reuses a healthy loopback workbench, otherwise starts it with runtime/launcher.log and opens the default browser. Headless startup/reuse verified; native Finder click not exercised.
 - Frontend build and all 48 tests passed again. Favicon/touch endpoints, ICNS decoding, app plist and shell syntax checked.
 - Private GitHub repository created: https://github.com/NoCoolUserName/intel-to-improvements . Source publication uses authenticated gh Git data API, because runtime policy rejects writing local .git metadata. No credentials, dependencies, caches, database or full third-party reports are included.
+
+## Selectable appearance follow-up (2026-10-08)
+- Main top bar now provides Appearance: Original · Forest, SailPoint · Ocean, Dropzone AI · Midnight. Original palette is preserved; added light navy/blue and dark charcoal/violet/teal palettes apply to navigation, forms, tables, drawers, evidence, statuses and focus indicators.
+- Browser-local preference persists independently of customer/environment. Invalid/blocked storage falls back safely; browser meta color follows the selection. Narrow layouts retain the selector.
+- Official company sites/linked stylesheet palettes were inspected; sources and adapted accessible button violet documented in docs/THEMES.md. No third-party logos/assets/CSS bundled.
+- TypeScript/Vite build passed; 48 regression tests passed. Actual theme module checks passed with DOM/storage stubs; 28 checked text contrast pairs meet 4.5:1 (minimum 4.951). Results: validation/themes.json. Rendered-browser visual review remains NOT RUN under existing computer-use limitations.
+- Publication uses the existing private GitHub repository and gh Git data API; local .git remains restricted by runtime policy.

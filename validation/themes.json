@@ -1,0 +1,209 @@
+{
+  "executed_at": "2026-10-08T21:22:28.125722+00:00",
+  "themes": [
+    "original",
+    "sailpoint",
+    "dropzone"
+  ],
+  "state_checks": "passed: all selections/persistence/default/invalid/blocked storage/meta color using DOM-storage stubs",
+  "contrast_checks": [
+    {
+      "theme": "sailpoint",
+      "foreground": "text",
+      "background": "surface",
+      "ratio": 16.654,
+      "passes_4_5": true
+    },
+    {
+      "theme": "sailpoint",
+      "foreground": "text",
+      "background": "surface-soft",
+      "ratio": 15.21,
+      "passes_4_5": true
+    },
+    {
+      "theme": "sailpoint",
+      "foreground": "muted",
+      "background": "surface",
+      "ratio": 7.936,
+      "passes_4_5": true
+    },
+    {
+      "theme": "sailpoint",
+      "foreground": "muted",
+      "background": "surface-soft",
+      "ratio": 7.248,
+      "passes_4_5": true
+    },
+    {
+      "theme": "sailpoint",
+      "foreground": "accent-text",
+      "background": "accent",
+      "ratio": 10.562,
+      "passes_4_5": true
+    },
+    {
+      "theme": "sailpoint",
+      "foreground": "accent-text",
+      "background": "accent-hover",
+      "ratio": 13.086,
+      "passes_4_5": true
+    },
+    {
+      "theme": "sailpoint",
+      "foreground": "link",
+      "background": "surface",
+      "ratio": 7.539,
+      "passes_4_5": true
+    },
+    {
+      "theme": "sailpoint",
+      "foreground": "link",
+      "background": "surface-soft",
+      "ratio": 6.885,
+      "passes_4_5": true
+    },
+    {
+      "theme": "sailpoint",
+      "foreground": "sidebar-text",
+      "background": "sidebar",
+      "ratio": 13.825,
+      "passes_4_5": true
+    },
+    {
+      "theme": "sailpoint",
+      "foreground": "sidebar-muted",
+      "background": "sidebar",
+      "ratio": 9.708,
+      "passes_4_5": true
+    },
+    {
+      "theme": "sailpoint",
+      "foreground": "badge-text",
+      "background": "badge-bg",
+      "ratio": 9.358,
+      "passes_4_5": true
+    },
+    {
+      "theme": "sailpoint",
+      "foreground": "success-text",
+      "background": "success-bg",
+      "ratio": 6.707,
+      "passes_4_5": true
+    },
+    {
+      "theme": "sailpoint",
+      "foreground": "warning-text",
+      "background": "warning-bg",
+      "ratio": 6.111,
+      "passes_4_5": true
+    },
+    {
+      "theme": "sailpoint",
+      "foreground": "error-text",
+      "background": "error-bg",
+      "ratio": 6.418,
+      "passes_4_5": true
+    },
+    {
+      "theme": "dropzone",
+      "foreground": "text",
+      "background": "surface",
+      "ratio": 15.1,
+      "passes_4_5": true
+    },
+    {
+      "theme": "dropzone",
+      "foreground": "text",
+      "background": "surface-soft",
+      "ratio": 14.007,
+      "passes_4_5": true
+    },
+    {
+      "theme": "dropzone",
+      "foreground": "muted",
+      "background": "surface",
+      "ratio": 8.494,
+      "passes_4_5": true
+    },
+    {
+      "theme": "dropzone",
+      "foreground": "muted",
+      "background": "surface-soft",
+      "ratio": 7.88,
+      "passes_4_5": true
+    },
+    {
+      "theme": "dropzone",
+      "foreground": "accent-text",
+      "background": "accent",
+      "ratio": 4.951,
+      "passes_4_5": true
+    },
+    {
+      "theme": "dropzone",
+      "foreground": "accent-text",
+      "background": "accent-hover",
+      "ratio": 5.998,
+      "passes_4_5": true
+    },
+    {
+      "theme": "dropzone",
+      "foreground": "link",
+      "background": "surface",
+      "ratio": 8.56,
+      "passes_4_5": true
+    },
+    {
+      "theme": "dropzone",
+      "foreground": "link",
+      "background": "surface-soft",
+      "ratio": 7.941,
+      "passes_4_5": true
+    },
+    {
+      "theme": "dropzone",
+      "foreground": "sidebar-text",
+      "background": "sidebar",
+      "ratio": 13.102,
+      "passes_4_5": true
+    },
+    {
+      "theme": "dropzone",
+      "foreground": "sidebar-muted",
+      "background": "sidebar",
+      "ratio": 9.464,
+      "passes_4_5": true
+    },
+    {
+      "theme": "dropzone",
+      "foreground": "badge-text",
+      "background": "badge-bg",
+      "ratio": 8.765,
+      "passes_4_5": true
+    },
+    {
+      "theme": "dropzone",
+      "foreground": "success-text",
+      "background": "success-bg",
+      "ratio": 7.692,
+      "passes_4_5": true
+    },
+    {
+      "theme": "dropzone",
+      "foreground": "warning-text",
+      "background": "warning-bg",
+      "ratio": 8.469,
+      "passes_4_5": true
+    },
+    {
+      "theme": "dropzone",
+      "foreground": "error-text",
+      "background": "error-bg",
+      "ratio": 7.629,
+      "passes_4_5": true
+    }
+  ],
+  "rendered_browser_test": "NOT RUN: unavailable computer-use permissions",
+  "limitations": "Text-pair contrast and scoped module checks only; no full accessibility or visual-browser certification."
+}
