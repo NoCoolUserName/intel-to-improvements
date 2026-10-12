@@ -12,6 +12,11 @@ updates:
       - '*'
 - package-ecosystem: uv
   directory: /
+  # 3.3.1 wheel and sdist omit STIX schemas; retain the working pin.
+  # Exact-version exclusion: later fixed releases remain eligible for review.
+  ignore:
+  - dependency-name: stix2-validator
+    versions: ["3.3.1"]
   schedule:
     interval: monthly
   open-pull-requests-limit: 1
