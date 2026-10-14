@@ -1,6 +1,6 @@
 {
-  "enabled": true,
-  "blocked_reason": "",
+  "enabled": false,
+  "blocked_reason": "Pending explicit activation and verification of native strict required-check protection.",
   "allow_dev_minor": false,
   "dependency_files": [
     "web/package.json",
