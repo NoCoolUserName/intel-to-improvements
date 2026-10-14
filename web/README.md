@@ -4,7 +4,7 @@ Use Node 22.12+ (matching the application's prerequisites) and install the locke
 dependencies with `npm ci` from this directory.
 
 - `npm test`: run the Vitest suite once; this is picked up by the existing Code
-  quality workflow's `node-scripts: lint test build` configuration.
+  quality workflow's required `typecheck test build` configuration.
 - `npm run test:watch`: rerun tests while developing.
 - `npm run typecheck`: check the production TypeScript sources without emitting.
 - `npm run build`: run TypeScript's build check and Vite's production build,
@@ -23,3 +23,8 @@ side-effect import checking.
 
 These DOM tests complement the Python API/export tests. They are not screenshot,
 layout, full accessibility-audit, or live-service tests.
+
+CI requires all three scripts to exist and pass, and requires the committed
+`package-lock.json`. Removing a script fails validation before installation;
+checks cannot silently become optional. The shared workflow is pinned to
+`927052f6ef9ce21c1fec280dcc87affdee1ae87a` (code-quality#3).
