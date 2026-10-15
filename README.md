@@ -44,6 +44,14 @@ Use the **Appearance** dropdown in the top bar on any page: **Original · Forest
 
 The generated ZIP contains STIX, native MISP, converted MISP, hunt Markdown/JSON, purple-team Markdown/JSON, Sigma assessment, evidence, coverage, compatibility report and a run manifest. `examples/activemq/` contains a reusable package from the limited attributed replay; full retrieved articles are never committed.
 
+## Coverage timing and demonstration cases
+
+The coverage card **Receipt → first assessment** is a completed milestone: original customer receipt to the first persisted assessment in the selected environment, including any waiting time. It is not a running stopwatch. Refreshing, generating a package, or reassessing a revision does not reset it. A newly received source has its own clock. History shows original receipt, first assessment, selected-revision assessment, and package readiness separately; package creation never becomes assessment completion. Long durations display hours/days rather than thousands of seconds.
+
+The badge **Local analysis · no AI** describes fixed rules running on this computer; it does not describe internet connectivity. URL fetching still uses the network. To request the configured model, choose **Model API analysis** in Add Intelligence before submitting the source. This requires configured `OPENAI_API_KEY` / `OPENAI_MODEL` and a customer profile allowing live processing. Results retain the method that produced them; no automatic promotion or fallback occurs. **Saved demo analysis** labels the exact-content curated replay.
+
+Bundled edge-case examples, including the insufficient-evidence note, are hidden from the working-case and demo selectors by default. **Show test cases** reveals them. They check that nontechnical text produces Unknown relevance and no invented hunt/emulation plan. The test fixtures and their records remain intact; actual user-supplied sources with insufficient evidence remain visible.
+
 ## Inputs and processing
 
 - URL: selected public HTTP(S) report on ports 80/443, at most four redirects, connect/read timeouts and 5 MiB. Resolved IP is pinned for the request; local/private/reserved/metadata destinations are rejected at every hop. Index listing is bounded to 25 links and never auto-ingests them. Generic HTML extraction reports fallback gaps. No IOC, payload, report command or embedded URL is executed/fetched automatically.

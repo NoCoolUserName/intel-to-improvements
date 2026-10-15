@@ -25,3 +25,5 @@ Optional real checks after presentation:
 - Actual lab/SIEM: execute only approved human-led steps, collect environment/control-versioned evidence, and record method/scope/outcomes separately. This app never runs red-team tools or searches a SIEM.
 
 The local walkthrough demonstrates evidence handling, source-to-action decisions and selected detection semantics. Actual organizational detection/prevention coverage remains conditional on that environment’s evidence.
+
+Appearance labels describe analysis methods: Local analysis uses fixed rules, Model API analysis makes a configured API request, and Saved demo analysis reuses curated exact-content findings. These are unrelated to network status. The receipt-to-first-assessment card is fixed at completion and includes waiting time; use History for revision/package clocks. Toggle **Show test cases** to inspect the insufficient-evidence and held-out edge examples.

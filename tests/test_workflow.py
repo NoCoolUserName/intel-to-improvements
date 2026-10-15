@@ -150,3 +150,35 @@ def test_live_refusal_visible_no_fallback(service,monkeypatch):
     monkeypatch.setattr(openai,'OpenAI',lambda **kwargs:SimpleNamespace(responses=Responses()))
     j=service.submit('fictional-bank','windows-ad','live','text','CertUtil downloaded a payload.',background=False)
     assert j['state']=='failed' and not service.store.all('extraction') and service.store.all('model_response')
+
+def test_assessment_clocks_ignore_package_delay_and_later_reassessment(service,assessed,monkeypatch):
+    from fastapi.testclient import TestClient
+    from iti.api import create_app
+    a=copy.deepcopy(assessed)
+    receipt='2026-10-14T00:00:00+00:00'
+    a['created_at']='2026-10-14T00:00:02+00:00'
+    service.store.put('assessment',a['id'],a)
+    service.store.put('customer_receipt',uid('receipt',a['context']['customer_id'],a['source']['id']),{'at':receipt})
+    service.store.put('source_ingestion',a['source']['id'],{'at':receipt})
+    before=ledger.view(service.store,a)['metrics']
+    monkeypatch.setattr('iti.services.now',lambda:'2026-10-14T09:54:08.800000+00:00')
+    package=service.generate(a['id'],a['context']['customer_id'])
+    assert package['created_at']!=a['created_at']
+    # Both entry points used to conflate package and assessment creation.
+    assert ledger.view(service.store,package)['metrics']['customer_receipt_to_assessment_seconds']==2
+    client=TestClient(create_app(service),base_url='http://127.0.0.1')
+    query={'customer_id':a['context']['customer_id'],'environment_id':a['context']['environment_id']}
+    for _ in range(2):
+        response=client.get('/api/ledger/'+a['id'],params=query)
+        assert response.status_code==200
+        metrics=response.json()['metrics']
+        assert metrics['assessment_ready']==a['created_at']
+        assert metrics['customer_receipt_to_assessment_seconds']==2
+        assert metrics['customer_receipt_to_first_assessment_seconds']==2
+        assert metrics['source_ingestion_to_package_seconds']==35648.8
+    later=copy.deepcopy(a);later['id']='assessment_later';later['created_at']='2026-10-15T00:00:00+00:00'
+    service.store.put('assessment',later['id'],later,immutable=True)
+    metrics=ledger.view(service.store,later)['metrics']
+    assert metrics['customer_receipt_to_first_assessment_seconds']==before['customer_receipt_to_first_assessment_seconds']==2
+    assert metrics['customer_receipt_to_assessment_seconds']==86400
+    assert metrics['customer_first_receipt']==receipt

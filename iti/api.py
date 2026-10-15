@@ -95,8 +95,7 @@ def create_app(service=None):
     @app.get('/api/ledger/{id}')
     def coverage(id:str,customer_id:str,environment_id:str):
         a=svc.scoped('assessment',id,customer_id,environment_id)
-        p=next((p for p in reversed(svc.store.all('package')) if p['assessment_id']==id),None)
-        return ledger.view(svc.store,p or a)
+        return ledger.view(svc.store,a)
     @app.post('/api/ledger/{id}/test')
     def test(id:str,body:dict):return ledger.record_test(svc.store,svc.scoped('assessment',id,body['customer_id']),TestRun.model_validate(body['test']))
     @app.post('/api/ledger/{id}/improve')

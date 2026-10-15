@@ -90,3 +90,4 @@
   .theme-control { display: flex; align-items: center; gap: 12px; }
   .theme-control select { margin-top: 0; }
 }
+.casebar .test-case-control { min-width: 0; flex: 0 0 auto; font-size: 11px; letter-spacing: 0; }
