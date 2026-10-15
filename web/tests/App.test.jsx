@@ -3,6 +3,7 @@ import {afterEach, beforeEach, expect, it, vi} from 'vitest';
 import {act, cleanup, render, screen, waitFor, within} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../src/App';
+import catalog from '../../catalogs/d3fend/catalog.json';
 
 // Authored, minimal API fixtures. No live services or user intelligence are used.
 const evidenceText = '<img src=x onerror="alert(1)"> is untrusted report text.';
@@ -41,6 +42,8 @@ function respond(input) {
   const bank = url.searchParams.get('customer_id') === 'fictional-bank';
   switch (url.pathname) {
     case '/api/bootstrap': return json(bootstrap);
+    case '/api/assessments/bank-case/defenses': case '/api/assessments/cloud-case/defenses':
+      return json({state:'ready',behaviors:{}});
     case '/api/evaluation': return json({status: 'NOT RUN'});
     case '/api/assessments': return json(bank ? [bankCase] : [cloudCase]);
     case '/api/packages': return json(bank ? [bankPackage] : []);
@@ -133,3 +136,102 @@ it('ignores a late investigation response for the previous customer', async () =
   expect(screen.queryByRole('button', {name: 'Bank investigation behavior'})).toBeNull();
 });
 
+
+// Real catalog IDs/names, with authored assessment linkage and simplified provenance.
+const defenseIds=['D3-APCA','D3-CSPP','D3-NTCD','D3-NTF'];
+const defenseNames=defenseIds.map(id=>catalog.techniques[id].name);
+function defenseFixture(saved) {
+  return {state:'ready',assessment_id:bankCase.id,behaviors:{'behavior-1':{
+    attack_id:'T1105',mapping_basis:'analyst_proposed',confidence_rationale:'Authored mapping fixture',
+    applicability:{applicability:'applicable',reason:'Windows lab',missing_prerequisites:['DNS logging']},
+    suitability:'Analyst review required',candidates:defenseIds.map((id,i)=>({
+      id:'candidate-'+id,snapshot_id:'snapshot-1',behavior_id:'behavior-1',d3fend_id:id,name:defenseNames[i],
+      reference:'https://d3fend.mitre.org/resources/',reference_scope:'general',
+      explanation:'Pinned association; no verified protection',catalog:{revision:'pinned-fixture',catalog_sha256:'fixture',relationship_semantics:'Derived association'},
+      evidence:['span-1'],improvement:saved&&i===0?{id:saved.id,status:saved.status}:null,
+      prefill:{priority:'high',status:'open',rationale:'Reported behavior; evidence span-1. Separate catalog-derived recommendation.',proposed_change:'Assess and implement '+id,retest:'Name the control, scope, result and evidence'},
+    }))}}};
+}
+function withDefenses() {
+  let saved;let writes=0;
+  fetch.mockImplementation(async (input,options)=>{
+    const url=new URL(String(input),'http://localhost');
+    if(url.pathname==='/api/assessments/bank-case/defenses')return json(defenseFixture(saved));
+    if(url.pathname==='/api/ledger/bank-case/improve'){
+      const body=JSON.parse(options.body);writes++;
+      expect(body.customer_id).toBe('fictional-bank');expect(body.environment_id).toBe('windows-ad');
+      if(!body.action.id){
+        expect(body.candidate_ref).toEqual({snapshot_id:'snapshot-1',candidate_id:'candidate-D3-APCA'});
+        expect(body.action.origin).toBeUndefined();
+      }
+      saved={...body.action,id:'improvement-1',assessment_id:bankCase.id,context:bankCase.context,origin:{...defenseFixture().behaviors['behavior-1'].candidates[0],explanation:'Frozen association'}};
+      return json(saved);
+    }
+    if(url.pathname==='/api/ledger/bank-case')return json({counts:{},metrics:{},tests:[],history:[],improvements:saved?[saved]:[]});
+    return respond(input);
+  });
+  return {saved:()=>saved,writes:()=>writes};
+}
+it('opens a bounded candidate list, edits the existing form and retains the saved action after remount',async()=>{
+  const state=withDefenses();const {user,unmount}=await mount();
+  await user.click(screen.getByRole('button',{name:'Bank investigation behavior'}));
+  await screen.findByRole('button',{name:'Create improvement for D3-APCA'});
+  expect(screen.queryByRole('button',{name:'Create improvement for D3-NTF'})).toBeNull();
+  await user.click(screen.getByRole('button',{name:'Show all 4'}));
+  expect(screen.getByRole('button',{name:'Create improvement for D3-NTF'})).toBeTruthy();
+  await user.click(screen.getByRole('button',{name:'Create improvement for D3-APCA'}));
+  expect(screen.getByRole('textbox',{name:'Owner'}).value).toBe('');
+  expect(screen.getByRole('combobox',{name:'Behavior'}).disabled).toBe(true);
+  expect(screen.getByRole('combobox',{name:'Status'}).value).toBe('open');
+  expect(screen.getByRole('textbox',{name:'Rationale'}).value).toContain('span-1');
+  await user.type(screen.getByRole('textbox',{name:'Owner'}),'Lab owner');
+  await user.clear(screen.getByRole('textbox',{name:'Proposed change'}));
+  await user.type(screen.getByRole('textbox',{name:'Proposed change'}),'Assess lab protocol control');
+  await user.clear(screen.getByRole('textbox',{name:'Retest plan'}));
+  await user.type(screen.getByRole('textbox',{name:'Retest plan'}),'Named control; benign lab variant; collect event');
+  await user.dblClick(screen.getByRole('button',{name:'Record improvement'}));
+  await waitFor(()=>expect(screen.queryByRole('heading',{name:'Review defensive improvement'})).toBeNull());
+  expect(state.writes()).toBe(1);expect(state.saved().proposed_change).toBe('Assess lab protocol control');
+  expect(state.saved().retest).toBe('Named control; benign lab variant; collect event');
+  unmount();render(<App/>);
+  await user.click(await screen.findByRole('button',{name:'Bank investigation behavior'}));
+  await user.click(await screen.findByRole('button',{name:'View improvement · open'}));
+  expect(screen.getByRole('heading',{name:'Assess lab protocol control'})).toBeTruthy();
+  expect(within(screen.getByRole('complementary',{name:'Evidence and detail drawer'})).getByText(/D3FEND origin/)).toBeTruthy();
+  expect(state.writes()).toBe(1);
+  await user.click(screen.getByRole('button',{name:'Close drawer'}));
+  await user.click(screen.getByText(/History and independent clocks/));
+  await user.click(screen.getByRole('button',{name:'Mark deployed'}));
+  await user.click(screen.getByRole('button',{name:'Bank investigation behavior'}));
+  expect(await screen.findByRole('button',{name:'View improvement · deployed'})).toBeTruthy();
+  expect(state.saved().origin.d3fend_id).toBe('D3-APCA');
+});
+it('closes a candidate form on customer change and ignores the previous catalog response',async()=>{
+  withDefenses();const {user}=await mount();
+  await user.click(screen.getByRole('button',{name:'Bank investigation behavior'}));
+  await user.click(await screen.findByRole('button',{name:'Create improvement for D3-APCA'}));
+  await user.selectOptions(screen.getByRole('combobox',{name:'Active customer'}),'fictional-cloud');
+  await screen.findByRole('button',{name:'Cloud investigation behavior'});
+  expect(screen.queryByRole('button',{name:'Record improvement'})).toBeNull();
+  expect(screen.queryByText('D3-APCA')).toBeNull();
+});
+it('does not render a delayed catalog result after customer switching',async()=>{
+  let release;
+  fetch.mockImplementation(async input=>String(input).includes('/bank-case/defenses')?new Promise(resolve=>{release=()=>resolve(json(defenseFixture()));}):respond(input));
+  const {user}=await mount();await waitFor(()=>expect(release).toBeTypeOf('function'));
+  await user.selectOptions(screen.getByRole('combobox',{name:'Active customer'}),'fictional-cloud');
+  await user.click(await screen.findByRole('button',{name:'Cloud investigation behavior'}));
+  await act(async()=>release());
+  expect(screen.queryByRole('button',{name:'Create improvement for D3-APCA'})).toBeNull();
+});
+
+it('keeps manual improvements available when the catalog is invalid',async()=>{
+  fetch.mockImplementation(async input=>String(input).includes('/defenses?')?json({state:'catalog_unavailable',message:'Catalog checksum mismatch'}):respond(input));
+  const {user}=await mount();await user.click(screen.getByRole('button',{name:'Bank investigation behavior'}));
+  expect(await screen.findByText('Catalog checksum mismatch')).toBeTruthy();
+  expect(screen.getByRole('button',{name:'Retry catalog'})).toBeTruthy();
+  await user.click(screen.getByRole('button',{name:'Close drawer'}));
+  await user.click(screen.getByRole('button',{name:'Record improvement / result'}));
+  expect(screen.getByRole('textbox',{name:'Owner'})).toBeTruthy();
+  expect(screen.getByRole('combobox',{name:'Behavior'}).disabled).toBe(false);
+});

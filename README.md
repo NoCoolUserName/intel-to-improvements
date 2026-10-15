@@ -144,3 +144,9 @@ Review staged content first; `.gitignore` excludes all full reports, live handof
 The Purple team page includes the actual locally served MITRE Attack Flow Builder above the human validation scenarios. Generate an updated package to add **attack-flow.json** and its evidence/provenance sidecar. Historical packages remain unchanged. The existing ActiveMQ case is honestly unordered: its saved sequence numbers do not prove relationships.
 
 Fresh bootstrap builds the viewer. For an existing install, run `./scripts/build-attack-flow` and `npm --prefix web run build`, then restart `./scripts/run` and refresh the page. No extra running service, internet access after setup, or AI credential is needed to view a flow. The **Open in Builder** link opens a separate editable local draft; it never overwrites or approves the immutable package. See [integration setup, pin, semantics and smoke test](integrations/attack-flow/README.md).
+
+## Possible defensive countermeasures
+
+Open **Purple team**, expand a scenario, and inspect **Possible defensive countermeasures**. Exact ATT&CK-ID associations come from a pinned local D3FEND catalog. **Create improvement** opens the existing editable form: choose an owner, specify a concrete control/configuration and retest, then save. The ledger retains the source evidence and frozen catalog origin; subsequent visits offer **View improvement**. The same section is available in the behavior evidence drawer.
+
+These are suggestions requiring review. Creating, deploying or closing an action does not verify detection/prevention or stop verification clocks. No additional service, AI call, Builder install or internet access is needed for lookup. See [catalog provenance and refresh](catalogs/d3fend/README.md), [schema details](docs/SCHEMAS.md) and [validation](VALIDATION.md).

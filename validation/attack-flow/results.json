@@ -50,5 +50,20 @@
     "ActiveMQ source has no explicit relationship records; saved sequence integers do not generate edges",
     "No new model inference, human review, live MISP or operational coverage validation",
     "Browser result is a local acceptance run; not a broad browser/platform matrix"
-  ]
+  ],
+  "ci_corrections": {
+    "initial_commit": "e672306dcfaf4d1fc450994acbc4a1894a5893ba",
+    "secret_scanner": "Schema digest false positive fixed with explicit path/sha256 metadata; no exclusions",
+    "security_scanner": "Five JSX ampersands encoded for strict parsing; no rule suppressed",
+    "focused_backend_retest": 6,
+    "local_semgrep": {
+      "version": "1.180.0",
+      "rules": 6,
+      "targets": 34,
+      "findings": 0,
+      "parse_errors": 0
+    },
+    "local_ruff": "0.17.0 required correctness rules passed",
+    "local_gitleaks": "8.24.3 default rules, pin/schema directory passed"
+  }
 }

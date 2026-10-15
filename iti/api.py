@@ -8,7 +8,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from .services import Service
 from .store import ROOT,now,uid
 from .models import CustomerProfile,GmailScope,TestRun,ImprovementAction,EvidenceAttachment,SECTORS
-from . import profiles,gmail,ledger,detection,misp,ingestion
+from . import profiles,gmail,ledger,detection,misp,ingestion,defenses
 
 def create_app(service=None):
     svc=service or Service()
@@ -104,7 +104,13 @@ def create_app(service=None):
     @app.post('/api/ledger/{id}/test')
     def test(id:str,body:dict):return ledger.record_test(svc.store,svc.scoped('assessment',id,body['customer_id']),TestRun.model_validate(body['test']))
     @app.post('/api/ledger/{id}/improve')
-    def improve(id:str,body:dict):return ledger.improve(svc.store,svc.scoped('assessment',id,body['customer_id']),ImprovementAction.model_validate(body['action']))
+    def improve(id:str,body:dict):
+        if body.get('candidate_ref') and not body.get('environment_id'):raise ValueError('Selected environment required for defense suggestion')
+        a=svc.scoped('assessment',id,body['customer_id'],body.get('environment_id'))
+        return ledger.improve(svc.store,a,ImprovementAction.model_validate(body['action']),body.get('candidate_ref'))
+    @app.get('/api/assessments/{id}/defenses')
+    def defensive_candidates(id:str,customer_id:str,environment_id:str):
+        return defenses.suggestions(svc.store,svc.scoped('assessment',id,customer_id,environment_id))
     @app.post('/api/ledger/{id}/synthetic')
     def synthetic(id:str,body:dict):
         a=svc.scoped('assessment',id,body['customer_id']);rule_id=body['rule_id'];b=body['behavior_id']

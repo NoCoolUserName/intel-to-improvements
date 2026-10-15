@@ -31,7 +31,8 @@ DIRECTIONS = {'precedes': False, 'followed-by': False, 'follows': True,
 def schemas():
     registry = Registry()
     documents = {}
-    for name, expected_hash in PIN['schemas'].items():
+    for entry in PIN['schemas']:
+        name, expected_hash = entry['path'], entry['sha256']
         raw = (DIRECTORY / 'schemas' / name).read_bytes()
         if digest(raw) != expected_hash:
             raise ValueError('Pinned Attack Flow schema hash mismatch: ' + name)

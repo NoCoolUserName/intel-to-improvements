@@ -75,3 +75,19 @@ Follow `DEMO.md` for the five-minute walkthrough. `validation/run-manifest.json`
 - Actual UI screenshots/resources and machine test reports are in `validation/attack-flow/`. Authored case uses isolated `runtime/attack-flow-smoke`; normal runtime still uses port 8000.
 - Temporary acceptance server stopped and idle main server refreshed on the final backend. Source review complete; publication uses the existing GitHub API workflow with expected-parent protection. The returned commit and file-hash verification are recorded in ignored `runtime/attack-flow-publication-result.json`. No live model/MISP/Gmail claims added.
 - Reconciled GitHub-only App/theme tests and the already-updated frontend lock before publishing. Restored the established App/entry-point split; all 20 frontend tests, required typecheck and build pass on bundled Node 24.19.0. Existing CI files are preserved unchanged.
+- Initial publication `e672306` reached main. CI identified a false-positive generic-api-key in the pinned Windows registry schema checksum. Changed hash metadata to explicit path/sha256 records; no schema bytes, digest, scanner setting or exclusion changed. Focused validation rerun before the corrective commit.
+
+The initial strict Semgrep run reported no security findings but failed on five unescaped JSX ampersands. Encoded those visible labels without changing rendered text. Gitleaks 8.24.3 now passes the pin/schema directory with default rules and no exclusions; Ruff 0.17.0 correctness rules pass.
+
+## D3FEND enhancement — implementation in progress
+- Baseline GitHub main aa79e69; local .git remains absent. No duplicate checkout; preserve existing connector publication workflow and remote-only CI files.
+- Reused archive at Attack Flow 5c8bf4ca9ff64ef9b55c38a2505db318750cbcda; strict JSON extraction, no downloaded code execution. Normalized exact enterprise lookup catalog and verified official matrix links; ontology version/release unknown in source and left null.
+- Added separate immutable defense suggestion snapshots, scoped API, and server-validated optional action origin. Candidate retries serialize locally; manual actions and verification rules remain separate.
+- UI reuses the existing improvement form, scenario area and evidence drawer; pending regression/browser checks before delivery.
+
+### D3FEND implementation completed
+- Local exact Enterprise catalog: 424 mapped ATT&CK IDs, 147 defenses; source Attack Flow 5c8bf4ca9ff64ef9b55c38a2505db318750cbcda. Refresh transform reran offline and reproduced the checksum.
+- Candidate section in Purple Team scenarios/evidence drawers; source mapping uncertainty, applicability/gaps, separate suitability, official links and provenance. Existing editable form creates scoped, idempotent ledger actions with frozen server-validated origin. Manual actions remain supported.
+- Completed 63 Python + 24 frontend tests, typecheck/build, Ruff correctness, strict Semgrep and default Gitleaks publication scan. Current results in validation/d3fend/.
+- Actual browser candidate → edited form → save → existing ledger → reload → edit passed with outbound networking blocked; one action, zero test records, live verification metrics pending. Actual screenshots captured. Acceptance action isolated in runtime/d3fend-smoke; normal store unaffected.
+- Idle main server refreshed at http://127.0.0.1:8000. No new credentials/external acceptance claims. Publication will use connector Git data API with expected-main protection; preserve remote-only CI files. Final commit/CI result recorded in runtime/d3fend/publication-result.json.
