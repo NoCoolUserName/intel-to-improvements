@@ -1,7 +1,7 @@
 export const THEMES = [
   { id: 'original', label: 'Original · Forest' },
-  { id: 'sailpoint', label: 'SailPoint · Ocean' },
-  { id: 'dropzone', label: 'Dropzone AI · Midnight' },
+  { id: 'sailpoint', label: 'Ocean' },
+  { id: 'dropzone', label: 'Midnight' },
 ] as const;
 export type ThemeId = typeof THEMES[number]['id'];
 const STORAGE_KEY = 'iti.appearance.theme';
