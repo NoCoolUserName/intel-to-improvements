@@ -12,8 +12,11 @@ def scope_key(assessment):
     c=assessment['context'];return ':'.join([c['customer_id'],c['environment_id'],assessment['source']['id']])
 
 def record_test(store,assessment,test):
+    from . import vulnerabilities
+    vulnerability=assessment.get('vulnerability')
+    dependencies=vulnerabilities.validate_test(store,assessment,test) if vulnerability else dependency(assessment,test.behavior_id)
     ids={b['id'] for b in assessment['extraction']['behaviors']}
-    if test.behavior_id not in ids:raise ValueError('Behavior does not belong to assessment')
+    if not vulnerability and (test.vulnerability_assessment_id or test.behavior_id not in ids or test.dimension in ('remediation','mitigation') or test.method in ('reliable rescan','version/configuration evidence','targeted human-led test')):raise ValueError('Behavior does not belong to assessment or unsupported dimension')
     if test.environment_version!=assessment['context']['environment_version']:raise ValueError('Environment version mismatch')
     if dt(test.executed_at)>datetime.now(timezone.utc)+timedelta(minutes=5):raise ValueError('Execution time cannot be in the future')
     if test.dimension.startswith('soc_') and dt(test.executed_at)<dt(test.exercise_event_at):raise ValueError('SOC outcome cannot precede exercise event')
@@ -23,10 +26,11 @@ def record_test(store,assessment,test):
     if test.improvement_id:
         action=store.get('improvement',test.improvement_id)
         if action['scope']!=scope_key(assessment) or action['behavior_id']!=test.behavior_id:raise ValueError('Retest improvement scope mismatch')
-    matched=next((r for r in assessment['candidates'] if r['id']==test.control_id),None)
+    matched=next((r for r in assessment.get('candidates',[]) if r['id']==test.control_id),None)
     if matched and test.method!='analyst attestation' and test.control_version!=matched['source']['sha256']:raise ValueError('Rule version differs from assessed candidate; reassess the changed rule before recording verification')
     test.id=store.identity('test:'+uid('test',scope_key(assessment),now(),test.model_dump_json()));test.recorded_at=now()
-    record=test.model_dump()|{'context':assessment['context'],'document_id':assessment['source']['id'],'assessment_id':assessment['id'],'dependencies':dependency(assessment,test.behavior_id),'confirmed_at':now()}
+    record=test.model_dump()|{'context':assessment['context'],'document_id':assessment['source']['id'],'assessment_id':assessment['id'],'dependencies':dependencies,'confirmed_at':now()}
+    if vulnerability:record['vulnerability_asset_id']=vulnerability['asset']['logical_id']
     store.put('test',test.id,record,immutable=True);store.event('test_executed',scope_key(assessment),record)
     if test.baseline:store.event('baseline_assessed',scope_key(assessment),{'test_id':test.id,'confirmed_at':record['confirmed_at'],'original_execution_time':test.executed_at})
     return record
@@ -37,8 +41,14 @@ def improve(store,assessment,action,candidate_ref=None):
         return _improve(store,assessment,action,candidate_ref)
 
 def _improve(store,assessment,action,candidate_ref):
-    from . import defenses
-    if action.behavior_id not in {b['id'] for b in assessment['extraction']['behaviors']}:raise ValueError('Unknown behavior')
+    from . import defenses,vulnerabilities
+    vulnerability=assessment.get('vulnerability')
+    if vulnerability:
+        if any(not str(getattr(action,k)).strip() for k in ('owner','rationale','proposed_change','retest')):raise ValueError('Owner, rationale, implementation and retest plan are required')
+        if not action.remediation or not all(action.remediation.get(k) for k in ('review_date','residual_uncertainty','permanent_fix','source_references')):raise ValueError('Vulnerability action requires review date, uncertainty, permanent fix and source references')
+        datetime.strptime(action.remediation['review_date'],'%Y-%m-%d')
+        if action.behavior_id is not None or action.vulnerability_assessment_id!=assessment['id'] or candidate_ref:raise ValueError('Vulnerability action must reference its reviewed decision, not an invented behavior')
+    elif action.vulnerability_assessment_id or action.behavior_id not in {b['id'] for b in assessment['extraction']['behaviors']}:raise ValueError('Unknown behavior')
     context=assessment['context'];origin_assessment=assessment['id']
     if action.id:
         old=store.get('improvement',action.id)
@@ -51,7 +61,13 @@ def _improve(store,assessment,action,candidate_ref):
         action.deployed_at=old.get('deployed_at') or action.deployed_at
     else:
         if action.origin is not None:raise ValueError('Client-supplied origin is not trusted; select a stored candidate')
-        if candidate_ref:
+        if vulnerability:
+            action.origin=vulnerabilities.action_origin(store,assessment)
+            action.id=uid('improvement',action.origin['review_id'],action.origin['asset_logical_id'])
+            prior=store.maybe('improvement',action.id)
+            if prior:return prior
+            if action.status!='open' or action.deployed_at:raise ValueError('New vulnerability action must start open and undeployed')
+        elif candidate_ref:
             action.origin=defenses.resolve_origin(store,assessment,action.behavior_id,candidate_ref)
             action.id=uid('improvement',assessment['id'],context['customer_id'],context['environment_id'],action.behavior_id,action.origin['d3fend_id'])
             prior=store.maybe('improvement',action.id)

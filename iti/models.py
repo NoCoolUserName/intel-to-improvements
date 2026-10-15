@@ -252,7 +252,11 @@ class EvidenceAttachment(Model):
 
 class TestRun(Model):
     id: str=''
-    behavior_id: str
+    behavior_id: str|None=None
+    vulnerability_assessment_id: str|None=None
+    measurement: dict[str,Any]|None=None
+    residual_risk: str|None=None
+    permanent_fix: str|None=None
     environment_version: int
     control_id: str
     control_version: str
@@ -261,9 +265,9 @@ class TestRun(Model):
     actual: str
     executed_at: str
     recorded_at: str=''
-    method: Literal['synthetic log match','lab emulation','observed SIEM alert','observed prevention','analyst attestation']
+    method: Literal['synthetic log match','lab emulation','observed SIEM alert','observed prevention','analyst attestation','reliable rescan','version/configuration evidence','targeted human-led test']
     result: Literal['passed','failed','inconclusive']
-    dimension: Literal['telemetry','detection','prevention','soc_acknowledged','soc_response','deployment']
+    dimension: Literal['telemetry','detection','prevention','soc_acknowledged','soc_response','deployment','remediation','mitigation']
     scope: str
     evidence: list[EvidenceAttachment]
     variant: str
@@ -289,7 +293,9 @@ class TestRun(Model):
 
 class ImprovementAction(Model):
     id: str=''
-    behavior_id: str
+    behavior_id: str|None=None
+    vulnerability_assessment_id: str|None=None
+    remediation: dict[str,Any]|None=None
     owner: str
     priority: str
     status: Literal['open','in progress','deployed','retest requested','closed']='open'
