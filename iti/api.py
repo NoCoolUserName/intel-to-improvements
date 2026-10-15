@@ -151,6 +151,8 @@ def create_app(service=None):
     @app.get('/api/evaluation')
     def evaluation():
         p=ROOT/'validation/evaluation.json';return json.loads(p.read_text()) if p.exists() else {'status':'NOT RUN','command':'./scripts/iti eval'}
+    from .vulnerability_api import register
+    register(app,svc)
     viewer=ROOT/'runtime/attack-flow-viewer'
     @app.get('/api/attack-flow/viewer')
     def viewer_status():

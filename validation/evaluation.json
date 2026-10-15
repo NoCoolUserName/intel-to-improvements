@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "executed_at": "2026-10-15T04:45:26.345789+00:00",
+  "executed_at": "2026-10-15T15:12:44.667816+00:00",
   "fixture_count": 5,
   "gold_labeler": "developer/model-curated by direct inspection of source text; owner has not reviewed",
   "gold_hash": "dd1faf9e12bcc82b49086ba80ab657379ad6ded2e2fb773ff233f69de66b88e9",
@@ -75,16 +75,16 @@
           "valid": true,
           "objects": 14,
           "warnings": [
-            "attack-pattern--e3769584-88f5-4515-bb56-69e97b3aa8ff: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
-            "attack-pattern--4ddc6a9c-9723-4c5e-8af3-9fa3abd3cc26: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
-            "attack-pattern--296c9361-a437-42d1-840c-7ddb3efa802a: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
-            "attack-pattern--e92135e4-0021-4236-84f0-fb1e0864f1e7: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
-            "attack-pattern--7f3fb9cb-4509-43f6-a1ec-f4ac2fc921f1: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
-            "attack-pattern--0abeaa8d-04d8-4bb8-b3a0-647fa1a411ab: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
-            "attack-pattern--9d197ed9-e2c8-4b5a-bc98-e084d60f21e4: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
-            "attack-pattern--81a8a04b-1834-4118-9d1d-c4a76c4854fd: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
-            "relationship--6d946c50-1a66-49c8-a8a1-be582ea7c6ca: {202} 'ipv4-addr' is not a suggested relationship target object for 'indicator' objects with the 'based-on' relationship.",
-            "report--cf42bf19-48b6-4f9f-958e-03c1841366f1: {302} External reference 'The DFIR Report' has a URL but no hash."
+            "attack-pattern--115589e2-f6e2-43e5-8c54-3a877bd51878: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "attack-pattern--49bf7cae-0351-4bfe-8fe2-a1e9b63743f2: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "attack-pattern--002da5f0-8970-4305-ba7f-f893ee2c8584: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "attack-pattern--15282115-9178-4a8e-a790-2f5e96d2fc7e: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "attack-pattern--ac666b6f-e8ea-437c-9713-723a5834dd82: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "attack-pattern--f690fce9-b90c-458c-9219-f06ef4f3ddf6: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "attack-pattern--d923d02c-749a-4eb2-aaaa-35ca6bc1dee6: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "attack-pattern--807192f9-3a31-4b61-a8bb-c787a26dc0b6: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "relationship--45ece75c-434f-4292-8295-e71bf2d80242: {202} 'ipv4-addr' is not a suggested relationship target object for 'indicator' objects with the 'based-on' relationship.",
+            "report--b78acad5-7a5b-48f2-a9e5-5f3e864169e7: {302} External reference 'The DFIR Report' has a URL but no hash."
           ],
           "patterns_valid": true,
           "references_valid": true
@@ -161,7 +161,7 @@
             "semantic_review": "required",
             "misp_import": "not used"
           },
-          "flow_id": "attack-flow--40cbaa0b-bdd9-46e3-bcf2-713e727d88ef"
+          "flow_id": "attack-flow--37d62152-1c57-4ec3-a84d-10c0d4baf5f9"
         },
         "claim": "Validated serialization is not semantic truth or universal TIP compatibility"
       },
@@ -221,9 +221,9 @@
           "valid": true,
           "objects": 5,
           "warnings": [
-            "attack-pattern--185047fc-82e2-44b0-88a2-79eb9f6402a7: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
-            "attack-pattern--02c210a2-cc07-481e-a3f5-f4e7ee54cbb2: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
-            "attack-pattern--4776047e-b76c-4728-841d-f0c09511c934: {302} External reference 'MITRE ATT&CK' has a URL but no hash."
+            "attack-pattern--03b23a1f-316a-4c0a-b9c8-3aab3e4aea89: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "attack-pattern--fbf90ac5-cec7-4b20-998c-d3d3f9380913: {302} External reference 'MITRE ATT&CK' has a URL but no hash.",
+            "attack-pattern--7989dac4-8e88-406d-8995-4fb08decff33: {302} External reference 'MITRE ATT&CK' has a URL but no hash."
           ],
           "patterns_valid": true,
           "references_valid": true
@@ -284,7 +284,7 @@
             "semantic_review": "required",
             "misp_import": "not used"
           },
-          "flow_id": "attack-flow--7697cdf1-1229-43e9-9655-ee5d1326ab20"
+          "flow_id": "attack-flow--2aea72e2-47af-49e2-a7a8-73f50aa7cd6c"
         },
         "claim": "Validated serialization is not semantic truth or universal TIP compatibility"
       },
@@ -430,7 +430,7 @@
           "valid": true,
           "objects": 7,
           "warnings": [
-            "attack-pattern--2cd82983-3bb0-4442-a3ac-1ee0ffd62e75: {302} External reference 'MITRE ATT&CK' has a URL but no hash."
+            "attack-pattern--070c3bad-2ecc-4c2a-a347-927864fb0102: {302} External reference 'MITRE ATT&CK' has a URL but no hash."
           ],
           "patterns_valid": true,
           "references_valid": true
@@ -499,7 +499,7 @@
             "semantic_review": "required",
             "misp_import": "not used"
           },
-          "flow_id": "attack-flow--21272a15-61b9-472f-823c-c8e6ef59cd25"
+          "flow_id": "attack-flow--f073cb17-1a38-4ccf-a396-b56ce726ed7c"
         },
         "claim": "Validated serialization is not semantic truth or universal TIP compatibility"
       },
@@ -662,15 +662,15 @@
   ],
   "versions": {
     "fastapi": "0.143.0",
-    "pydantic": "2.14.0",
+    "pydantic": "2.14.1",
     "stix2": "3.0.2",
     "stix2-validator": "3.2.0",
     "pymisp": "2.5.34.4",
     "misp-stix": "2026.9.16",
     "pysigma": "1.5.1",
     "pysigma-backend-splunk": "2.1.0",
-    "openai": "3.26.1",
-    "pypdf": "6.19.0",
+    "openai": "3.29.0",
+    "pypdf": "6.20.0",
     "pytest": "9.1.1",
     "python": "3.14.6",
     "platform": "macOS-26.4.1-arm64-arm-64bit-Mach-O"
