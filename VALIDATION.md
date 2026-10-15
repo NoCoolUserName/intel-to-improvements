@@ -101,3 +101,8 @@ Both calls must retrieve/compare the same event identity. Review returned server
 Current saved ActiveMQ annotations contain no explicit inter-behavior relationship records; no arrows are invented from sequence integers. That is an honest supported limit. The authored fixture independently demonstrates the implemented edge path. Full reproduction/build/update instructions and source/patch details: `integrations/attack-flow/README.md`.
 
 Final frontend reconciliation retained the existing GitHub dependency lock and required `typecheck test build` scripts. The existing App/theme suite runs alongside seven Attack Flow tests against the same `App.tsx` used in production. One old-package button expectation was updated to “Generate updated package”; customer-scope fields were added to authored API fixtures. Final checks passed with Node 24.19.0, TypeScript 7.0.2, Vite 8.3.3, Vitest 5.0.3 and jsdom 30.1.2. Upstream Builder remains isolated on its unchanged pinned lock.
+
+Initial GitHub CI flagged the pinned Windows registry schema checksum as a generic API key because the schema filename contains “key.” The pin metadata now uses explicit `path`/`sha256` records; digest values and pinned schema bytes are unchanged, and the scanner remains enabled without exclusions.
+
+The initial strict Semgrep run reported no security findings but failed on five unescaped JSX ampersands. Encoded those visible labels without changing rendered text. Gitleaks 8.24.3 now passes the pin/schema directory with default rules and no exclusions; Ruff 0.17.0 correctness rules pass.
+The rerun of Semgrep 1.180.0 with all six existing strict rules passed: 34 supported source/test targets, zero findings, zero parsing errors.
