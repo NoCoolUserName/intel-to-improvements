@@ -25,3 +25,9 @@ export function isTestCase(source: {origin?: string}): boolean {
 export function isTestDemo(id: string): boolean {
   return ['insufficient', 'held-out', 'held-out-cloud'].includes(id);
 }
+
+export function replayUnavailable(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false;
+  const data = error as {code?: string; message?: string};
+  return data.code === 'replay_unavailable' || Boolean(data.message?.includes('No exact-content replay exists'));
+}

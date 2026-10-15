@@ -69,6 +69,7 @@ def create_app(service=None):
         if j['data']['context']['customer_id']!=body['customer_id']:raise KeyError('Job not found')
         if action=='cancel':return svc.cancel(id)
         if action=='resume':return svc.resume(id)
+        if action=='reanalyze':return svc.reanalyze(id,body.get('mode'))
         raise ValueError('Unknown job action')
     @app.get('/api/assessments')
     def assessments(customer_id:str,environment_id:str):

@@ -67,6 +67,15 @@ class Service:
         if background:EXECUTOR.submit(self.run,id)
         else:self.run(id)
         return self.job(id)
+    def reanalyze(self,id,mode,background=True):
+        job=self.job(id);data=job['data']
+        if job['state'] not in ('failed','cancelled','interrupted'):raise ValueError('Only a failed, cancelled, or interrupted job can be reanalyzed here')
+        if mode not in ('offline','live'):raise ValueError('Choose local or model API analysis for a saved report')
+        if not data.get('source_revision'):raise ValueError('This job has no saved source; submit the source again')
+        ctx=Context.model_validate(data['context'])
+        result=self.submit(ctx.customer_id,ctx.environment_id,mode,'source',data['source_revision'],background=background,frozen_context=ctx)
+        self.store.event('analysis_restarted',ctx.customer_id,{'previous_job':id,'job':result['id'],'source_revision':data['source_revision'],'mode':mode})
+        return result
     def run(self,id):
         with self.store.connect() as c:
             changed=c.execute("UPDATE jobs SET state='running' WHERE id=? AND state='queued'",(id,)).rowcount
@@ -99,7 +108,7 @@ class Service:
             self.update(id,state='complete',stage='assessed',updates={'assessment_id':assessment['id'],'completed_at':now()})
         except InterruptedError as e:self.update(id,state='cancelled',updates={'error':str(e)})
         except Exception as e:
-            error={'type':type(e).__name__,'message':str(e),'traceback':traceback.format_exc(),'at':now()};self.store.put('failure',uid('failure',id,now()),error,immutable=True);self.update(id,state='failed',updates={'error':error})
+            error={'type':type(e).__name__,'message':str(e),'code':getattr(e,'code',None),'traceback':traceback.format_exc(),'at':now()};self.store.put('failure',uid('failure',id,now()),error,immutable=True);self.update(id,state='failed',updates={'error':error})
     def assess(self,source,ex,ctx):
         aid=uid('assessment',source.revision_id,ex.id,ctx.model_dump())
         previous=self.store.maybe('assessment',aid)

@@ -52,7 +52,8 @@ def test_live_missing_failure_resume_checkpoint(service,monkeypatch):
 
 def test_replay_rejects_changed_content(service):
     j=service.submit('fictional-bank','windows-ad','replay','text','CertUtil downloaded NEW facts.',background=False)
-    assert j['state']=='failed' and 'exact-content replay' in j['data']['error']['message']
+    assert j['state']=='failed' and j['data']['error']['code']=='replay_unavailable'
+    assert 'saved demo analysis' in j['data']['error']['message']
 
 def test_restart_cancel_no_corruption(service,monkeypatch):
     class Dummy:
@@ -182,3 +183,33 @@ def test_assessment_clocks_ignore_package_delay_and_later_reassessment(service,a
     assert metrics['customer_receipt_to_first_assessment_seconds']==before['customer_receipt_to_first_assessment_seconds']==2
     assert metrics['customer_receipt_to_assessment_seconds']==86400
     assert metrics['customer_first_receipt']==receipt
+
+def test_replay_recovery_keeps_source_context_history_and_clocks(service,monkeypatch):
+    from fastapi.testclient import TestClient
+    from iti.api import create_app
+    j=service.submit('fictional-bank','windows-ad','replay','text','On Windows, CertUtil downloaded a payload.',background=False)
+    assert j['state']=='failed' and j['data']['error']['code']=='replay_unavailable'
+    revision=j['data']['source_revision'];source=service.store.get('source',revision)
+    receipt=service.store.get('customer_receipt',uid('receipt','fictional-bank',source['id']))
+    ingress=service.store.get('source_ingestion',source['id'])
+    c=CustomerProfile.model_validate(service.store.get('customer','fictional-bank'));profiles.save(service.store,c)
+    monkeypatch.setattr('iti.ingestion.fetch',lambda *_:pytest.fail('Recovery must not refetch a report'))
+    recovered=service.reanalyze(j['id'],'offline',background=False)
+    assert recovered['state']=='complete'
+    assert recovered['data']['source_revision']==revision
+    assert recovered['data']['context']==j['data']['context']
+    assert recovered['data']['context']['customer_version']==1
+    assert service.job(j['id'])['state']=='failed'
+    assert service.reanalyze(j['id'],'offline',background=False)['id']==recovered['id']
+    assert service.store.get('customer_receipt',uid('receipt','fictional-bank',source['id']))==receipt
+    assert service.store.get('source_ingestion',source['id'])==ingress
+    monkeypatch.delenv('OPENAI_API_KEY',raising=False);monkeypatch.delenv('OPENAI_MODEL',raising=False)
+    live=service.reanalyze(j['id'],'live',background=False)
+    assert live['state']=='failed' and live['data']['mode']=='live'
+    assert 'unavailable' in live['data']['error']['message'] and not live['data'].get('extraction_id')
+    client=TestClient(create_app(service),base_url='http://127.0.0.1')
+    assert client.post('/api/jobs/'+j['id']+'/reanalyze',json={'customer_id':'fictional-cloud','mode':'offline'}).status_code==404
+    assert client.post('/api/jobs/'+j['id']+'/reanalyze',json={'customer_id':'fictional-bank','mode':'replay'}).status_code==422
+    response=client.post('/api/jobs/'+j['id']+'/reanalyze',json={'customer_id':'fictional-bank','mode':'offline'})
+    assert response.status_code==200 and response.json()['id']==recovered['id']
+    with pytest.raises(ValueError,match='Only a failed'):service.reanalyze(recovered['id'],'offline')
