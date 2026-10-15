@@ -1,6 +1,6 @@
 # Frontend checks
 
-Use Node 22.12+ (matching the application's prerequisites) and install the locked
+Use Node 22.22.2+ or 24.15+ (supported even-numbered release) (matching the application's prerequisites) and install the locked
 dependencies with `npm ci` from this directory.
 
 - `npm test`: run the Vitest suite once; this is picked up by the existing Code
@@ -28,3 +28,4 @@ CI requires all three scripts to exist and pass, and requires the committed
 `package-lock.json`. Removing a script fails validation before installation;
 checks cannot silently become optional. The shared workflow is pinned to
 `927052f6ef9ce21c1fec280dcc87affdee1ae87a` (code-quality#3).
+

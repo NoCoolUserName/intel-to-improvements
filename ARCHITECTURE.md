@@ -54,3 +54,9 @@ Public URL requests resolve/check every address, pin the selected address during
 ## Extension points
 
 Future work: richer extraction/evaluation and review UI, MISP MCP transport, TAXII, additional SIEM backends, Navigator exports, ticketing, optional OCR and operator-configured polling. None is represented as operational today. No app-native Gmail API/OAuth extension is part of this POC.
+
+## Attack Flow extension
+
+`iti/attack_flow.py` builds a separately validated Attack Flow 2.0.0 extension bundle from the frozen package. It is integrated by `exporters.export_package`, with hashes, compatibility status and ZIP inclusion. The native STIX/MISP path is unchanged. Source-reported relationship records, not sequence numbers, drive links; schema/typed-reference checks use a hashed offline registry. Evidence and context remain in the sidecar and standard external references.
+
+`AttackFlowPanel.tsx` gates rendering by customer/environment, keys frames to package/scope, and validates the minimal same-origin bridge. The local MITRE Vue Builder is built separately and mounted by FastAPI; React does not implement the graph renderer. Its strict local artifact URL guard, read-only UI and browser CSP prevent automatic external fetching. See `integrations/attack-flow/README.md` for the inspected pin, bridge, build workaround, update/removal and limits.

@@ -6,7 +6,7 @@ The deliverable is local software, not a hosted service. It requires no credenti
 
 ## Start
 
-Prerequisites: macOS Apple Silicon or Linux, Python 3.12+, Node 22.12+ and npm, network access for initial package installation. Tested on Apple Silicon macOS with Python 3.14.6 and Node 25.9.0. Linux is supported by portable dependencies/scripts but was not executed in this session.
+Prerequisites: macOS Apple Silicon or Linux, Python 3.12+, Node 22.22.2+ or 24.15+ (even-numbered supported release) and npm, network access for initial package installation. Tested on Apple Silicon macOS with Python 3.14.6; final workbench checks on Node 24.19.0 and pinned Builder build on Node 25.9.0. Linux is supported by portable dependencies/scripts but was not executed in this session.
 
 ```sh
 ./scripts/bootstrap
@@ -138,3 +138,9 @@ git commit -m "Build Intel to Improvements local proof of concept"
 ```
 
 Review staged content first; `.gitignore` excludes all full reports, live handoffs, secrets and runtime data. Application license and catalog/source notices are separate in `LICENSE` and `THIRD_PARTY_NOTICES.md`.
+
+## Reported Attack Flow
+
+The Purple team page includes the actual locally served MITRE Attack Flow Builder above the human validation scenarios. Generate an updated package to add **attack-flow.json** and its evidence/provenance sidecar. Historical packages remain unchanged. The existing ActiveMQ case is honestly unordered: its saved sequence numbers do not prove relationships.
+
+Fresh bootstrap builds the viewer. For an existing install, run `./scripts/build-attack-flow` and `npm --prefix web run build`, then restart `./scripts/run` and refresh the page. No extra running service, internet access after setup, or AI credential is needed to view a flow. The **Open in Builder** link opens a separate editable local draft; it never overwrites or approves the immutable package. See [integration setup, pin, semantics and smoke test](integrations/attack-flow/README.md).

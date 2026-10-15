@@ -1,6 +1,7 @@
 export function analysisMode(mode: string): {label: string; description: string} {
   if (mode === 'live') return {label: 'Model API analysis', description: 'This result was produced through the configured model API. This is an analysis method, not a connection-status indicator.'};
   if (mode === 'replay') return {label: 'Saved demo analysis', description: 'Previously curated findings for exact known source content; no new model request.'};
+  if (mode === 'analyst-curated') return {label: 'Curated analysis', description: 'Explicitly curated findings and relationships. Check provenance for the annotator and review status; this does not imply owner approval.'};
   if (mode === 'offline') return {label: 'Local analysis · no AI', description: 'Fixed recognition rules run on this computer. URLs can still be fetched over the internet. Select Model API analysis for a new API-backed assessment; existing results keep their original method.'};
   return {label: 'Unknown analysis method', description: 'No recognized processing method was recorded.'};
 }

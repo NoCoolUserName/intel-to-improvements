@@ -1,0 +1,62 @@
+{
+  "pageUrl": "http://127.0.0.1:8001/attack-flow-builder/?src=http%3A%2F%2F127.0.0.1%3A8001%2Fapi%2Fartifacts%2Fpackage_aa7931fb43455c42accfacd5415114e1%2Fattack-flow.json%3Fcustomer_id%3Dfictional-bank%26environment_id%3Dwindows-ad&iti_package=package_aa7931fb43455c42accfacd5415114e1&iti_frame=560651d9-4ced-4a17-a479-20be3ba29cca&theme=light_theme",
+  "assets": [
+    {
+      "kind": "script",
+      "url": "http://127.0.0.1:8001/attack-flow-builder/assets/index-CHDHfXHZ.js"
+    },
+    {
+      "kind": "stylesheet",
+      "url": "http://127.0.0.1:8001/attack-flow-builder/assets/index-Bd94WNI4.css"
+    },
+    {
+      "kind": "other",
+      "url": "http://127.0.0.1:8001/attack-flow-builder/settings_macos.json"
+    },
+    {
+      "kind": "font",
+      "url": "http://127.0.0.1:8001/attack-flow-builder/assets/Inter-Medium-P1cOs5ep.woff2?v=3.19"
+    },
+    {
+      "kind": "font",
+      "url": "http://127.0.0.1:8001/attack-flow-builder/assets/Inter-Regular-CKDp9E3C.woff2?v=3.19"
+    },
+    {
+      "kind": "font",
+      "url": "http://127.0.0.1:8001/attack-flow-builder/assets/Inter-Bold-CuhepTt8.woff2?v=3.19"
+    },
+    {
+      "kind": "image",
+      "url": "http://127.0.0.1:8001/attack-flow-builder/assets/ctid_logo-Xf8CinlU.png"
+    },
+    {
+      "kind": "other",
+      "url": "http://127.0.0.1:8001/api/artifacts/package_aa7931fb43455c42accfacd5415114e1/attack-flow.json?customer_id=fictional-bank&environment_id=windows-ad"
+    },
+    {
+      "kind": "image",
+      "url": "http://127.0.0.1:8001/attack-flow-builder/favicon.ico"
+    },
+    {
+      "kind": "font",
+      "url": "http://127.0.0.1:8001/attack-flow-builder/assets/JetBrainsMono-SemiBold-Latin-DGStcf2-.woff2"
+    },
+    {
+      "kind": "font",
+      "url": "http://127.0.0.1:8001/attack-flow-builder/assets/Inter-ExtraBold-B0QOs-T2.woff2?v=3.19"
+    },
+    {
+      "kind": "font",
+      "url": "http://127.0.0.1:8001/attack-flow-builder/assets/Inter-SemiBold-Ctx7G98q.woff2?v=3.19"
+    },
+    {
+      "kind": "script",
+      "url": "http://127.0.0.1:8001/attack-flow-builder/assets/DictionaryField-B_LLFUGf.js"
+    },
+    {
+      "kind": "stylesheet",
+      "url": "http://127.0.0.1:8001/attack-flow-builder/assets/DictionaryField-BCLfCq-q.css"
+    }
+  ],
+  "console": []
+}

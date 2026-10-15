@@ -58,3 +58,20 @@ Follow `DEMO.md` for the five-minute walkthrough. `validation/run-manifest.json`
 - Manual intake now offers Local or Model API analysis; Load selected case still runs the curated demo. Legacy/new replay mismatch jobs show a plain explanation plus explicit recovery buttons instead of Resume. Tracebacks remain under Technical details.
 - Recovery reuses the persisted source revision without fetching again, freezes the original customer/environment context, keeps receipt/ingestion clocks, retains the original failure, and deduplicates repeat requests. Model recovery never falls back automatically. No real failed source was automatically reprocessed or sent to a model.
 - Added scoped service/API regression covering recovery, clock/context preservation, no refetch, idempotency, customer isolation and missing model credentials; checked legacy failure recognition. Frontend build and 50 tests passed. Local project server refreshed after checking no jobs were active.
+
+## Attack Flow integration
+- Requested pin: `5c8bf4ca9ff64ef9b55c38a2505db318750cbcda`, real Builder 4.0.1 and extension 2.0.0.
+- Workspace remains authoritative; local `.git` is absent. Confirmed connected GitHub main at `7a1d99bf3d51de71c3a2c79108007f03a348a087`; publish using existing GitHub API workflow with expected-parent protection.
+- Inspected URL/readonly loader and automatic horizontal STIX layout. Loader does not fit the STIX camera; add a narrow ready/error/fit bridge.
+- Sequence numbers alone will not generate edges. Existing frozen relationships may support directed edges; unknown/partial order remains explicit.
+- Existing native CTI/MISP and human scenarios remain independent. New generator revision; historical packages unchanged.
+
+### Attack Flow implementation completed and verified
+- Added `iti/attack_flow.py`, pinned schema/extension registry and separate export/provenance/manifest/ZIP integration. Generator `packages-6-attack-flow-2`; historical packages unchanged.
+- Added isolated `scripts/build-attack-flow`, explicit upstream patch/bridge, license notices, FastAPI mount/CSP, scoped React panel and curated-mode label.
+- Build verified at requested pin. Fixed missing shared root config, Node 25 development-plugin failure, overly tall unordered initial layout, and disabled upstream Atomic links/recommender/chat.
+- 56 Python + 20 frontend tests passed (7 Attack Flow + 13 existing App/theme checks); both production builds passed. Existing eval rerun: 12 TP/0 FP/1 FN on 5 fixtures.
+- Actual browser verified ActiveMQ no fabricated edges; authored temporal edge/disconnected action; read-only, fit, pan/zoom, fullscreen, byte-matching download, separate editable draft, customer change. Offline test server blocks outbound DNS/socket connections; CSP/resources show localhost-only browser loads, no console errors.
+- Actual UI screenshots/resources and machine test reports are in `validation/attack-flow/`. Authored case uses isolated `runtime/attack-flow-smoke`; normal runtime still uses port 8000.
+- Temporary acceptance server stopped and idle main server refreshed on the final backend. Source review complete; publication uses the existing GitHub API workflow with expected-parent protection. The returned commit and file-hash verification are recorded in ignored `runtime/attack-flow-publication-result.json`. No live model/MISP/Gmail claims added.
+- Reconciled GitHub-only App/theme tests and the already-updated frontend lock before publishing. Restored the established App/entry-point split; all 20 frontend tests, required typecheck and build pass on bundled Node 24.19.0. Existing CI files are preserved unchanged.

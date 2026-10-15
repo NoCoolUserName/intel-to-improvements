@@ -30,8 +30,12 @@ def create_app(service=None):
                 if total>6*1024*1024:return JSONResponse({'detail':'Request exceeds 6 MiB'},status_code=413)
                 chunks.append(chunk)
             request._body=b''.join(chunks)
+        if request.url.path.startswith('/attack-flow-builder/') and not (ROOT/'runtime/attack-flow-viewer/index.html').is_file():
+            return JSONResponse({'detail':'Local Attack Flow viewer not built; run ./scripts/build-attack-flow'},status_code=503)
         response=await call_next(request)
-        response.headers.update({'X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'"})
+        builder=request.url.path.startswith('/attack-flow-builder/')
+        frame_policy="'self'" if builder else "'none'"
+        response.headers.update({'X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','Content-Security-Policy':f"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; worker-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors {frame_policy}"})
         return response
     @app.exception_handler(ValueError)
     async def bad(request,exc):return JSONResponse({'detail':str(exc)},status_code=422)
@@ -141,6 +145,13 @@ def create_app(service=None):
     @app.get('/api/evaluation')
     def evaluation():
         p=ROOT/'validation/evaluation.json';return json.loads(p.read_text()) if p.exists() else {'status':'NOT RUN','command':'./scripts/iti eval'}
+    viewer=ROOT/'runtime/attack-flow-viewer'
+    @app.get('/api/attack-flow/viewer')
+    def viewer_status():
+        available=(viewer/'index.html').is_file() and (viewer/'build.json').is_file()
+        return {'available':available,'reason':None if available else 'Build the local viewer with ./scripts/build-attack-flow, restart the app, then retry.'}
+    # Mount even before build so completing setup does not require an app restart.
+    app.mount('/attack-flow-builder',StaticFiles(directory=viewer,html=True,check_dir=False),name='attack-flow-builder')
     dist=ROOT/'web/dist'
     if dist.exists():
         app.mount('/assets',StaticFiles(directory=dist/'assets'),name='assets')

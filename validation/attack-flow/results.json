@@ -1,0 +1,54 @@
+{
+  "executed_at": "2026-10-15T04:47:19.977741+00:00",
+  "upstream_revision": "5c8bf4ca9ff64ef9b55c38a2505db318750cbcda",
+  "builder_version": "4.0.1",
+  "extension_version": "2.0.0",
+  "node_version": "v25.9.0",
+  "npm_version": "11.21.0",
+  "backend_tests": {
+    "passed": 56,
+    "failed": 0
+  },
+  "frontend_tests": {
+    "passed": 20,
+    "failed": 0,
+    "scope": "7 Attack Flow tests and 13 pre-existing App/theme checks",
+    "executed_at": "2026-10-15T04:54:38.695235+00:00",
+    "versions": {
+      "node": "24.19.0",
+      "typescript": "7.0.2",
+      "vite": "8.3.3",
+      "vitest": "5.0.3",
+      "jsdom": "30.1.2"
+    },
+    "lock": "existing remote main lock retained"
+  },
+  "builds": {
+    "workbench": "passed",
+    "pinned_viewer_typecheck": "passed",
+    "pinned_viewer_vite": "passed",
+    "warning": "upstream main chunk exceeds 500 kB"
+  },
+  "browser": {
+    "engine": "Codex in-app Chromium",
+    "actual_viewer": true,
+    "activemq_actions": 8,
+    "activemq_edges": 0,
+    "authored_actions": 3,
+    "authored_edges": 1,
+    "read_only": true,
+    "fit_pan_zoom": true,
+    "fullscreen": true,
+    "download_sha256": "6da88e38ffa1dbacb359fcff80c56a0a36265ab6110b30b267c378bea25c108c",
+    "editor_same_artifact": true,
+    "draft_did_not_change_artifact": true,
+    "customer_switch_previous_iframe_count": 0,
+    "console_errors": [],
+    "offline_scope": "backend non-loopback DNS/connect denial + browser same-origin CSP; observed localhost resources, not a packet capture"
+  },
+  "limitations": [
+    "ActiveMQ source has no explicit relationship records; saved sequence integers do not generate edges",
+    "No new model inference, human review, live MISP or operational coverage validation",
+    "Browser result is a local acceptance run; not a broad browser/platform matrix"
+  ]
+}

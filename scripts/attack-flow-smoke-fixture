@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+"""Isolated authored browser fixture; no production runtime data or model call.
+Run: .venv/bin/python scripts/attack-flow-smoke-fixture
+Then: ITI_DATA_DIR="$PWD/runtime/attack-flow-smoke" ITI_PORT=8001 ./scripts/run
+"""
+import sys
+from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
+from iti.services import Service
+from iti.store import Store,ROOT,uid,now
+from iti.models import SourceDocument,Extraction,EntityRelationship,Context
+s=Service(Store(ROOT/'runtime/attack-flow-smoke'))
+job=s.submit('fictional-bank','windows-ad','offline','path',str(ROOT/'fixtures/attack-flow-sequence.md'),background=False)
+assert job['state']=='complete',job
+original=s.store.get('assessment',job['data']['assessment_id'])
+source=SourceDocument.model_validate(original['source']);ex=Extraction.model_validate(original['extraction'])
+lookup={b.key:b for b in ex.behaviors};span=next(x for x in source.spans if 'After the CertUtil download' in x.text)
+ex.id=uid('extraction',source.revision_id,'authored-sequence-1');ex.mode='analyst-curated';ex.provider='developer-curated browser fixture; not owner reviewed'
+ex.relationships=[EntityRelationship(id=uid('relationship',ex.id,'precedes'),source_ref=lookup['certutil'].id,target_ref=lookup['remote_service'].id,relationship='precedes',text='The authored source places the CertUtil download before the remote service action.',evidence=[span.id],confidence_rationale='Explicit After wording in the independently authored fixture; temporal, not causal.')]
+s.store.put('extraction',ex.id,ex.model_dump(),immutable=True)
+a=s.assess(source,ex,Context.model_validate(original['context']))
+p=s.generate(a['id'],'fictional-bank')
+print('Browser fixture package:',p['id'])
+print('Expected: 3 actions, one download → remote-service temporal arrow, AnyDesk unordered.')
+print('Open http://127.0.0.1:8001 → Purple team after starting the isolated test app.')

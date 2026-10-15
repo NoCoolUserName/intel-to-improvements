@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+"""Optional isolated acceptance server; outbound networking denied in this process.
+Browser CSP separately restricts assets/connections to the same loopback origin.
+Stop with Ctrl-C. Normal startup never uses this additional test server.
+"""
+import sys, socket, ipaddress, os
+from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
+from iti.store import ROOT
+os.environ['ITI_DATA_DIR']=str(ROOT/'runtime/attack-flow-smoke')
+def allowed(host):
+    if host in ('localhost',None):return
+    try:
+        if ipaddress.ip_address(host).is_loopback:return
+    except ValueError:pass
+    raise OSError('Offline smoke: non-loopback networking denied')
+original_getaddrinfo=socket.getaddrinfo
+original_connect=socket.socket.connect
+original_connect_ex=socket.socket.connect_ex
+def resolve(host,*args,**kwargs):allowed(host);return original_getaddrinfo(host,*args,**kwargs)
+def connect(sock,address):
+    if isinstance(address,tuple):allowed(address[0])
+    return original_connect(sock,address)
+def connect_ex(sock,address):
+    if isinstance(address,tuple):allowed(address[0])
+    return original_connect_ex(sock,address)
+socket.getaddrinfo=resolve;socket.socket.connect=connect;socket.socket.connect_ex=connect_ex
+try:socket.getaddrinfo('example.org',443)
+except OSError:print('Confirmed: outbound resolution/connections blocked; same-origin browser CSP enabled.',flush=True)
+else:raise RuntimeError('Offline guard failed')
+import uvicorn
+uvicorn.run('iti.api:app',host='127.0.0.1',port=8001)

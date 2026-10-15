@@ -1,6 +1,6 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><title>Intel to Improvements — actual evaluation</title><style>body{font:15px system-ui;max-width:1100px;margin:50px auto;color:#23433b;background:#f6faf7}table{border-collapse:collapse;width:100%;background:white}td,th{text-align:left;padding:12px;border:1px solid #cddbce}pre{white-space:pre-wrap;font-size:11px;background:white;padding:20px}h1{font-size:30px}</style><h1>Intel to Improvements · evaluation</h1><p>Executed 2026-10-08T18:21:46.723471+00:00. developer/model-curated by direct inspection of source text; owner has not reviewed</p><p>Labeled behavior subset precision 1.0; recall 0.9230769230769231. Scope limits below apply.</p><table><tr><th>Fixture</th><th>Mode</th><th>Held out</th><th>TP</th><th>FP</th><th>FN</th><th>Completeness</th></tr><tr><td>activemq-derived</td><td>replay</td><td>False</td><td>8</td><td>0</td><td>0</td><td>partial</td></tr><tr><td>no-ioc</td><td>offline</td><td>False</td><td>3</td><td>0</td><td>0</td><td>complete-for-supported-content</td></tr><tr><td>insufficient</td><td>offline</td><td>False</td><td>0</td><td>0</td><td>0</td><td>complete-for-supported-content</td></tr><tr><td>held-out</td><td>offline</td><td>True</td><td>1</td><td>0</td><td>0</td><td>complete-for-supported-content</td></tr><tr><td>held-out-cloud</td><td>offline</td><td>True</td><td>0</td><td>0</td><td>1</td><td>complete-for-supported-content</td></tr></table><h2>Limitations and complete measured output</h2><pre>{
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Intel to Improvements — actual evaluation</title><style>body{font:15px system-ui;max-width:1100px;margin:50px auto;color:#23433b;background:#f6faf7}table{border-collapse:collapse;width:100%;background:white}td,th{text-align:left;padding:12px;border:1px solid #cddbce}pre{white-space:pre-wrap;font-size:11px;background:white;padding:20px}h1{font-size:30px}</style><h1>Intel to Improvements · evaluation</h1><p>Executed 2026-10-15T04:45:26.345789+00:00. developer/model-curated by direct inspection of source text; owner has not reviewed</p><p>Labeled behavior subset precision 1.0; recall 0.9230769230769231. Scope limits below apply.</p><table><tr><th>Fixture</th><th>Mode</th><th>Held out</th><th>TP</th><th>FP</th><th>FN</th><th>Completeness</th></tr><tr><td>activemq-derived</td><td>replay</td><td>False</td><td>8</td><td>0</td><td>0</td><td>partial</td></tr><tr><td>no-ioc</td><td>offline</td><td>False</td><td>3</td><td>0</td><td>0</td><td>complete-for-supported-content</td></tr><tr><td>insufficient</td><td>offline</td><td>False</td><td>0</td><td>0</td><td>0</td><td>complete-for-supported-content</td></tr><tr><td>held-out</td><td>offline</td><td>True</td><td>1</td><td>0</td><td>0</td><td>complete-for-supported-content</td></tr><tr><td>held-out-cloud</td><td>offline</td><td>True</td><td>0</td><td>0</td><td>1</td><td>complete-for-supported-content</td></tr></table><h2>Limitations and complete measured output</h2><pre>{
   &quot;schema_version&quot;: &quot;1.0&quot;,
-  &quot;executed_at&quot;: &quot;2026-10-08T18:21:46.723471+00:00&quot;,
+  &quot;executed_at&quot;: &quot;2026-10-15T04:45:26.345789+00:00&quot;,
   &quot;fixture_count&quot;: 5,
   &quot;gold_labeler&quot;: &quot;developer/model-curated by direct inspection of source text; owner has not reviewed&quot;,
   &quot;gold_hash&quot;: &quot;dd1faf9e12bcc82b49086ba80ab657379ad6ded2e2fb773ff233f69de66b88e9&quot;,
@@ -75,16 +75,16 @@
           &quot;valid&quot;: true,
           &quot;objects&quot;: 14,
           &quot;warnings&quot;: [
-            &quot;attack-pattern--300e038b-d3e7-40d2-bbdd-27cad19e650c: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
-            &quot;attack-pattern--d5f8d62f-ac7f-4c44-a351-f74b838fb5fa: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
-            &quot;attack-pattern--ce325238-1550-4981-aa88-8ba91b976df6: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
-            &quot;attack-pattern--8dd1bc6e-55fa-438f-ac71-11a94b70b782: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
-            &quot;attack-pattern--5d50d43a-3bc9-4758-83d0-2eabe08203f5: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
-            &quot;attack-pattern--8b91d2df-a019-4a9f-91e0-c84ce4821308: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
-            &quot;attack-pattern--a197a90c-cbbb-4abb-8085-0ec64505f5c7: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
-            &quot;attack-pattern--e33c57a1-a045-4942-aae1-172cafa0175b: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
-            &quot;relationship--9fdce02e-d157-4dda-acbb-8a41d9ea2416: {202} &#x27;ipv4-addr&#x27; is not a suggested relationship target object for &#x27;indicator&#x27; objects with the &#x27;based-on&#x27; relationship.&quot;,
-            &quot;report--df26cb41-2916-458f-93ae-5175ef50be96: {302} External reference &#x27;The DFIR Report&#x27; has a URL but no hash.&quot;
+            &quot;attack-pattern--e3769584-88f5-4515-bb56-69e97b3aa8ff: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
+            &quot;attack-pattern--4ddc6a9c-9723-4c5e-8af3-9fa3abd3cc26: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
+            &quot;attack-pattern--296c9361-a437-42d1-840c-7ddb3efa802a: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
+            &quot;attack-pattern--e92135e4-0021-4236-84f0-fb1e0864f1e7: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
+            &quot;attack-pattern--7f3fb9cb-4509-43f6-a1ec-f4ac2fc921f1: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
+            &quot;attack-pattern--0abeaa8d-04d8-4bb8-b3a0-647fa1a411ab: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
+            &quot;attack-pattern--9d197ed9-e2c8-4b5a-bc98-e084d60f21e4: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
+            &quot;attack-pattern--81a8a04b-1834-4118-9d1d-c4a76c4854fd: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
+            &quot;relationship--6d946c50-1a66-49c8-a8a1-be582ea7c6ca: {202} &#x27;ipv4-addr&#x27; is not a suggested relationship target object for &#x27;indicator&#x27; objects with the &#x27;based-on&#x27; relationship.&quot;,
+            &quot;report--cf42bf19-48b6-4f9f-958e-03c1841366f1: {302} External reference &#x27;The DFIR Report&#x27; has a URL but no hash.&quot;
           ],
           &quot;patterns_valid&quot;: true,
           &quot;references_valid&quot;: true
@@ -127,6 +127,42 @@
           &quot;C2 address discrepancy .52 versus .62 requires source review&quot;
         ],
         &quot;readiness&quot;: &quot;review required&quot;,
+        &quot;attack_flow&quot;: {
+          &quot;generator&quot;: &quot;attack-flow-2&quot;,
+          &quot;upstream_revision&quot;: &quot;5c8bf4ca9ff64ef9b55c38a2505db318750cbcda&quot;,
+          &quot;review_status&quot;: &quot;Generated \u2014 review required&quot;,
+          &quot;source_completeness&quot;: &quot;partial&quot;,
+          &quot;source_gaps&quot;: [
+            &quot;Limited developer-curated derivative, not the full report; original contains image-only evidence&quot;,
+            &quot;C2 address discrepancy .52 versus .62 requires source review&quot;
+          ],
+          &quot;actions&quot;: 8,
+          &quot;edges&quot;: 0,
+          &quot;omissions&quot;: [],
+          &quot;status&quot;: &quot;generated&quot;,
+          &quot;ordering&quot;: &quot;unordered&quot;,
+          &quot;unordered_behavior_ids&quot;: [
+            &quot;behavior_ee153d6de3ee5cb58cd98a3bd214e1e4&quot;,
+            &quot;behavior_efa888780f4c50ccaf41a33c6043bf7f&quot;,
+            &quot;behavior_7eac9ec8e2c45cb78b360058f151a3be&quot;,
+            &quot;behavior_19541a05f89350228e60ff7aa5280579&quot;,
+            &quot;behavior_aad5e0ce01025b5e80506bfd6184e1ef&quot;,
+            &quot;behavior_5d00d525ea505fab9e8d4308ac2a6463&quot;,
+            &quot;behavior_3a87a565cd2e545f8eaa52b254a80000&quot;,
+            &quot;behavior_4a431faf3b075841bfe83bacfd7ed92a&quot;
+          ],
+          &quot;explanation&quot;: &quot;Reported actions; unordered. Entry points include independently unordered components, not simultaneous or AND/OR actions. Temporal arrows do not establish causation. All actions require source review; human validation scenarios are scoped separately.&quot;,
+          &quot;validation&quot;: {
+            &quot;valid&quot;: true,
+            &quot;schema&quot;: &quot;Attack Flow 2.0.0 + pinned STIX 2.1 schemas&quot;,
+            &quot;schema_revision&quot;: &quot;5c8bf4ca9ff64ef9b55c38a2505db318750cbcda&quot;,
+            &quot;references_valid&quot;: true,
+            &quot;objects&quot;: 12,
+            &quot;semantic_review&quot;: &quot;required&quot;,
+            &quot;misp_import&quot;: &quot;not used&quot;
+          },
+          &quot;flow_id&quot;: &quot;attack-flow--40cbaa0b-bdd9-46e3-bcf2-713e727d88ef&quot;
+        },
         &quot;claim&quot;: &quot;Validated serialization is not semantic truth or universal TIP compatibility&quot;
       },
       &quot;retrieval&quot;: {
@@ -185,9 +221,9 @@
           &quot;valid&quot;: true,
           &quot;objects&quot;: 5,
           &quot;warnings&quot;: [
-            &quot;attack-pattern--5b524307-4a64-48c1-8001-f12567977735: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
-            &quot;attack-pattern--114ded9f-8cc8-4206-a393-cfc28c279d37: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
-            &quot;attack-pattern--369f6000-b7c4-4958-a4ab-b9e276be9551: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;
+            &quot;attack-pattern--185047fc-82e2-44b0-88a2-79eb9f6402a7: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
+            &quot;attack-pattern--02c210a2-cc07-481e-a3f5-f4e7ee54cbb2: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;,
+            &quot;attack-pattern--4776047e-b76c-4728-841d-f0c09511c934: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;
           ],
           &quot;patterns_valid&quot;: true,
           &quot;references_valid&quot;: true
@@ -222,6 +258,34 @@
           &quot;Bounded deterministic text recognition, not live AI. Unrecognized behaviors are omitted; analyst review required.&quot;
         ],
         &quot;readiness&quot;: &quot;review required&quot;,
+        &quot;attack_flow&quot;: {
+          &quot;generator&quot;: &quot;attack-flow-2&quot;,
+          &quot;upstream_revision&quot;: &quot;5c8bf4ca9ff64ef9b55c38a2505db318750cbcda&quot;,
+          &quot;review_status&quot;: &quot;Generated \u2014 review required&quot;,
+          &quot;source_completeness&quot;: &quot;complete-for-supported-content&quot;,
+          &quot;source_gaps&quot;: [],
+          &quot;actions&quot;: 3,
+          &quot;edges&quot;: 0,
+          &quot;omissions&quot;: [],
+          &quot;status&quot;: &quot;generated&quot;,
+          &quot;ordering&quot;: &quot;unordered&quot;,
+          &quot;unordered_behavior_ids&quot;: [
+            &quot;behavior_edb98ac90d3252869612021fb37641af&quot;,
+            &quot;behavior_df717540709459e38b0dff991420fb6d&quot;,
+            &quot;behavior_b2fb9db31c0a5f3898473830106231c8&quot;
+          ],
+          &quot;explanation&quot;: &quot;Reported actions; unordered. Entry points include independently unordered components, not simultaneous or AND/OR actions. Temporal arrows do not establish causation. All actions require source review; human validation scenarios are scoped separately.&quot;,
+          &quot;validation&quot;: {
+            &quot;valid&quot;: true,
+            &quot;schema&quot;: &quot;Attack Flow 2.0.0 + pinned STIX 2.1 schemas&quot;,
+            &quot;schema_revision&quot;: &quot;5c8bf4ca9ff64ef9b55c38a2505db318750cbcda&quot;,
+            &quot;references_valid&quot;: true,
+            &quot;objects&quot;: 7,
+            &quot;semantic_review&quot;: &quot;required&quot;,
+            &quot;misp_import&quot;: &quot;not used&quot;
+          },
+          &quot;flow_id&quot;: &quot;attack-flow--7697cdf1-1229-43e9-9655-ee5d1326ab20&quot;
+        },
         &quot;claim&quot;: &quot;Validated serialization is not semantic truth or universal TIP compatibility&quot;
       },
       &quot;retrieval&quot;: {
@@ -300,6 +364,19 @@
           &quot;Insufficient supported behavioral evidence: no defensible hunt/emulation generated&quot;
         ],
         &quot;readiness&quot;: &quot;review required&quot;,
+        &quot;attack_flow&quot;: {
+          &quot;generator&quot;: &quot;attack-flow-2&quot;,
+          &quot;upstream_revision&quot;: &quot;5c8bf4ca9ff64ef9b55c38a2505db318750cbcda&quot;,
+          &quot;review_status&quot;: &quot;Generated \u2014 review required&quot;,
+          &quot;source_completeness&quot;: &quot;complete-for-supported-content&quot;,
+          &quot;source_gaps&quot;: [],
+          &quot;actions&quot;: 0,
+          &quot;edges&quot;: 0,
+          &quot;omissions&quot;: [],
+          &quot;status&quot;: &quot;empty&quot;,
+          &quot;reason&quot;: &quot;No evidenced source-reported actions in this extraction. Inferences, proposals and unsupported assertions are not reported attack actions.&quot;,
+          &quot;validation&quot;: null
+        },
         &quot;claim&quot;: &quot;Validated serialization is not semantic truth or universal TIP compatibility&quot;
       },
       &quot;retrieval&quot;: {
@@ -353,7 +430,7 @@
           &quot;valid&quot;: true,
           &quot;objects&quot;: 7,
           &quot;warnings&quot;: [
-            &quot;attack-pattern--6f1ebed8-55c9-48e5-a408-e028121a370d: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;
+            &quot;attack-pattern--2cd82983-3bb0-4442-a3ac-1ee0ffd62e75: {302} External reference &#x27;MITRE ATT&amp;CK&#x27; has a URL but no hash.&quot;
           ],
           &quot;patterns_valid&quot;: true,
           &quot;references_valid&quot;: true
@@ -398,6 +475,32 @@
           &quot;Bounded deterministic text recognition, not live AI. Unrecognized behaviors are omitted; analyst review required.&quot;
         ],
         &quot;readiness&quot;: &quot;review required&quot;,
+        &quot;attack_flow&quot;: {
+          &quot;generator&quot;: &quot;attack-flow-2&quot;,
+          &quot;upstream_revision&quot;: &quot;5c8bf4ca9ff64ef9b55c38a2505db318750cbcda&quot;,
+          &quot;review_status&quot;: &quot;Generated \u2014 review required&quot;,
+          &quot;source_completeness&quot;: &quot;complete-for-supported-content&quot;,
+          &quot;source_gaps&quot;: [],
+          &quot;actions&quot;: 1,
+          &quot;edges&quot;: 0,
+          &quot;omissions&quot;: [],
+          &quot;status&quot;: &quot;generated&quot;,
+          &quot;ordering&quot;: &quot;unordered&quot;,
+          &quot;unordered_behavior_ids&quot;: [
+            &quot;behavior_4ce4bc11228359658eced71076989115&quot;
+          ],
+          &quot;explanation&quot;: &quot;Reported actions; unordered. Entry points include independently unordered components, not simultaneous or AND/OR actions. Temporal arrows do not establish causation. All actions require source review; human validation scenarios are scoped separately.&quot;,
+          &quot;validation&quot;: {
+            &quot;valid&quot;: true,
+            &quot;schema&quot;: &quot;Attack Flow 2.0.0 + pinned STIX 2.1 schemas&quot;,
+            &quot;schema_revision&quot;: &quot;5c8bf4ca9ff64ef9b55c38a2505db318750cbcda&quot;,
+            &quot;references_valid&quot;: true,
+            &quot;objects&quot;: 5,
+            &quot;semantic_review&quot;: &quot;required&quot;,
+            &quot;misp_import&quot;: &quot;not used&quot;
+          },
+          &quot;flow_id&quot;: &quot;attack-flow--21272a15-61b9-472f-823c-c8e6ef59cd25&quot;
+        },
         &quot;claim&quot;: &quot;Validated serialization is not semantic truth or universal TIP compatibility&quot;
       },
       &quot;retrieval&quot;: {
@@ -479,6 +582,19 @@
           &quot;Insufficient supported behavioral evidence: no defensible hunt/emulation generated&quot;
         ],
         &quot;readiness&quot;: &quot;review required&quot;,
+        &quot;attack_flow&quot;: {
+          &quot;generator&quot;: &quot;attack-flow-2&quot;,
+          &quot;upstream_revision&quot;: &quot;5c8bf4ca9ff64ef9b55c38a2505db318750cbcda&quot;,
+          &quot;review_status&quot;: &quot;Generated \u2014 review required&quot;,
+          &quot;source_completeness&quot;: &quot;complete-for-supported-content&quot;,
+          &quot;source_gaps&quot;: [],
+          &quot;actions&quot;: 0,
+          &quot;edges&quot;: 0,
+          &quot;omissions&quot;: [],
+          &quot;status&quot;: &quot;empty&quot;,
+          &quot;reason&quot;: &quot;No evidenced source-reported actions in this extraction. Inferences, proposals and unsupported assertions are not reported attack actions.&quot;,
+          &quot;validation&quot;: null
+        },
         &quot;claim&quot;: &quot;Validated serialization is not semantic truth or universal TIP compatibility&quot;
       },
       &quot;retrieval&quot;: {

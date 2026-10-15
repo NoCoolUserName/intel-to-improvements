@@ -8,7 +8,7 @@ import App from '../src/App';
 const evidenceText = '<img src=x onerror="alert(1)"> is untrusted report text.';
 function assessment(id, title) {
   return {
-    id, context: {customer_version: 1},
+    id, context: {customer_id: id.startsWith('bank') ? 'fictional-bank' : 'fictional-cloud', customer_version: 1, environment_id: id.startsWith('bank') ? 'windows-ad' : 'mac-cloud'},
     source: {id: `source-${id}`, title, revision_id: `revision-${id}`, serials: [], gaps: [],
       origin: 'Authored test fixture', spans: [{id: 'span-1', text: evidenceText,
         heading_path: ['Evidence'], kind: 'text', start: 0, end: evidenceText.length}]},
@@ -23,7 +23,7 @@ function assessment(id, title) {
 }
 const bankCase = assessment('bank-case', 'Bank investigation');
 const cloudCase = assessment('cloud-case', 'Cloud investigation');
-const bankPackage = {id: 'bank-package', assessment_id: bankCase.id, context: {destination: ''},
+const bankPackage = {id: 'bank-package', assessment_id: bankCase.id, context: {...bankCase.context, destination: ''},
   artifacts: {names: ['cti.stix21.json', 'cti.misp.json', 'package.zip'], validation: {status: 'fixture'}}};
 const bootstrap = {
   customers: [
@@ -108,9 +108,9 @@ it('shows a failed package request and allows dismissing the error', async () =>
     return respond(input);
   });
   const {user} = await mount();
-  await user.click(screen.getByRole('button', {name: 'Open existing package'}));
+  await user.click(screen.getByRole('button', {name: 'Generate updated package'}));
   expect((await screen.findByRole('alert')).textContent).toContain('Package validation failed');
-  expect(screen.getByRole('button', {name: 'Open existing package'}).disabled).toBe(false);
+  expect(screen.getByRole('button', {name: 'Generate updated package'}).disabled).toBe(false);
   await user.click(screen.getByRole('button', {name: 'Dismiss error'}));
   expect(screen.queryByRole('alert')).toBeNull();
 });
@@ -132,3 +132,4 @@ it('ignores a late investigation response for the previous customer', async () =
   expect(screen.queryByRole('option', {name: /Bank investigation/})).toBeNull();
   expect(screen.queryByRole('button', {name: 'Bank investigation behavior'})).toBeNull();
 });
+
