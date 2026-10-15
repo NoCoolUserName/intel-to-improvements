@@ -31,15 +31,36 @@ def record_test(store,assessment,test):
     if test.baseline:store.event('baseline_assessed',scope_key(assessment),{'test_id':test.id,'confirmed_at':record['confirmed_at'],'original_execution_time':test.executed_at})
     return record
 
-def improve(store,assessment,action):
+def improve(store,assessment,action,candidate_ref=None):
+    # Serializes retries and simultaneous submissions across threads/processes.
+    with store.lock('improvement:'+scope_key(assessment)):
+        return _improve(store,assessment,action,candidate_ref)
+
+def _improve(store,assessment,action,candidate_ref):
+    from . import defenses
     if action.behavior_id not in {b['id'] for b in assessment['extraction']['behaviors']}:raise ValueError('Unknown behavior')
+    context=assessment['context'];origin_assessment=assessment['id']
     if action.id:
         old=store.get('improvement',action.id)
         if old['scope']!=scope_key(assessment):raise ValueError('Improvement customer/environment mismatch')
+        if candidate_ref:raise ValueError('Existing action cannot acquire a new candidate origin')
+        if old.get('origin') and (old['origin']['assessment_id']!=assessment['id'] or old['behavior_id']!=action.behavior_id):raise ValueError('Frozen defense action assessment/behavior mismatch')
+        if action.origin is not None and action.origin!=old.get('origin'):raise ValueError('Improvement origin cannot be altered')
+        action.origin=old.get('origin');context=old['context'];origin_assessment=old.get('assessment_id',assessment['id'])
         action.opened_at=old['opened_at']
-    else:action.id=store.identity('improvement:'+scope_key(assessment)+':'+now());action.opened_at=now()
+        action.deployed_at=old.get('deployed_at') or action.deployed_at
+    else:
+        if action.origin is not None:raise ValueError('Client-supplied origin is not trusted; select a stored candidate')
+        if candidate_ref:
+            action.origin=defenses.resolve_origin(store,assessment,action.behavior_id,candidate_ref)
+            action.id=uid('improvement',assessment['id'],context['customer_id'],context['environment_id'],action.behavior_id,action.origin['d3fend_id'])
+            prior=store.maybe('improvement',action.id)
+            if prior:return prior
+            if action.status!='open' or action.deployed_at:raise ValueError('New candidate improvement must start open and undeployed')
+        else:action.id=store.identity('improvement:'+scope_key(assessment)+':'+now())
+        action.opened_at=now()
     if action.status=='deployed' and not action.deployed_at:action.deployed_at=now()
-    row=action.model_dump()|{'context':assessment['context'],'scope':scope_key(assessment)}
+    row=action.model_dump()|{'context':context,'scope':scope_key(assessment),'assessment_id':origin_assessment}
     store.put('improvement',action.id,row);store.event('improvement_'+action.status.replace(' ','_'),scope_key(assessment),row)
     return row
 

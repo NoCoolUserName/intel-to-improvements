@@ -1,0 +1,195 @@
+{
+  "executed_at": "2026-10-15T05:38:06.676336+00:00",
+  "method": "actual local browser against isolated saved-demo store",
+  "live_defensive_validation": false,
+  "fixture": "existing limited ActiveMQ replay; authored acceptance action",
+  "assessment_id": "assessment_a99a0e9aef0b52f19f53ba0f749a8fc7",
+  "improvement_id": "improvement_959753d0c7735ac694cb452ba16afd72",
+  "scope": {
+    "customer_id": "fictional-bank",
+    "customer_snapshot": {
+      "additional_sectors": [],
+      "allow_live_processing": true,
+      "environments": [
+        {
+          "backend": "Splunk raw events",
+          "controls": [
+            {
+              "deployed_at": null,
+              "name": "Defender",
+              "status": "declared; not tested",
+              "version": "unknown"
+            }
+          ],
+          "exposed_services": [
+            "ActiveMQ"
+          ],
+          "field_map": {
+            "CommandLine": "CommandLine",
+            "Computer": "Computer",
+            "Image": "Image",
+            "OriginalFileName": "OriginalFileName",
+            "ParentImage": "ParentImage",
+            "User": "User",
+            "UtcTime": "UtcTime"
+          },
+          "id": "windows-ad",
+          "important_assets": [
+            "Domain controllers",
+            "Backup server"
+          ],
+          "name": "Windows / AD lab",
+          "notes": "Fictional. Sysmon process telemetry declared. PowerShell script-block and LSASS process-access telemetry deliberately missing. Index selected by analyst, no CIM claim.",
+          "platforms": [
+            "windows"
+          ],
+          "retention_days": 30,
+          "schema_version": "1.0",
+          "technologies": [
+            "ActiveMQ",
+            "Active Directory",
+            "PowerShell",
+            "RDP"
+          ],
+          "telemetry": {
+            "dns_query": [
+              "QueryName",
+              "Image"
+            ],
+            "process_creation": [
+              "Image",
+              "OriginalFileName",
+              "ParentImage",
+              "CommandLine",
+              "User",
+              "Computer",
+              "UtcTime"
+            ],
+            "proxy": [
+              "url",
+              "src_ip"
+            ]
+          },
+          "version": 1
+        }
+      ],
+      "id": "fictional-bank",
+      "intelligence_requirements": [
+        "ransomware",
+        "credential access"
+      ],
+      "misp_destination": null,
+      "name": "Northstar Bank \u00b7 fictional",
+      "priorities": [
+        "Protect backups and privileged identities"
+      ],
+      "schema_version": "1.0",
+      "sector": "financial-services",
+      "subsector": null,
+      "version": 1
+    },
+    "customer_version": 1,
+    "destination": null,
+    "environment_id": "windows-ad",
+    "environment_snapshot": {
+      "backend": "Splunk raw events",
+      "controls": [
+        {
+          "deployed_at": null,
+          "name": "Defender",
+          "status": "declared; not tested",
+          "version": "unknown"
+        }
+      ],
+      "exposed_services": [
+        "ActiveMQ"
+      ],
+      "field_map": {
+        "CommandLine": "CommandLine",
+        "Computer": "Computer",
+        "Image": "Image",
+        "OriginalFileName": "OriginalFileName",
+        "ParentImage": "ParentImage",
+        "User": "User",
+        "UtcTime": "UtcTime"
+      },
+      "id": "windows-ad",
+      "important_assets": [
+        "Domain controllers",
+        "Backup server"
+      ],
+      "name": "Windows / AD lab",
+      "notes": "Fictional. Sysmon process telemetry declared. PowerShell script-block and LSASS process-access telemetry deliberately missing. Index selected by analyst, no CIM claim.",
+      "platforms": [
+        "windows"
+      ],
+      "retention_days": 30,
+      "schema_version": "1.0",
+      "technologies": [
+        "ActiveMQ",
+        "Active Directory",
+        "PowerShell",
+        "RDP"
+      ],
+      "telemetry": {
+        "dns_query": [
+          "QueryName",
+          "Image"
+        ],
+        "process_creation": [
+          "Image",
+          "OriginalFileName",
+          "ParentImage",
+          "CommandLine",
+          "User",
+          "Computer",
+          "UtcTime"
+        ],
+        "proxy": [
+          "url",
+          "src_ip"
+        ]
+      },
+      "version": 1
+    },
+    "environment_version": 1,
+    "policy_version": "relevance-1",
+    "schema_version": "1.0"
+  },
+  "catalog": {
+    "sha256": "a9137e3cca3f03f1c9b532fb472386453ec0b4164023aaa24dcd0a0f48a9a463",
+    "revision": "5c8bf4ca9ff64ef9b55c38a2505db318750cbcda",
+    "transformation_version": "d3fend-transform-1",
+    "techniques": 147,
+    "mapped_attack_ids": 424
+  },
+  "checks": {
+    "candidate_review": true,
+    "edited_form_saved": true,
+    "ledger_view": true,
+    "reload_persistence": true,
+    "one_action_after_reload_and_edit": true,
+    "origin_preserved": true,
+    "verification_unchanged": true,
+    "outbound_network_blocked": true
+  },
+  "metrics": {
+    "source_first_ingestion": "2026-10-15T05:32:24.565761+00:00",
+    "customer_first_receipt": "2026-10-15T05:32:24.568184+00:00",
+    "first_package_ready": "2026-10-15T05:32:24.880730+00:00",
+    "assessment_ready": "2026-10-15T05:32:24.599249+00:00",
+    "first_assessment_ready": "2026-10-15T05:32:24.599249+00:00",
+    "customer_receipt_to_first_assessment_seconds": 0.031065,
+    "source_ingestion_to_package_seconds": 0.314969,
+    "customer_receipt_to_assessment_seconds": 0.031065,
+    "source_ingestion_to_live_detection_seconds": null,
+    "source_ingestion_to_live_prevention_seconds": null,
+    "customer_receipt_to_live_detection_confirmation_seconds": null,
+    "customer_receipt_to_live_prevention_confirmation_seconds": null,
+    "soc_timings": [],
+    "synthetic_timings": "Excluded from live operational metrics",
+    "policy": "30-day freshness plus exact source/extraction/customer/environment/rule dependency match; current confirmation and original execution clocks retained"
+  },
+  "improvement_count": 1,
+  "test_count": 0
+}

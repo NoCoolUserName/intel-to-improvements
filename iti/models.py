@@ -298,6 +298,7 @@ class ImprovementAction(Model):
     opened_at: str=''
     deployed_at: str|None=None
     retest: str
+    origin: dict[str,Any]|None=None
 
 class GmailScope(Model):
     query: str=Field(min_length=1,max_length=1000)
