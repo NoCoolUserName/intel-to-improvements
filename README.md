@@ -24,7 +24,7 @@ On macOS, after bootstrap, run `./scripts/install-desktop`. This installs **Inte
 
 ## Appearance
 
-Use the **Appearance** dropdown in the top bar on any page: **Original · Forest** keeps the existing design, **SailPoint · Ocean** uses navy/blue on light surfaces, and **Dropzone AI · Midnight** uses charcoal/violet/teal. Your choice is remembered in this browser and applies to tables, forms, drawers, and status labels. It is independent of customer selection. See [theme sources and accessibility checks](docs/THEMES.md).
+Use the **Appearance** dropdown in the top bar on any page: **Original · Forest** keeps the existing design, **Ocean** uses navy/blue on light surfaces, and **Midnight** uses charcoal/violet/teal. Your choice is remembered in this browser and applies to tables, forms, drawers, and status labels. It is independent of customer selection. See [theme sources and accessibility checks](docs/THEMES.md).
 
 ## Commands
 
