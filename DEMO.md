@@ -25,3 +25,21 @@ Optional real checks after presentation:
 - Actual lab/SIEM: execute only approved human-led steps, collect environment/control-versioned evidence, and record method/scope/outcomes separately. This app never runs red-team tools or searches a SIEM.
 
 The local walkthrough demonstrates evidence handling, source-to-action decisions and selected detection semantics. Actual organizational detection/prevention coverage remains conditional on that environment’s evidence.
+
+Appearance labels describe analysis methods: Local analysis uses fixed rules, Model API analysis makes a configured API request, and Saved demo analysis reuses curated exact-content findings. These are unrelated to network status. The receipt-to-first-assessment card is fixed at completion and includes waiting time; use History for revision/package clocks. Toggle **Show test cases** to inspect the insufficient-evidence and held-out edge examples.
+
+### Attack Flow addition
+
+On **Purple team**, select ActiveMQ and click **Generate updated package** when shown. The panel above the scenarios displays eight evidenced actions, an explicit unordered warning and extraction gaps. Explain why no arrows were invented from the old sequence numbering. Expand, zoom/pan, Fit, and download the JSON. Open in Builder to show the real MITRE editor and explain that edits are separate drafts.
+
+For a supported arrow, run the isolated authored smoke fixture described in `integrations/attack-flow/README.md`: download precedes remote service execution, while AnyDesk timing is unknown. Its temporal arrow is not a causal claim and its fixture is not operational evidence. The existing human plans, Sigma assessment and coverage ledger remain independent.
+
+## D3FEND suggestion → improvement (about one minute)
+
+1. Select Northstar Bank / Windows AD and **ActiveMQ → LockBit · limited derived case**. Open **Purple team** (generate a package if none exists).
+2. In the first scenario, inspect **Possible defensive countermeasures**. T1190 has 14 pinned associations; the first three are sorted by ID, not ranked. Expand catalog provenance or follow the official reference. Behavior applicability and defensive suitability are separate.
+3. Select **Create improvement for D3-APCA**. Review the source evidence/rationale, enter an owner, replace the proposed change with a named lab control/configuration, and edit the retest plan. Save.
+4. Open **Coverage → History and independent clocks → View improvement**. Expand its D3FEND origin. Reload and revisit the scenario: **View improvement · open** replaces Create. Detection/prevention remain untested and their durations pending.
+5. For an empty-state example, inspect the remote-service behavior T1569.002: no mapping exists in this pinned catalog; the manual improvement workflow remains usable. This does not mean no countermeasure exists.
+
+Validation created an explicitly authored acceptance action in isolated `runtime/d3fend-smoke`, not the owner's normal ledger. Screenshots are in `validation/d3fend/`. No countermeasure was deployed or emulated by this feature.

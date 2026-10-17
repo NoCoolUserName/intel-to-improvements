@@ -12,8 +12,11 @@ def scope_key(assessment):
     c=assessment['context'];return ':'.join([c['customer_id'],c['environment_id'],assessment['source']['id']])
 
 def record_test(store,assessment,test):
+    from . import vulnerabilities
+    vulnerability=assessment.get('vulnerability')
+    dependencies=vulnerabilities.validate_test(store,assessment,test) if vulnerability else dependency(assessment,test.behavior_id)
     ids={b['id'] for b in assessment['extraction']['behaviors']}
-    if test.behavior_id not in ids:raise ValueError('Behavior does not belong to assessment')
+    if not vulnerability and (test.vulnerability_assessment_id or test.behavior_id not in ids or test.dimension in ('remediation','mitigation') or test.method in ('reliable rescan','version/configuration evidence','targeted human-led test')):raise ValueError('Behavior does not belong to assessment or unsupported dimension')
     if test.environment_version!=assessment['context']['environment_version']:raise ValueError('Environment version mismatch')
     if dt(test.executed_at)>datetime.now(timezone.utc)+timedelta(minutes=5):raise ValueError('Execution time cannot be in the future')
     if test.dimension.startswith('soc_') and dt(test.executed_at)<dt(test.exercise_event_at):raise ValueError('SOC outcome cannot precede exercise event')
@@ -23,28 +26,66 @@ def record_test(store,assessment,test):
     if test.improvement_id:
         action=store.get('improvement',test.improvement_id)
         if action['scope']!=scope_key(assessment) or action['behavior_id']!=test.behavior_id:raise ValueError('Retest improvement scope mismatch')
-    matched=next((r for r in assessment['candidates'] if r['id']==test.control_id),None)
+    matched=next((r for r in assessment.get('candidates',[]) if r['id']==test.control_id),None)
     if matched and test.method!='analyst attestation' and test.control_version!=matched['source']['sha256']:raise ValueError('Rule version differs from assessed candidate; reassess the changed rule before recording verification')
     test.id=store.identity('test:'+uid('test',scope_key(assessment),now(),test.model_dump_json()));test.recorded_at=now()
-    record=test.model_dump()|{'context':assessment['context'],'document_id':assessment['source']['id'],'assessment_id':assessment['id'],'dependencies':dependency(assessment,test.behavior_id),'confirmed_at':now()}
+    record=test.model_dump()|{'context':assessment['context'],'document_id':assessment['source']['id'],'assessment_id':assessment['id'],'dependencies':dependencies,'confirmed_at':now()}
+    if vulnerability:record['vulnerability_asset_id']=vulnerability['asset']['logical_id']
     store.put('test',test.id,record,immutable=True);store.event('test_executed',scope_key(assessment),record)
     if test.baseline:store.event('baseline_assessed',scope_key(assessment),{'test_id':test.id,'confirmed_at':record['confirmed_at'],'original_execution_time':test.executed_at})
     return record
 
-def improve(store,assessment,action):
-    if action.behavior_id not in {b['id'] for b in assessment['extraction']['behaviors']}:raise ValueError('Unknown behavior')
+def improve(store,assessment,action,candidate_ref=None):
+    # Serializes retries and simultaneous submissions across threads/processes.
+    with store.lock('improvement:'+scope_key(assessment)):
+        return _improve(store,assessment,action,candidate_ref)
+
+def _improve(store,assessment,action,candidate_ref):
+    from . import defenses,vulnerabilities
+    vulnerability=assessment.get('vulnerability')
+    if vulnerability:
+        if any(not str(getattr(action,k)).strip() for k in ('owner','rationale','proposed_change','retest')):raise ValueError('Owner, rationale, implementation and retest plan are required')
+        if not action.remediation or not all(action.remediation.get(k) for k in ('review_date','residual_uncertainty','permanent_fix','source_references')):raise ValueError('Vulnerability action requires review date, uncertainty, permanent fix and source references')
+        datetime.strptime(action.remediation['review_date'],'%Y-%m-%d')
+        if action.behavior_id is not None or action.vulnerability_assessment_id!=assessment['id'] or candidate_ref:raise ValueError('Vulnerability action must reference its reviewed decision, not an invented behavior')
+    elif action.vulnerability_assessment_id or action.behavior_id not in {b['id'] for b in assessment['extraction']['behaviors']}:raise ValueError('Unknown behavior')
+    context=assessment['context'];origin_assessment=assessment['id']
     if action.id:
         old=store.get('improvement',action.id)
         if old['scope']!=scope_key(assessment):raise ValueError('Improvement customer/environment mismatch')
+        if candidate_ref:raise ValueError('Existing action cannot acquire a new candidate origin')
+        if old.get('origin') and (old['origin']['assessment_id']!=assessment['id'] or old['behavior_id']!=action.behavior_id):raise ValueError('Frozen defense action assessment/behavior mismatch')
+        if action.origin is not None and action.origin!=old.get('origin'):raise ValueError('Improvement origin cannot be altered')
+        action.origin=old.get('origin');context=old['context'];origin_assessment=old.get('assessment_id',assessment['id'])
         action.opened_at=old['opened_at']
-    else:action.id=store.identity('improvement:'+scope_key(assessment)+':'+now());action.opened_at=now()
+        action.deployed_at=old.get('deployed_at') or action.deployed_at
+    else:
+        if action.origin is not None:raise ValueError('Client-supplied origin is not trusted; select a stored candidate')
+        if vulnerability:
+            action.origin=vulnerabilities.action_origin(store,assessment)
+            action.id=uid('improvement',action.origin['review_id'],action.origin['asset_logical_id'])
+            prior=store.maybe('improvement',action.id)
+            if prior:return prior
+            if action.status!='open' or action.deployed_at:raise ValueError('New vulnerability action must start open and undeployed')
+        elif candidate_ref:
+            action.origin=defenses.resolve_origin(store,assessment,action.behavior_id,candidate_ref)
+            action.id=uid('improvement',assessment['id'],context['customer_id'],context['environment_id'],action.behavior_id,action.origin['d3fend_id'])
+            prior=store.maybe('improvement',action.id)
+            if prior:return prior
+            if action.status!='open' or action.deployed_at:raise ValueError('New candidate improvement must start open and undeployed')
+        else:action.id=store.identity('improvement:'+scope_key(assessment)+':'+now())
+        action.opened_at=now()
     if action.status=='deployed' and not action.deployed_at:action.deployed_at=now()
-    row=action.model_dump()|{'context':assessment['context'],'scope':scope_key(assessment)}
+    row=action.model_dump()|{'context':context,'scope':scope_key(assessment),'assessment_id':origin_assessment}
     store.put('improvement',action.id,row);store.event('improvement_'+action.status.replace(' ','_'),scope_key(assessment),row)
     return row
 
 def view(store,assessment):
     import copy
+    # Packages have their own creation clock. Always assess against the original
+    # persisted assessment, including when a CLI caller supplies a package.
+    if assessment.get('assessment_id'):
+        assessment=store.get('assessment',assessment['assessment_id'])
     scope=scope_key(assessment);c=assessment['context'];rows=copy.deepcopy(assessment['coverage'])
     tests=[t for t in store.all('test') if t['document_id']==assessment['source']['id'] and t['context']['customer_id']==c['customer_id'] and t['context']['environment_id']==c['environment_id']]
     current=store.get('customer',c['customer_id']);env=next((e for e in current['environments'] if e['id']==c['environment_id']),None)
@@ -73,4 +114,6 @@ def view(store,assessment):
     counts.update({'failed':sum('failed' in r['detection_test'] or r['synthetic_result']=='failed' for r in rows),'untested':sum(r['detection_test']=='not tested' for r in rows),'stale':sum('stale' in r['detection_test'] or r['synthetic_result']=='stale' for r in rows),'live_detection_passed':sum(r['detection_test']=='passed (live)' and r['applicability']=='applicable' for r in rows)})
     packages=[p for p in store.all('package') if p['source']['id']==assessment['source']['id'] and p['context']['customer_id']==c['customer_id'] and p['context']['environment_id']==c['environment_id']]
     first_package=min((p['created_at'] for p in packages),default=None)
-    return {'rows':rows,'tests':tests,'improvements':[i for i in store.all('improvement') if i['scope']==scope],'history':sorted(store.history(scope)+store.history(assessment['source']['id']),key=lambda e:e['seq']),'counts':counts,'live_detection_percent':round(100*counts['live_detection_passed']/counts['applicable'],1) if counts['applicable'] else None,'metrics':{'source_first_ingestion':ingestion,'customer_first_receipt':receipt,'first_package_ready':first_package,'assessment_ready':assessment['created_at'],'source_ingestion_to_package_seconds':seconds(ingestion,first_package),'customer_receipt_to_assessment_seconds':seconds(receipt,assessment['created_at']),'source_ingestion_to_live_detection_seconds':seconds(ingestion,verified_detection),'source_ingestion_to_live_prevention_seconds':seconds(ingestion,verified_prevention),'customer_receipt_to_live_detection_confirmation_seconds':seconds(receipt,verified_detection),'customer_receipt_to_live_prevention_confirmation_seconds':seconds(receipt,verified_prevention),'soc_timings':[{'test_id':t['id'],'seconds':seconds(t.get('exercise_event_at'),t['executed_at']),'scope':t['method'],'exercise':t['exercise']} for t in tests if t['dimension'].startswith('soc_') and not t['stale']],'synthetic_timings':'Excluded from live operational metrics','policy':'30-day freshness plus exact source/extraction/customer/environment/rule dependency match; current confirmation and original execution clocks retained'}}
+    assessments=[a for a in store.all('assessment') if a['source']['id']==assessment['source']['id'] and a['context']['customer_id']==c['customer_id'] and a['context']['environment_id']==c['environment_id']]
+    first_assessment=min((a['created_at'] for a in assessments),default=None)
+    return {'rows':rows,'tests':tests,'improvements':[i for i in store.all('improvement') if i['scope']==scope],'history':sorted(store.history(scope)+store.history(assessment['source']['id']),key=lambda e:e['seq']),'counts':counts,'live_detection_percent':round(100*counts['live_detection_passed']/counts['applicable'],1) if counts['applicable'] else None,'metrics':{'source_first_ingestion':ingestion,'customer_first_receipt':receipt,'first_package_ready':first_package,'assessment_ready':assessment['created_at'],'first_assessment_ready':first_assessment,'customer_receipt_to_first_assessment_seconds':seconds(receipt,first_assessment),'source_ingestion_to_package_seconds':seconds(ingestion,first_package),'customer_receipt_to_assessment_seconds':seconds(receipt,assessment['created_at']),'source_ingestion_to_live_detection_seconds':seconds(ingestion,verified_detection),'source_ingestion_to_live_prevention_seconds':seconds(ingestion,verified_prevention),'customer_receipt_to_live_detection_confirmation_seconds':seconds(receipt,verified_detection),'customer_receipt_to_live_prevention_confirmation_seconds':seconds(receipt,verified_prevention),'soc_timings':[{'test_id':t['id'],'seconds':seconds(t.get('exercise_event_at'),t['executed_at']),'scope':t['method'],'exercise':t['exercise']} for t in tests if t['dimension'].startswith('soc_') and not t['stale']],'synthetic_timings':'Excluded from live operational metrics','policy':'30-day freshness plus exact source/extraction/customer/environment/rule dependency match; current confirmation and original execution clocks retained'}}

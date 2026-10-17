@@ -32,3 +32,7 @@ Portable versioned JSON references a stored request and exact frozen customer/en
 
 ## Completion evidence
 Run tests and held-out evaluation with actual counts, false assertions and limits. Document exact commands and versions. Exercise unseen source through live model only if configured; otherwise record unavailable. Live Gmail requires selected operator scope; live MISP requires configured instance. Ship run manifest, actual evaluation JSON/HTML, README/ARCHITECTURE/VALIDATION/THIRD_PARTY_NOTICES/DEMO and checkpoint. Extensions are documented only.
+
+## First Attack Flow integration
+
+Pinned local MITRE Builder `5c8bf4ca9ff64ef9b55c38a2505db318750cbcda`; separate evidence-backed Attack Flow export in new immutable package versions; readonly Purple Team iframe above human scenarios; absolute scoped artifact URL; explicit ready/error/fit bridge; offline runtime; local editable draft link with no round-trip save. Only evidenced source-reported relationships yield edges. Unknown ordering and empty input remain honest. Core STIX/MISP, coverage states and human validation semantics are unchanged. Integration README contains the bounded implementation and explicitly deferred features.

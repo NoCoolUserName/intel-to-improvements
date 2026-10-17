@@ -106,11 +106,13 @@ class Provider(Protocol):
     def extract(self,source,store,cancel=lambda:False)->Extraction: ...
 class OfflineProvider:
     def extract(self,source,store,cancel=lambda:False): return bounded_extract(source)
+class ReplayUnavailableError(ValueError):
+    code='replay_unavailable'
 class ReplayProvider:
     def extract(self,source,store,cancel=lambda:False):
         manifest=json.loads((ROOT/'fixtures/replay.json').read_text())
         spec=manifest.get(source.content_hash)
-        if not spec: raise ValueError('No exact-content replay exists. Choose bounded offline analysis or configure live extraction; no title/URL canned fallback.')
+        if not spec: raise ReplayUnavailableError('No saved demo analysis exists for this exact source. Analyze the saved report locally or with the configured model API, or load the bundled demonstration case.')
         out=Extraction(id=uid('extract',source.revision_id,'replay',PROMPT_VERSION),source_revision=source.revision_id,mode='replay',provider='developer-curated-replay-v1',warnings=['Prerecorded, developer/model-curated annotations; not a new AI inference. Owner has not reviewed this case.']+source.gaps)
         for entry in spec['behaviors']:
             span=next((s for s in source.spans if entry['anchor'] in s.text),None)

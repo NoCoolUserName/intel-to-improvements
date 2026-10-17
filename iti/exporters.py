@@ -121,8 +121,12 @@ def export_package(store,package):
     from .packages import render_markdown
     stix,sv,omissions=stix_export(store,package);misp,mv=misp_export(store,package)
     conversion,converted=convert_compare(stix,misp)
-    compatibility={'stix':sv,'native_misp':mv,'converter':conversion,'omissions':omissions+package['source']['conversion_losses'],'review_warnings':package['extraction']['warnings'],'readiness':'review required','claim':'Validated serialization is not semantic truth or universal TIP compatibility'}
+    from . import attack_flow
+    flow,flow_provenance,flow_status=attack_flow.export(store,package)
+    compatibility={'stix':sv,'native_misp':mv,'converter':conversion,'omissions':omissions+package['source']['conversion_losses'],'review_warnings':package['extraction']['warnings'],'readiness':'review required','attack_flow':flow_status,'claim':'Validated serialization is not semantic truth or universal TIP compatibility'}
     data={'cti.stix21.json':stix,'cti.misp.json':misp,'hunt.json':json.dumps({'context':package['context'],'source_gaps':package['source']['gaps'],'hunts':package['hunts']},indent=2),'purple-team.json':json.dumps({'context':package['context'],'source_gaps':package['source']['gaps'],'scenarios':package['emulations']},indent=2),'hunt.md':render_markdown('Evidence-led hunt package',package,'hunts'),'purple-team.md':render_markdown('Human-led controlled validation plan',package,'emulations'),'compatibility.json':json.dumps(compatibility,indent=2),'evidence.json':json.dumps({'source':package['source'],'extraction':package['extraction']},indent=2),'coverage.json':json.dumps({'context':package['context'],'source_revision':package['source']['revision_id'],'rows':package['coverage']},indent=2),'sigma.json':json.dumps({'context':package['context'],'candidates':package['candidates'],'retrieval':package['retrieval']},indent=2)}
+    if flow:data['attack-flow.json']=flow
+    data['attack-flow-provenance.json']=json.dumps(flow_provenance,indent=2,ensure_ascii=False)
     if converted:data['misp-converted.json']=converted
     manifest=package['manifest']|{'artifacts':{k:digest(v) for k,v in data.items()},'validation':compatibility}
     data['manifest.json']=json.dumps(manifest,indent=2)

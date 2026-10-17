@@ -63,6 +63,19 @@
     "retest": {
       "title": "Retest",
       "type": "string"
+    },
+    "origin": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Origin"
     }
   },
   "required": [

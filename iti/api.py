@@ -8,7 +8,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from .services import Service
 from .store import ROOT,now,uid
 from .models import CustomerProfile,GmailScope,TestRun,ImprovementAction,EvidenceAttachment,SECTORS
-from . import profiles,gmail,ledger,detection,misp,ingestion
+from . import profiles,gmail,ledger,detection,misp,ingestion,defenses
 
 def create_app(service=None):
     svc=service or Service()
@@ -30,8 +30,12 @@ def create_app(service=None):
                 if total>6*1024*1024:return JSONResponse({'detail':'Request exceeds 6 MiB'},status_code=413)
                 chunks.append(chunk)
             request._body=b''.join(chunks)
+        if request.url.path.startswith('/attack-flow-builder/') and not (ROOT/'runtime/attack-flow-viewer/index.html').is_file():
+            return JSONResponse({'detail':'Local Attack Flow viewer not built; run ./scripts/build-attack-flow'},status_code=503)
         response=await call_next(request)
-        response.headers.update({'X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'"})
+        builder=request.url.path.startswith('/attack-flow-builder/')
+        frame_policy="'self'" if builder else "'none'"
+        response.headers.update({'X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','Content-Security-Policy':f"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; worker-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors {frame_policy}"})
         return response
     @app.exception_handler(ValueError)
     async def bad(request,exc):return JSONResponse({'detail':str(exc)},status_code=422)
@@ -69,6 +73,7 @@ def create_app(service=None):
         if j['data']['context']['customer_id']!=body['customer_id']:raise KeyError('Job not found')
         if action=='cancel':return svc.cancel(id)
         if action=='resume':return svc.resume(id)
+        if action=='reanalyze':return svc.reanalyze(id,body.get('mode'))
         raise ValueError('Unknown job action')
     @app.get('/api/assessments')
     def assessments(customer_id:str,environment_id:str):
@@ -95,12 +100,17 @@ def create_app(service=None):
     @app.get('/api/ledger/{id}')
     def coverage(id:str,customer_id:str,environment_id:str):
         a=svc.scoped('assessment',id,customer_id,environment_id)
-        p=next((p for p in reversed(svc.store.all('package')) if p['assessment_id']==id),None)
-        return ledger.view(svc.store,p or a)
+        return ledger.view(svc.store,a)
     @app.post('/api/ledger/{id}/test')
     def test(id:str,body:dict):return ledger.record_test(svc.store,svc.scoped('assessment',id,body['customer_id']),TestRun.model_validate(body['test']))
     @app.post('/api/ledger/{id}/improve')
-    def improve(id:str,body:dict):return ledger.improve(svc.store,svc.scoped('assessment',id,body['customer_id']),ImprovementAction.model_validate(body['action']))
+    def improve(id:str,body:dict):
+        if body.get('candidate_ref') and not body.get('environment_id'):raise ValueError('Selected environment required for defense suggestion')
+        a=svc.scoped('assessment',id,body['customer_id'],body.get('environment_id'))
+        return ledger.improve(svc.store,a,ImprovementAction.model_validate(body['action']),body.get('candidate_ref'))
+    @app.get('/api/assessments/{id}/defenses')
+    def defensive_candidates(id:str,customer_id:str,environment_id:str):
+        return defenses.suggestions(svc.store,svc.scoped('assessment',id,customer_id,environment_id))
     @app.post('/api/ledger/{id}/synthetic')
     def synthetic(id:str,body:dict):
         a=svc.scoped('assessment',id,body['customer_id']);rule_id=body['rule_id'];b=body['behavior_id']
@@ -141,6 +151,15 @@ def create_app(service=None):
     @app.get('/api/evaluation')
     def evaluation():
         p=ROOT/'validation/evaluation.json';return json.loads(p.read_text()) if p.exists() else {'status':'NOT RUN','command':'./scripts/iti eval'}
+    from .vulnerability_api import register
+    register(app,svc)
+    viewer=ROOT/'runtime/attack-flow-viewer'
+    @app.get('/api/attack-flow/viewer')
+    def viewer_status():
+        available=(viewer/'index.html').is_file() and (viewer/'build.json').is_file()
+        return {'available':available,'reason':None if available else 'Build the local viewer with ./scripts/build-attack-flow, restart the app, then retry.'}
+    # Mount even before build so completing setup does not require an app restart.
+    app.mount('/attack-flow-builder',StaticFiles(directory=viewer,html=True,check_dir=False),name='attack-flow-builder')
     dist=ROOT/'web/dist'
     if dist.exists():
         app.mount('/assets',StaticFiles(directory=dist/'assets'),name='assets')

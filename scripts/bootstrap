@@ -8,4 +8,5 @@ python3 -m venv .venv
 UV_CACHE_DIR=runtime/uv-cache .venv/bin/uv sync --frozen --extra dev
 npm --prefix web ci --cache "$PWD/runtime/npm-cache"
 npm --prefix web run build
+./scripts/build-attack-flow
 printf '\nReady: ./scripts/iti demo && ./scripts/run\n'

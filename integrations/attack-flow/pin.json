@@ -1,0 +1,247 @@
+{
+  "repository": "https://github.com/center-for-threat-informed-defense/attack-flow",
+  "revision": "5c8bf4ca9ff64ef9b55c38a2505db318750cbcda",
+  "archive_sha256": "6e4d7146400d7a1834d1626cd21e9a3bcfe506fcaad1773e936141a10153a48a",
+  "builder_version": "4.0.1",
+  "extension_version": "2.0.0",
+  "base_url": "/attack-flow-builder/",
+  "patch_version": "iti-1",
+  "schemas": [
+    {
+      "path": "attack-flow-extension-2.0.0.json",
+      "sha256": "afdbac65edc9805ea2f3b2b84b4ae4908644e7f4190f28e8e836659d74d87e70"
+    },
+    {
+      "path": "attack-flow-schema-2.0.0.json",
+      "sha256": "fff896f5e1bdc39d9b387c0d3571307037cf9be1059de9cd94d066d1da2997cc"
+    },
+    {
+      "path": "oasis-open/common/binary.json",
+      "sha256": "55e47da1f4b6c7f1096c35a1ce36ebcf1e993e780e5f560f8b0732334c6eec9d"
+    },
+    {
+      "path": "oasis-open/common/bundle.json",
+      "sha256": "8bad0f73613d10c8946ff5eba8c3d8866a30c8a98fc2b31db2eb08f4669ca303"
+    },
+    {
+      "path": "oasis-open/common/core.json",
+      "sha256": "9124be0d8454ed83ece7de633d49166c53bdada0bc2a57845c47ebe3eb250ecf"
+    },
+    {
+      "path": "oasis-open/common/cyber-observable-core.json",
+      "sha256": "eedf67081e58c186e61d9656b4207c229cfa9b039ca4de066021913c42ac5ee5"
+    },
+    {
+      "path": "oasis-open/common/dictionary.json",
+      "sha256": "9ebf120557de2b617d31fa26f3173361b06a454c9890b6de17c0fd047198079b"
+    },
+    {
+      "path": "oasis-open/common/extension-definition.json",
+      "sha256": "d2da473ec604433ea3b3b6485d0782baaff59ef28786d6ee92f941b7c9c4fa89"
+    },
+    {
+      "path": "oasis-open/common/extension.json",
+      "sha256": "af38272f58f54f0eef8a0662165d156d5380ffeaae002a2d5ddbc160cceb64df"
+    },
+    {
+      "path": "oasis-open/common/external-reference.json",
+      "sha256": "1fe5c4e46f9ade221d6bb3cd0bbe1439b3e92da5f1e79ba4b89ea02870fbb1d6"
+    },
+    {
+      "path": "oasis-open/common/granular-marking.json",
+      "sha256": "9b5795abe57cc3b8a51a435ecea1491f38c506ab4fd9cdd3b5a18040fa16d419"
+    },
+    {
+      "path": "oasis-open/common/hashes-type.json",
+      "sha256": "87aaa9e99bf201da44ea3fb023b82a5e6e30ae84c953d6842b611869c4069a2e"
+    },
+    {
+      "path": "oasis-open/common/hex.json",
+      "sha256": "f7ab08d1b797665961cf0bd3e0a67010347903fabdd5b09f2f278dc661a835f8"
+    },
+    {
+      "path": "oasis-open/common/identifier.json",
+      "sha256": "03bf44dbc5584b312971de0d18f20682e12667c3c9bf660db4423da8653e9ead"
+    },
+    {
+      "path": "oasis-open/common/kill-chain-phase.json",
+      "sha256": "eabb8b2400a6f6284de52d059af79baae2da7bca95cac13464d5b511df3ef7de"
+    },
+    {
+      "path": "oasis-open/common/language-content.json",
+      "sha256": "12d5e26b3854514dcc5571c637cf5d6b9b9ab1387a384ac7ce0991472613e968"
+    },
+    {
+      "path": "oasis-open/common/marking-definition.json",
+      "sha256": "f059eec44a263c74911111be654dfd9269e7c3c1121eb31c359bec748283370c"
+    },
+    {
+      "path": "oasis-open/common/properties.json",
+      "sha256": "75d3791a78b9712a0a09b701cddd7776a1c6b27891e262f9b9f6fb7a09962afc"
+    },
+    {
+      "path": "oasis-open/common/timestamp.json",
+      "sha256": "3733e5cc07a3c9ad4293dd9522998c82be29f03e0fad9718d6c70d16a0bb5514"
+    },
+    {
+      "path": "oasis-open/common/url-regex.json",
+      "sha256": "be146b28300126dd42b9e3742d6e13d083bdd0d174db71552fdbd7110773d548"
+    },
+    {
+      "path": "oasis-open/observables/artifact.json",
+      "sha256": "96edbf59b65de95dbbe387776e72c03b8c3580b26f2025bb6f48a8af0a95cd7b"
+    },
+    {
+      "path": "oasis-open/observables/autonomous-system.json",
+      "sha256": "91c08020bec95b9054b067f96d4f2f03c7a7900602174a17fed28f582b856ef7"
+    },
+    {
+      "path": "oasis-open/observables/directory.json",
+      "sha256": "6f2a8c9bd3d5ce19f7fe341e202eaf085c6a27011be13fb2a87e01e1e1bd737e"
+    },
+    {
+      "path": "oasis-open/observables/domain-name.json",
+      "sha256": "aa5bb55e4b66ff3bfef01ab1165ef62b82311242e54c4819645bb2f503568c78"
+    },
+    {
+      "path": "oasis-open/observables/email-addr.json",
+      "sha256": "0de691f85a936a4db6b9a3a2bca8ccd68437e324a27fde210504668c8baaf5f1"
+    },
+    {
+      "path": "oasis-open/observables/email-message.json",
+      "sha256": "14765f6eb67ae30d9e1d054a027fe2982f99916143f59b55ee2a80dc0f1b9f45"
+    },
+    {
+      "path": "oasis-open/observables/file.json",
+      "sha256": "0e5e6f040addf35e0bc81ed2d03efad151bfb1b4964080b158b04f04e4f9675d"
+    },
+    {
+      "path": "oasis-open/observables/ipv4-addr.json",
+      "sha256": "feb23d155587dbcbb7e424df433a4d357fb9b14589a9820469bfc306ad935faf"
+    },
+    {
+      "path": "oasis-open/observables/ipv6-addr.json",
+      "sha256": "4087e6abfb77894d2e78da2e64f2f07b250113cf2fa02bca95f2c4ca7d685148"
+    },
+    {
+      "path": "oasis-open/observables/mac-addr.json",
+      "sha256": "5ba2bb92d7731d5a524eb7530cd067776ec80224e85446010122dff9430b702a"
+    },
+    {
+      "path": "oasis-open/observables/mutex.json",
+      "sha256": "23b0fb123c3c08475ca9cad767b0b1e84ca1da24ae0469c8624afd90e04514fc"
+    },
+    {
+      "path": "oasis-open/observables/network-traffic.json",
+      "sha256": "5f82dea4da5b24427316f751b08df778d13ffb7f57e3e11c4d4e7f90d45e0846"
+    },
+    {
+      "path": "oasis-open/observables/process.json",
+      "sha256": "9208d3575078fc1b8790b8981d03fa0cd58f842a67f8c66abdf761ed3cdd25d4"
+    },
+    {
+      "path": "oasis-open/observables/software.json",
+      "sha256": "ccd540dce51fe0fcfc84836d0678a0a95c5a33a5106fe1a23541d313aa0459a7"
+    },
+    {
+      "path": "oasis-open/observables/url.json",
+      "sha256": "162d8efa00b0d46c68bb12ef3bc099a81490c4d1313ae2387714045cb847e7fc"
+    },
+    {
+      "path": "oasis-open/observables/user-account.json",
+      "sha256": "2fd20a141a9cdbb7ba7d22638763f66285874d30cb75d7e0b027f6da69d2c45b"
+    },
+    {
+      "path": "oasis-open/observables/windows-registry-key.json",
+      "sha256": "ad625dc0d476e3c35374d348c57a69874e890e4d35ae5ff4b60970fc239ec5c0"
+    },
+    {
+      "path": "oasis-open/observables/x509-certificate.json",
+      "sha256": "48a39e010cdce03f36a770885d73ccaff97211eb816239776d815b6ff59ad2cc"
+    },
+    {
+      "path": "oasis-open/sdos/attack-pattern.json",
+      "sha256": "353eeaf40b480f6c6a692e1a7600d8fdd5bbb44c7e1137f75fdbea2fc3419372"
+    },
+    {
+      "path": "oasis-open/sdos/campaign.json",
+      "sha256": "c0e3996c546fe56b4f7f20ce78077509de9129c8a5e26bbefb2183d16a4b5e8e"
+    },
+    {
+      "path": "oasis-open/sdos/course-of-action.json",
+      "sha256": "6486ccdc9962ab344a68e9620eb0c0af9190cd1cd47597f3492d786c09264f3e"
+    },
+    {
+      "path": "oasis-open/sdos/grouping.json",
+      "sha256": "b35c71d6b6333f20c5a4600dba79beba7bd40a7700dc4d2a66da67096aeb373d"
+    },
+    {
+      "path": "oasis-open/sdos/identity.json",
+      "sha256": "ebb9fd9a7f4e69561afb433c8816c2987e564564584d91dc491c6c4dd089d546"
+    },
+    {
+      "path": "oasis-open/sdos/incident.json",
+      "sha256": "ad638f5f2cd0d55729cb3318ecf32c2a5f4f80400e50c62fa8c493bb298481f9"
+    },
+    {
+      "path": "oasis-open/sdos/indicator.json",
+      "sha256": "72691c8fe0ffb801f9f762ba82d8b6d7ef78ab1665b0782200b5e4a1ee1b799a"
+    },
+    {
+      "path": "oasis-open/sdos/infrastructure.json",
+      "sha256": "244be5de7fdc75b137da097145e958b30fe18bae48b2e5f52161644918c2ef1d"
+    },
+    {
+      "path": "oasis-open/sdos/intrusion-set.json",
+      "sha256": "20e967c174431a32036594bc8c0239efeb28a08cc8640624e5a75a9cd2642105"
+    },
+    {
+      "path": "oasis-open/sdos/location.json",
+      "sha256": "24d9a68950d5e7e977230a37aa6f15c3737d139f7b7b48d568ae3e2ebd8a0ebc"
+    },
+    {
+      "path": "oasis-open/sdos/malware-analysis.json",
+      "sha256": "f100a849d9719e98a85e9c225143e6c1827d6356e55b7db0afea75314c8f1c19"
+    },
+    {
+      "path": "oasis-open/sdos/malware.json",
+      "sha256": "21fa550ee4f5ca0de53e9d47907e624da7bb8f47a1f3d06029bb4cc3250a79ac"
+    },
+    {
+      "path": "oasis-open/sdos/note.json",
+      "sha256": "b99bb412c5fec581ebc1f4a75b2faafe733ef403dcc6c4deb78af8657e001687"
+    },
+    {
+      "path": "oasis-open/sdos/observed-data.json",
+      "sha256": "165b3a21aee66a0e522b078ca38d8f397cdb1777f3015c2807bb191a48608616"
+    },
+    {
+      "path": "oasis-open/sdos/opinion.json",
+      "sha256": "8710ffdb491f99b90e3221e96a6f6d835c49ff56a9a78c34e07bae7b44b25161"
+    },
+    {
+      "path": "oasis-open/sdos/report.json",
+      "sha256": "a451c78685ad5d7254d5e05b2b16c08de47680b494ff00479e730ad77573d25a"
+    },
+    {
+      "path": "oasis-open/sdos/threat-actor.json",
+      "sha256": "ab47c1b77c6e63c2831ace809cd9d731d955a391bc092c20a51aa1c1bd51ffff"
+    },
+    {
+      "path": "oasis-open/sdos/tool.json",
+      "sha256": "f246ab55c947678fd0e355a647be5259dfe22febc88239d3e70834d9c15827de"
+    },
+    {
+      "path": "oasis-open/sdos/vulnerability.json",
+      "sha256": "344bf5b6f0013a7cc26b3d03f47d80b562b9d31a54d40599556e97bd1d797f87"
+    },
+    {
+      "path": "oasis-open/sros/relationship.json",
+      "sha256": "f57e85384fdfdf51859591178e582a95f44b37de99967c597b0feb9fb7d5c554"
+    },
+    {
+      "path": "oasis-open/sros/sighting.json",
+      "sha256": "7f54f7af80917093f4ef8dea98095509d36f8b9012ace538d8f4a888336546a7"
+    }
+  ]
+}

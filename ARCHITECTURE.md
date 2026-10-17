@@ -54,3 +54,27 @@ Public URL requests resolve/check every address, pin the selected address during
 ## Extension points
 
 Future work: richer extraction/evaluation and review UI, MISP MCP transport, TAXII, additional SIEM backends, Navigator exports, ticketing, optional OCR and operator-configured polling. None is represented as operational today. No app-native Gmail API/OAuth extension is part of this POC.
+
+## Attack Flow extension
+
+`iti/attack_flow.py` builds a separately validated Attack Flow 2.0.0 extension bundle from the frozen package. It is integrated by `exporters.export_package`, with hashes, compatibility status and ZIP inclusion. The native STIX/MISP path is unchanged. Source-reported relationship records, not sequence numbers, drive links; schema/typed-reference checks use a hashed offline registry. Evidence and context remain in the sidecar and standard external references.
+
+`AttackFlowPanel.tsx` gates rendering by customer/environment, keys frames to package/scope, and validates the minimal same-origin bridge. The local MITRE Vue Builder is built separately and mounted by FastAPI; React does not implement the graph renderer. Its strict local artifact URL guard, read-only UI and browser CSP prevent automatic external fetching. See `integrations/attack-flow/README.md` for the inspected pin, bridge, build workaround, update/removal and limits.
+
+## D3FEND workbench suggestions
+
+`iti/defenses.py` validates the checksum/shape of a local normalized catalog, performs exact Enterprise ATT&CK ID lookup, and sorts unique D3FEND IDs. It does not re-extract intelligence, infer parents, call models or alter behavior applicability. `GET /api/assessments/{id}/defenses?customer_id=…&environment_id=…` requires the existing assessment scope and stores a separate immutable `defense_snapshot` keyed by assessment/catalog/generator revision. Current improvement status is a projection over that frozen snapshot.
+
+The existing `/api/ledger/{id}/improve` accepts optional `candidate_ref: {snapshot_id, candidate_id}` plus normal editable action fields. A candidate requires both customer and environment. The server resolves its stored assessment/behavior membership and constructs `origin` from trusted local data; client provenance is rejected. A process-safe scope lock plus deterministic assessment/customer/environment/behavior/D3FEND identity serializes duplicate submissions. Repeated selection returns the existing action without another history event or overwriting analyst edits. Manual actions remain independently creatable.
+
+Origin, original scope and timestamps persist on edits/deployment/retests. Candidate actions cannot be reassigned to another assessment or behavior. React clears old selection state and ignores late catalog/save responses after a scope change. Candidate suggestions are separate from immutable generated packages and STIX/MISP source facts. Existing test evidence rules exclusively control verification; action status is never a verification signal. No database schema migration or new service is needed for the optional JSON fields.
+
+## Vulnerability Intelligence extension
+
+`vulnerability_models.py` adds strict contracts; `vulnerabilities.py` reuses persisted source revisions/spans and customer receipts. Literal CVE occurrences are scoped to the source's associated customer/environment. Source assertions, observations, decisions, reviews and evidence attachments are immutable JSON records in the existing SQLite store. Asset identity is customer/environment/asset/CVE; changing a scanner finding creates an observation revision. CSV preview freezes context and imports through the same observation service. No SQL migration, data reset or new mandatory dependency is required; optional fields preserve existing models.
+
+`vulnerability_enrichment.py` owns explicit, bounded official KEV/FIRST/CNA retrieval, schema checks, immutable hashes and dated cache/freshness policy. It does not visit embedded source links. Public feed snapshots may be reused across customers; private source material, exposure observations, decision reads and evidence downloads cannot cross customer/environment scope. `vulnerability_demo.py` loads two limited source derivatives and synthetic observations only on request.
+
+`vulnerability-response-1` stores frozen inputs/reason codes and links prior proposals. Reviews are separate from proposals. Changed source, context, enrichment, exposure or verification generates a new decision without resetting receipt history. A prior accepted commitment is retained until explicit override. `ledger.py` accepts an additive vulnerability subject with no invented behavior and keeps existing action/test/history records. Scope, origin, review and exposure checks apply before creation/linking/testing; implementation hashes make previous verification stale when the change/retest plan changes. Normal behavior-ledger semantics remain unchanged.
+
+The React view is keyed by customer/environment and ignores late responses after unmount. Shared `ImprovementFields` preserves normal owner/change/retest editing. Attachment bytes are bounded, hashed and scoped, then measured test records must match those preserved references and declare method/context/criteria. These checks prove record consistency, not external scanner authenticity. Policy, data contract, freshness, clocks and API limits are documented in `docs/VULNERABILITY_INTELLIGENCE_DEMO.md`.
