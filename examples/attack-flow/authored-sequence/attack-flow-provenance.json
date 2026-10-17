@@ -1,0 +1,139 @@
+{
+  "generator": "attack-flow-2",
+  "upstream_revision": "5c8bf4ca9ff64ef9b55c38a2505db318750cbcda",
+  "extension_version": "2.0.0",
+  "source_document_id": "doc_80e4834f5f4d5ea79d2095642ae127a1",
+  "source_revision_id": "rev_fc608a72ee9455a7bf1ff1ffa45386f0",
+  "source_hash": "8bdea202369064ff9b5ebc8132eb7ec68b9519d85bb37f07cb37b352cc8503d2",
+  "extraction_id": "extraction_1ab4819978ab54b7baaac0d5c390fda2",
+  "package_id": "package_aa7931fb43455c42accfacd5415114e1",
+  "assessment_id": "assessment_0eab02cf9ec45e5c9338e06c84a73d61",
+  "context": {
+    "customer_id": "fictional-bank",
+    "customer_version": 1,
+    "environment_id": "windows-ad",
+    "environment_version": 1
+  },
+  "source_completeness": "complete-for-supported-content",
+  "source_gaps": [],
+  "mode": "analyst-curated",
+  "review_status": "Generated — review required",
+  "edge_policy": "Explicit source-reported relationships only; temporal order does not establish causation. Sequence integers and array order ignored.",
+  "actions": [
+    {
+      "action_id": "attack-action--03facadd-98f5-4b52-a236-b6694fd3c158",
+      "behavior_id": "behavior_f129a853541852549a078dfea8a3ffcb",
+      "evidence": [
+        {
+          "schema_version": "1.0",
+          "id": "span_92ce7a479ea055f1a841241db7eac8ab",
+          "revision_id": "rev_fc608a72ee9455a7bf1ff1ffa45386f0",
+          "text": "CertUtil downloaded a lab text file. After the CertUtil download, a remote service launched a lab marker on a second Windows host. This establishes reported temporal order, not causation.",
+          "heading_path": [
+            "Authored Attack Flow sequence validation"
+          ],
+          "kind": "paragraph",
+          "start": 123,
+          "end": 310,
+          "offset_space": "normalized_unicode",
+          "raw_start": null,
+          "raw_end": null,
+          "segment": null
+        }
+      ],
+      "mapping_basis": "analyst_proposed",
+      "qualifier": "ATT&CK mapping is an analyst proposal based on this behavior, not malware family association",
+      "extraction_confidence": "medium",
+      "confidence_rationale": "Explicit matching source wording; limited recognizer, semantic support requires review",
+      "source_reliability": "not independently assessed",
+      "sequence_annotation_ignored": null
+    },
+    {
+      "action_id": "attack-action--6906a6c5-61bd-4235-802b-49deb201ac9c",
+      "behavior_id": "behavior_dd98bf4599d35eb7b5125c30cadc56b6",
+      "evidence": [
+        {
+          "schema_version": "1.0",
+          "id": "span_92ce7a479ea055f1a841241db7eac8ab",
+          "revision_id": "rev_fc608a72ee9455a7bf1ff1ffa45386f0",
+          "text": "CertUtil downloaded a lab text file. After the CertUtil download, a remote service launched a lab marker on a second Windows host. This establishes reported temporal order, not causation.",
+          "heading_path": [
+            "Authored Attack Flow sequence validation"
+          ],
+          "kind": "paragraph",
+          "start": 123,
+          "end": 310,
+          "offset_space": "normalized_unicode",
+          "raw_start": null,
+          "raw_end": null,
+          "segment": null
+        }
+      ],
+      "mapping_basis": "analyst_proposed",
+      "qualifier": "ATT&CK mapping is an analyst proposal based on this behavior, not malware family association",
+      "extraction_confidence": "medium",
+      "confidence_rationale": "Explicit matching source wording; limited recognizer, semantic support requires review",
+      "source_reliability": "not independently assessed",
+      "sequence_annotation_ignored": null
+    },
+    {
+      "action_id": "attack-action--13e041a9-07d9-414b-af40-42d073672d6c",
+      "behavior_id": "behavior_8ebac7df91655a01abcaeb83c950aebd",
+      "evidence": [
+        {
+          "schema_version": "1.0",
+          "id": "span_a7957b859eff5587add75e4634ed167b",
+          "revision_id": "rev_fc608a72ee9455a7bf1ff1ffa45386f0",
+          "text": "AnyDesk was installed on a separate host. Its timing relative to the other two actions is unknown.",
+          "heading_path": [
+            "Authored Attack Flow sequence validation"
+          ],
+          "kind": "paragraph",
+          "start": 312,
+          "end": 410,
+          "offset_space": "normalized_unicode",
+          "raw_start": null,
+          "raw_end": null,
+          "segment": null
+        }
+      ],
+      "mapping_basis": "analyst_proposed",
+      "qualifier": "ATT&CK mapping is an analyst proposal based on this behavior, not malware family association",
+      "extraction_confidence": "medium",
+      "confidence_rationale": "Explicit matching source wording; limited recognizer, semantic support requires review",
+      "source_reliability": "not independently assessed",
+      "sequence_annotation_ignored": null
+    }
+  ],
+  "edges": [
+    {
+      "relationship_id": "relationship_c381d003016257698901f3d15fbb9ddc",
+      "source_behavior": "behavior_f129a853541852549a078dfea8a3ffcb",
+      "target_behavior": "behavior_dd98bf4599d35eb7b5125c30cadc56b6",
+      "source_action": "attack-action--03facadd-98f5-4b52-a236-b6694fd3c158",
+      "target_action": "attack-action--6906a6c5-61bd-4235-802b-49deb201ac9c",
+      "semantics": "reported temporal order; causation not established",
+      "assertion": "The authored source places the CertUtil download before the remote service action.",
+      "qualifier": null,
+      "evidence": [
+        {
+          "schema_version": "1.0",
+          "id": "span_92ce7a479ea055f1a841241db7eac8ab",
+          "revision_id": "rev_fc608a72ee9455a7bf1ff1ffa45386f0",
+          "text": "CertUtil downloaded a lab text file. After the CertUtil download, a remote service launched a lab marker on a second Windows host. This establishes reported temporal order, not causation.",
+          "heading_path": [
+            "Authored Attack Flow sequence validation"
+          ],
+          "kind": "paragraph",
+          "start": 123,
+          "end": 310,
+          "offset_space": "normalized_unicode",
+          "raw_start": null,
+          "raw_end": null,
+          "segment": null
+        }
+      ]
+    }
+  ],
+  "omissions": []
+}

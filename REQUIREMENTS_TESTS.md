@@ -28,3 +28,14 @@
 - Actual running HTTP acceptance: `validation/api-acceptance.json`; bounded live report index listing: `validation/index-listing.json`.
 - Five-fixture measured extraction: `validation/evaluation.json` / `.html`. One cloud behavior missed; no suppression of the failure. Exact rules searched and cited/independent retrieval counts retained.
 - Capability states and skipped external prerequisites: `validation/readiness.json`, `VALIDATION.md`. Browser not run because permitted browser control was unavailable; live AI/Gmail handoff/MISP/SIEM outcomes are not claimed.
+
+## Attack Flow acceptance
+
+- [x] Real pinned Builder build, isolated lock/dependencies, local FastAPI static serving.
+- [x] Separate extension export/schema/reference validation; stable identities and frozen provenance (`tests/test_attack_flow.py`).
+- [x] Evidence-linked forward/reversed temporal semantics; unknown/partial/repeated-technique/no-actions/cycle/omission cases.
+- [x] Manifest hashes, ZIP, historical preservation and unchanged native CTI/MISP/scenarios.
+- [x] Customer/environment download enforcement and same-origin framing/network policy.
+- [x] React scope gate/remount, stale/forged readiness messages, timeout, failure/retry, old/empty state (`web/tests/attack-flow.test.tsx`).
+- [x] Actual browser: ActiveMQ unordered nodes; authored temporal arrow/disconnected action; fit, pan/zoom, fullscreen, download and local editable draft. See actual evidence in `validation/attack-flow/`.
+- [x] Offline acceptance: backend outbound deny guard plus browser same-origin CSP; observed resources and console retained. This is application-scoped network denial, not a claim that the host's network adapter was disabled.

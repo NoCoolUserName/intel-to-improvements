@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+"""Explicit, offline transform of a verified Attack Flow archive and official link snapshot.
+No downloaded JavaScript is evaluated. No harvesting or runtime network requests.
+"""
+import argparse
+import hashlib
+import json
+import re
+import tarfile
+from datetime import datetime
+from pathlib import Path
+from urllib.parse import urljoin
+from bs4 import BeautifulSoup
+
+ROOT = Path(__file__).resolve().parents[1]
+VERSION = 'd3fend-transform-1'
+
+def parse_enum(raw):
+    match = re.fullmatch(r'export const enums = (.*);\s*export default enums;\s*', raw.decode(), re.S)
+    if not match:
+        raise ValueError('Unexpected enum wrapper; review upstream format before refreshing')
+    return json.loads(match[1])
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--archive', type=Path, required=True)
+    parser.add_argument('--references', type=Path, required=True, help='Saved official D3FEND matrix HTML')
+    parser.add_argument('--retrieved-at', required=True, help='Actual UTC retrieval timestamp of supplied references')
+    args = parser.parse_args()
+    retrieved = datetime.fromisoformat(args.retrieved_at.replace('Z', '+00:00'))
+    if retrieved.tzinfo is None or retrieved.utcoffset().total_seconds() != 0:
+        raise ValueError('Retrieval timestamp must include UTC timezone')
+    pin = json.loads((ROOT/'integrations/attack-flow/pin.json').read_text())
+    archive = args.archive.read_bytes()
+    if hashlib.sha256(archive).hexdigest() != pin['archive_sha256']:
+        raise ValueError('Source archive checksum mismatch')
+    prefix = 'attack-flow-'+pin['revision']+'/src/attack_flow_builder/'
+    paths = ['src/assets/configuration/AttackFlowTemplates/MitreDefend.ts',
+             'src/assets/configuration/AttackFlowTemplates/MitreAttack.ts',
+             'src/assets/configuration/AttackFlowRecommender/AttackFlowRecommender.ts',
+             'sources/update_mitre_defend.mjs', 'sources/sources.mjs']
+    with tarfile.open(args.archive) as tar:
+        raw = {p: tar.extractfile(prefix+p).read() for p in paths}
+    defend, attack = [parse_enum(raw[p]) for p in paths[:2]]
+    references = args.references.read_bytes()
+    links = {}
+    for a in BeautifulSoup(references, 'html.parser').select('a[href]'):
+        url = urljoin('https://d3fend.mitre.org/', a['href'])
+        if re.fullmatch(r'https://d3fend\.mitre\.org/technique/d3f:[A-Za-z0-9-]+/?', url):
+            links.setdefault(a.get_text(' ', strip=True), url)
+    if not links:
+        raise ValueError('No official technique links in supplied matrix snapshot')
+    supported = sorted(k for k,v in attack['techniques'].items() if 'enterprise-attack' in v['domains'])
+    mappings = {k: sorted(set(v)) for k,v in defend['relationships']['offensiveTechniquesToCountermeasures'].items() if k in supported}
+    used = set(d for ds in mappings.values() for d in ds)
+    techniques = {k: {'id': k, 'name': v['name'], 'reference': links.get(v['name'], 'https://d3fend.mitre.org/resources/'),
+                      'reference_scope': 'technique' if v['name'] in links else 'general resources; technique URL unavailable'}
+                  for k,v in defend['techniques'].items() if k in used}
+    if used-set(techniques):
+        raise ValueError('Dangling D3FEND mapping')
+    provenance = {'repository': 'https://github.com/center-for-threat-informed-defense/attack-flow',
+        'revision': pin['revision'], 'archive_sha256': pin['archive_sha256'], 'transformation_version': VERSION,
+        'sources': [{'path':'src/attack_flow_builder/'+p,'sha256':hashlib.sha256(raw[p]).hexdigest(),
+                    'url':'https://github.com/center-for-threat-informed-defense/attack-flow/blob/'+pin['revision']+'/src/attack_flow_builder/'+p} for p in paths],
+        'retrieved_at': args.retrieved_at, 'ontology_version': None, 'ontology_release_date': None,
+        'ontology_version_note': 'The pinned generated enum does not record its D3FEND ontology version or release date. Current website version is not substituted.',
+        'attack_source_version': '19.1 (declared by pinned sources.mjs)',
+        'official_links': {'source':'https://d3fend.mitre.org/','sha256':hashlib.sha256(references).hexdigest(),
+                           'retrieved_at':args.retrieved_at,'use':'Exact-name link lookup only; no definitions or new associations imported'},
+        'relationship_semantics': 'Catalog-derived association from D3FEND ATT&CK Extractor off_to_def results. Upstream retained only IDs, not per-edge inference paths or effectiveness evidence.',
+        'license': 'Attack Flow Apache-2.0; D3FEND MITRE terms of use; see LICENSE and D3FEND-LICENSE',
+        'domain': 'enterprise-attack', 'ordering': 'D3FEND ID ascending; no suitability ranking'}
+    data = {'schema_version':'1.0','provenance':provenance,'supported_ids':supported,'mappings':mappings,'techniques':techniques}
+    content = (json.dumps(data,ensure_ascii=False,sort_keys=True,indent=2)+'\n').encode()
+    out = ROOT/'catalogs/d3fend';out.mkdir(exist_ok=True)
+    (out/'catalog.json').write_bytes(content)
+    (out/'pin.json').write_text(json.dumps({'sha256':hashlib.sha256(content).hexdigest(),'revision':pin['revision'],
+        'transformation_version':VERSION,'techniques':len(techniques),'mapped_attack_ids':len(mappings)},indent=2)+'\n')
+    print(f'Wrote {len(mappings)} exact enterprise mappings and {len(techniques)} defenses; no network calls.')
+
+if __name__ == '__main__':
+    main()

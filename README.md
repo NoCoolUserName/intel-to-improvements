@@ -6,7 +6,7 @@ The deliverable is local software, not a hosted service. It requires no credenti
 
 ## Start
 
-Prerequisites: macOS Apple Silicon or Linux, Python 3.12+, Node 22.12+ and npm, network access for initial package installation. Tested on Apple Silicon macOS with Python 3.14.6 and Node 25.9.0. Linux is supported by portable dependencies/scripts but was not executed in this session.
+Prerequisites: macOS Apple Silicon or Linux, Python 3.12+, Node 22.22.2+ or 24.15+ (even-numbered supported release) and npm, network access for initial package installation. Tested on Apple Silicon macOS with Python 3.14.6; final workbench checks on Node 24.19.0 and pinned Builder build on Node 25.9.0. Linux is supported by portable dependencies/scripts but was not executed in this session.
 
 ```sh
 ./scripts/bootstrap
@@ -24,7 +24,7 @@ On macOS, after bootstrap, run `./scripts/install-desktop`. This installs **Inte
 
 ## Appearance
 
-Use the **Appearance** dropdown in the top bar on any page: **Original · Forest** keeps the existing design, **SailPoint · Ocean** uses navy/blue on light surfaces, and **Dropzone AI · Midnight** uses charcoal/violet/teal. Your choice is remembered in this browser and applies to tables, forms, drawers, and status labels. It is independent of customer selection. See [theme sources and accessibility checks](docs/THEMES.md).
+Use the **Appearance** dropdown in the top bar on any page: **Original · Forest** keeps the existing design, **Ocean** uses navy/blue on light surfaces, and **Midnight** uses charcoal/violet/teal. Your choice is remembered in this browser and applies to tables, forms, drawers, and status labels. It is independent of customer selection. See [theme sources and accessibility checks](docs/THEMES.md).
 
 ## Commands
 
@@ -43,6 +43,14 @@ Use the **Appearance** dropdown in the top bar on any page: **Original · Forest
 `ingest` prints the actual persisted job state, frozen context and assessment ID. `export` prints package ID and validation results. A failed live extraction exits nonzero and remains inspectable/resumable. CLI and UI call the same services.
 
 The generated ZIP contains STIX, native MISP, converted MISP, hunt Markdown/JSON, purple-team Markdown/JSON, Sigma assessment, evidence, coverage, compatibility report and a run manifest. `examples/activemq/` contains a reusable package from the limited attributed replay; full retrieved articles are never committed.
+
+## Coverage timing and demonstration cases
+
+The coverage card **Receipt → first assessment** is a completed milestone: original customer receipt to the first persisted assessment in the selected environment, including any waiting time. It is not a running stopwatch. Refreshing, generating a package, or reassessing a revision does not reset it. A newly received source has its own clock. History shows original receipt, first assessment, selected-revision assessment, and package readiness separately; package creation never becomes assessment completion. Long durations display hours/days rather than thousands of seconds.
+
+The badge **Local analysis · no AI** describes fixed rules running on this computer; it does not describe internet connectivity. URL fetching still uses the network. To request the configured model, choose **Model API analysis** in Add Intelligence before submitting the source. This requires configured `OPENAI_API_KEY` / `OPENAI_MODEL` and a customer profile allowing live processing. Results retain the method that produced them; no automatic promotion or fallback occurs. **Saved demo analysis** labels the exact-content curated replay and is available through **Load selected case** for the bundled excerpt. The full webpage has different content, so it cannot use those saved findings. URL/file/Gmail/text intake offers Local or Model API analysis. If an older job failed in saved-demo mode, its guided recovery buttons analyze the already-saved source with the method you select, retaining its original customer/environment snapshot, receipt clock and failed-job history. Model recovery still requires configuration and never silently falls back.
+
+Bundled edge-case examples, including the insufficient-evidence note, are hidden from the working-case and demo selectors by default. **Show test cases** reveals them. They check that nontechnical text produces Unknown relevance and no invented hunt/emulation plan. The test fixtures and their records remain intact; actual user-supplied sources with insufficient evidence remain visible.
 
 ## Inputs and processing
 
@@ -130,3 +138,21 @@ git commit -m "Build Intel to Improvements local proof of concept"
 ```
 
 Review staged content first; `.gitignore` excludes all full reports, live handoffs, secrets and runtime data. Application license and catalog/source notices are separate in `LICENSE` and `THIRD_PARTY_NOTICES.md`.
+
+## Reported Attack Flow
+
+The Purple team page includes the actual locally served MITRE Attack Flow Builder above the human validation scenarios. Generate an updated package to add **attack-flow.json** and its evidence/provenance sidecar. Historical packages remain unchanged. The existing ActiveMQ case is honestly unordered: its saved sequence numbers do not prove relationships.
+
+Fresh bootstrap builds the viewer. For an existing install, run `./scripts/build-attack-flow` and `npm --prefix web run build`, then restart `./scripts/run` and refresh the page. No extra running service, internet access after setup, or AI credential is needed to view a flow. The **Open in Builder** link opens a separate editable local draft; it never overwrites or approves the immutable package. See [integration setup, pin, semantics and smoke test](integrations/attack-flow/README.md).
+
+## Possible defensive countermeasures
+
+Open **Purple team**, expand a scenario, and inspect **Possible defensive countermeasures**. Exact ATT&CK-ID associations come from a pinned local D3FEND catalog. **Create improvement** opens the existing editable form: choose an owner, specify a concrete control/configuration and retest, then save. The ledger retains the source evidence and frozen catalog origin; subsequent visits offer **View improvement**. The same section is available in the behavior evidence drawer.
+
+These are suggestions requiring review. Creating, deploying or closing an action does not verify detection/prevention or stop verification clocks. No additional service, AI call, Builder install or internet access is needed for lookup. See [catalog provenance and refresh](catalogs/d3fend/README.md), [schema details](docs/SCHEMAS.md) and [validation](VALIDATION.md).
+
+## Vulnerability Intelligence
+
+Open **Vulnerability Intelligence** for source-linked CVEs, dated KEV/EPSS/CNA-CVSS enrichment, a manual/CSV exposure register, explained per-asset response proposals and reviewed actions in the existing improvement ledger. No scanner or AI credential is required. **Load historical examples** explicitly selects a fictional software company with TeamCity and BYOVD cases; real historical reporting and synthetic asset observations remain labeled separately.
+
+Review the evidence, accept/override the recommendation with a reason, then create an owner action and record scoped verification. Remediation and prior-compromise hunting stay separate; closure, synthetic results and attestations cannot become live verified remediation. See the [three-minute walkthrough, CSV contract, policy, provenance and limitations](docs/VULNERABILITY_INTELLIGENCE_DEMO.md). Run `npm --prefix web run build`, restart `./scripts/run`, and refresh an existing install to load this view.

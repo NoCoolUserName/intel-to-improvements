@@ -1,0 +1,302 @@
+{
+  "type": "bundle",
+  "id": "bundle--c25f9088-f6e3-423e-8de2-a38d0a3c5a50",
+  "objects": [
+    {
+      "type": "extension-definition",
+      "id": "extension-definition--fb9c968a-745b-4ade-9b25-c324172197f4",
+      "spec_version": "2.1",
+      "name": "Attack Flow",
+      "description": "Extends STIX 2.1 with features to create Attack Flows.",
+      "created": "2022-08-02T19:34:35.143Z",
+      "modified": "2022-08-02T19:34:35.143Z",
+      "created_by_ref": "identity--d673f8cb-c168-42da-8ed4-0cb26725f86c",
+      "schema": "https://center-for-threat-informed-defense.github.io/attack-flow/stix/attack-flow-schema-2.0.0.json",
+      "version": "2.0.0",
+      "extension_types": [
+        "new-sdo"
+      ],
+      "external_references": [
+        {
+          "source_name": "Documentation",
+          "description": "Documentation for Attack Flow",
+          "url": "https://center-for-threat-informed-defense.github.io/attack-flow"
+        },
+        {
+          "source_name": "GitHub",
+          "description": "Source code repository for Attack Flow",
+          "url": "https://github.com/center-for-threat-informed-defense/attack-flow"
+        }
+      ]
+    },
+    {
+      "type": "identity",
+      "spec_version": "2.1",
+      "id": "identity--d673f8cb-c168-42da-8ed4-0cb26725f86c",
+      "created_by_ref": "identity--d673f8cb-c168-42da-8ed4-0cb26725f86c",
+      "created": "2022-08-02T19:34:35.143Z",
+      "modified": "2022-08-02T19:34:35.143Z",
+      "name": "MITRE Center for Threat-Informed Defense",
+      "identity_class": "organization"
+    },
+    {
+      "spec_version": "2.1",
+      "created": "2026-10-15T04:35:02.368Z",
+      "modified": "2026-10-15T04:36:59.296Z",
+      "created_by_ref": "identity--67355fee-b0ba-4ec0-9a8b-a0d361635ae7",
+      "type": "identity",
+      "id": "identity--67355fee-b0ba-4ec0-9a8b-a0d361635ae7",
+      "name": "Intel to Improvements",
+      "identity_class": "system",
+      "description": "Application-generated representation of source intelligence; not the original publisher."
+    },
+    {
+      "spec_version": "2.1",
+      "created": "2026-10-15T04:35:02.368Z",
+      "modified": "2026-10-15T04:36:59.296Z",
+      "created_by_ref": "identity--67355fee-b0ba-4ec0-9a8b-a0d361635ae7",
+      "extensions": {
+        "extension-definition--fb9c968a-745b-4ade-9b25-c324172197f4": {
+          "extension_type": "new-sdo"
+        }
+      },
+      "type": "attack-action",
+      "id": "attack-action--f54fc71e-2a01-4a08-8515-f23a5da546f5",
+      "name": "The report describes exploitation of vulnerable ActiveMQ on Windows.",
+      "description": "Mapping: analyst_proposed. Certainty: medium.\nSource reliability: not independently assessed. Full evidence: attack-flow-provenance.json.",
+      "external_references": [
+        {
+          "source_name": "iti:behavior",
+          "external_id": "behavior_ee153d6de3ee5cb58cd98a3bd214e1e4"
+        },
+        {
+          "source_name": "iti:evidence-span",
+          "external_id": "span_5f0a75f789005e0a8ac065f40713d402"
+        }
+      ],
+      "technique_id": "T1190"
+    },
+    {
+      "spec_version": "2.1",
+      "created": "2026-10-15T04:35:02.368Z",
+      "modified": "2026-10-15T04:36:59.296Z",
+      "created_by_ref": "identity--67355fee-b0ba-4ec0-9a8b-a0d361635ae7",
+      "extensions": {
+        "extension-definition--fb9c968a-745b-4ade-9b25-c324172197f4": {
+          "extension_type": "new-sdo"
+        }
+      },
+      "type": "attack-action",
+      "id": "attack-action--ca206471-e67b-4eeb-85e7-97e3b62ad638",
+      "name": "CertUtil downloaded a payload.",
+      "description": "Mapping: analyst_proposed. Certainty: medium.\nSource reliability: not independently assessed. Full evidence: attack-flow-provenance.json.",
+      "external_references": [
+        {
+          "source_name": "iti:behavior",
+          "external_id": "behavior_efa888780f4c50ccaf41a33c6043bf7f"
+        },
+        {
+          "source_name": "iti:evidence-span",
+          "external_id": "span_a958d48ad5c15d1986b44a86b0cddb77"
+        }
+      ],
+      "technique_id": "T1105"
+    },
+    {
+      "spec_version": "2.1",
+      "created": "2026-10-15T04:35:02.368Z",
+      "modified": "2026-10-15T04:36:59.296Z",
+      "created_by_ref": "identity--67355fee-b0ba-4ec0-9a8b-a0d361635ae7",
+      "extensions": {
+        "extension-definition--fb9c968a-745b-4ade-9b25-c324172197f4": {
+          "extension_type": "new-sdo"
+        }
+      },
+      "type": "attack-action",
+      "id": "attack-action--ccff0b5c-93fc-43b9-afe8-21d489072b83",
+      "name": "Java parentage accompanied command execution.",
+      "description": "Mapping: analyst_proposed. Certainty: medium.\nSource reliability: not independently assessed. Full evidence: attack-flow-provenance.json.",
+      "external_references": [
+        {
+          "source_name": "iti:behavior",
+          "external_id": "behavior_7eac9ec8e2c45cb78b360058f151a3be"
+        },
+        {
+          "source_name": "iti:evidence-span",
+          "external_id": "span_a958d48ad5c15d1986b44a86b0cddb77"
+        }
+      ],
+      "technique_id": "T1059.003"
+    },
+    {
+      "spec_version": "2.1",
+      "created": "2026-10-15T04:35:02.368Z",
+      "modified": "2026-10-15T04:36:59.296Z",
+      "created_by_ref": "identity--67355fee-b0ba-4ec0-9a8b-a0d361635ae7",
+      "extensions": {
+        "extension-definition--fb9c968a-745b-4ade-9b25-c324172197f4": {
+          "extension_type": "new-sdo"
+        }
+      },
+      "type": "attack-action",
+      "id": "attack-action--9ae38353-ec49-413c-b6b9-7973c263139c",
+      "name": "Processes accessed LSASS memory.",
+      "description": "Mapping: analyst_proposed. Certainty: medium.\nSource reliability: not independently assessed. Full evidence: attack-flow-provenance.json.",
+      "external_references": [
+        {
+          "source_name": "iti:behavior",
+          "external_id": "behavior_19541a05f89350228e60ff7aa5280579"
+        },
+        {
+          "source_name": "iti:evidence-span",
+          "external_id": "span_498643b16e395ea891910ee45f2c558c"
+        }
+      ],
+      "technique_id": "T1003.001"
+    },
+    {
+      "spec_version": "2.1",
+      "created": "2026-10-15T04:35:02.368Z",
+      "modified": "2026-10-15T04:36:59.296Z",
+      "created_by_ref": "identity--67355fee-b0ba-4ec0-9a8b-a0d361635ae7",
+      "extensions": {
+        "extension-definition--fb9c968a-745b-4ade-9b25-c324172197f4": {
+          "extension_type": "new-sdo"
+        }
+      },
+      "type": "attack-action",
+      "id": "attack-action--52616026-f1bd-44e6-b852-2518fb8986e8",
+      "name": "Remote services launched payloads on other Windows hosts.",
+      "description": "Mapping: analyst_proposed. Certainty: medium.\nSource reliability: not independently assessed. Full evidence: attack-flow-provenance.json.",
+      "external_references": [
+        {
+          "source_name": "iti:behavior",
+          "external_id": "behavior_aad5e0ce01025b5e80506bfd6184e1ef"
+        },
+        {
+          "source_name": "iti:evidence-span",
+          "external_id": "span_3e85678c09ec5a0f8c67b052e2983d29"
+        }
+      ],
+      "technique_id": "T1569.002"
+    },
+    {
+      "spec_version": "2.1",
+      "created": "2026-10-15T04:35:02.368Z",
+      "modified": "2026-10-15T04:36:59.296Z",
+      "created_by_ref": "identity--67355fee-b0ba-4ec0-9a8b-a0d361635ae7",
+      "extensions": {
+        "extension-definition--fb9c968a-745b-4ade-9b25-c324172197f4": {
+          "extension_type": "new-sdo"
+        }
+      },
+      "type": "attack-action",
+      "id": "attack-action--0ec7bfa3-caeb-4acd-b6d4-60d738652e71",
+      "name": "Obfuscated PowerShell appeared during remote-service activity.",
+      "description": "Mapping: analyst_proposed. Certainty: medium.\nSource reliability: not independently assessed. Full evidence: attack-flow-provenance.json.",
+      "external_references": [
+        {
+          "source_name": "iti:behavior",
+          "external_id": "behavior_5d00d525ea505fab9e8d4308ac2a6463"
+        },
+        {
+          "source_name": "iti:evidence-span",
+          "external_id": "span_3e85678c09ec5a0f8c67b052e2983d29"
+        }
+      ],
+      "technique_id": "T1059.001"
+    },
+    {
+      "spec_version": "2.1",
+      "created": "2026-10-15T04:35:02.368Z",
+      "modified": "2026-10-15T04:36:59.296Z",
+      "created_by_ref": "identity--67355fee-b0ba-4ec0-9a8b-a0d361635ae7",
+      "extensions": {
+        "extension-definition--fb9c968a-745b-4ade-9b25-c324172197f4": {
+          "extension_type": "new-sdo"
+        }
+      },
+      "type": "attack-action",
+      "id": "attack-action--5c7a51e0-c666-4276-9d38-73ee0b583b83",
+      "name": "AnyDesk installed an automatically starting service.",
+      "description": "Mapping: analyst_proposed. Certainty: medium.\nSource reliability: not independently assessed. Full evidence: attack-flow-provenance.json.",
+      "external_references": [
+        {
+          "source_name": "iti:behavior",
+          "external_id": "behavior_3a87a565cd2e545f8eaa52b254a80000"
+        },
+        {
+          "source_name": "iti:evidence-span",
+          "external_id": "span_bc8057780dbc51f4b7e86f4a73e01948"
+        }
+      ],
+      "technique_id": "T1219.002"
+    },
+    {
+      "spec_version": "2.1",
+      "created": "2026-10-15T04:35:02.368Z",
+      "modified": "2026-10-15T04:36:59.296Z",
+      "created_by_ref": "identity--67355fee-b0ba-4ec0-9a8b-a0d361635ae7",
+      "extensions": {
+        "extension-definition--fb9c968a-745b-4ade-9b25-c324172197f4": {
+          "extension_type": "new-sdo"
+        }
+      },
+      "type": "attack-action",
+      "id": "attack-action--a64a7b2b-46a4-4457-9eca-d423e50bbf3e",
+      "name": "RDP sessions carried ransomware execution.",
+      "description": "Mapping: analyst_proposed. Certainty: medium.\nSource reliability: not independently assessed. Full evidence: attack-flow-provenance.json.",
+      "external_references": [
+        {
+          "source_name": "iti:behavior",
+          "external_id": "behavior_4a431faf3b075841bfe83bacfd7ed92a"
+        },
+        {
+          "source_name": "iti:evidence-span",
+          "external_id": "span_9a9409e03a4a508895e62df5bba7a4af"
+        }
+      ],
+      "technique_id": "T1021.001"
+    },
+    {
+      "spec_version": "2.1",
+      "created": "2026-10-15T04:35:02.368Z",
+      "modified": "2026-10-15T04:36:59.296Z",
+      "created_by_ref": "identity--67355fee-b0ba-4ec0-9a8b-a0d361635ae7",
+      "extensions": {
+        "extension-definition--fb9c968a-745b-4ade-9b25-c324172197f4": {
+          "extension_type": "new-sdo"
+        }
+      },
+      "type": "attack-flow",
+      "id": "attack-flow--b0aaa722-050a-42f1-84d7-31eb6f0bb66b",
+      "name": "ActiveMQ → LockBit · limited derived case",
+      "scope": "other",
+      "description": "Reported actions; unordered. Entry points include independently unordered components, not simultaneous or AND/OR actions. Temporal arrows do not establish causation. All actions require source review; human validation scenarios are scoped separately.\nSource: https://thedfirreport.com/2026/02/23/apache-activemq-exploit-leads-to-lockbit-ransomware/#limited-derived\nSource document: doc_cad182dfa5b05c799dd0997787aa9b87\nSource revision: rev_828789f3de1b5901929eaea7dbd172ed\nExtraction: extract_153772ecaef85329bee7ada906583ddc\nPackage: package_497a0e2993a15dcb90fc751f6736c5ca\nCompleteness: partial; Limited developer-curated derivative, not the full report; original contains image-only evidence; C2 address discrepancy .52 versus .62 requires source review",
+      "start_refs": [
+        "attack-action--f54fc71e-2a01-4a08-8515-f23a5da546f5",
+        "attack-action--ca206471-e67b-4eeb-85e7-97e3b62ad638",
+        "attack-action--ccff0b5c-93fc-43b9-afe8-21d489072b83",
+        "attack-action--9ae38353-ec49-413c-b6b9-7973c263139c",
+        "attack-action--52616026-f1bd-44e6-b852-2518fb8986e8",
+        "attack-action--0ec7bfa3-caeb-4acd-b6d4-60d738652e71",
+        "attack-action--5c7a51e0-c666-4276-9d38-73ee0b583b83",
+        "attack-action--a64a7b2b-46a4-4457-9eca-d423e50bbf3e"
+      ],
+      "external_references": [
+        {
+          "source_name": "iti:source-revision",
+          "external_id": "rev_828789f3de1b5901929eaea7dbd172ed"
+        },
+        {
+          "source_name": "iti:extraction",
+          "external_id": "extract_153772ecaef85329bee7ada906583ddc"
+        },
+        {
+          "source_name": "iti:package",
+          "external_id": "package_497a0e2993a15dcb90fc751f6736c5ca"
+        }
+      ]
+    }
+  ]
+}

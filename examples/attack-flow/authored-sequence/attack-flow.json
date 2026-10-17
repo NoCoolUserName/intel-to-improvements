@@ -1,0 +1,169 @@
+{
+  "type": "bundle",
+  "id": "bundle--f236e559-7f6d-40ab-ab11-33559c9e1fc0",
+  "objects": [
+    {
+      "type": "extension-definition",
+      "id": "extension-definition--fb9c968a-745b-4ade-9b25-c324172197f4",
+      "spec_version": "2.1",
+      "name": "Attack Flow",
+      "description": "Extends STIX 2.1 with features to create Attack Flows.",
+      "created": "2022-08-02T19:34:35.143Z",
+      "modified": "2022-08-02T19:34:35.143Z",
+      "created_by_ref": "identity--d673f8cb-c168-42da-8ed4-0cb26725f86c",
+      "schema": "https://center-for-threat-informed-defense.github.io/attack-flow/stix/attack-flow-schema-2.0.0.json",
+      "version": "2.0.0",
+      "extension_types": [
+        "new-sdo"
+      ],
+      "external_references": [
+        {
+          "source_name": "Documentation",
+          "description": "Documentation for Attack Flow",
+          "url": "https://center-for-threat-informed-defense.github.io/attack-flow"
+        },
+        {
+          "source_name": "GitHub",
+          "description": "Source code repository for Attack Flow",
+          "url": "https://github.com/center-for-threat-informed-defense/attack-flow"
+        }
+      ]
+    },
+    {
+      "type": "identity",
+      "spec_version": "2.1",
+      "id": "identity--d673f8cb-c168-42da-8ed4-0cb26725f86c",
+      "created_by_ref": "identity--d673f8cb-c168-42da-8ed4-0cb26725f86c",
+      "created": "2022-08-02T19:34:35.143Z",
+      "modified": "2022-08-02T19:34:35.143Z",
+      "name": "MITRE Center for Threat-Informed Defense",
+      "identity_class": "organization"
+    },
+    {
+      "spec_version": "2.1",
+      "created": "2026-10-15T04:39:55.413Z",
+      "modified": "2026-10-15T04:39:55.413Z",
+      "created_by_ref": "identity--4ef00f0d-34a2-45ba-a197-09dba09a4ca8",
+      "type": "identity",
+      "id": "identity--4ef00f0d-34a2-45ba-a197-09dba09a4ca8",
+      "name": "Intel to Improvements",
+      "identity_class": "system",
+      "description": "Application-generated representation of source intelligence; not the original publisher."
+    },
+    {
+      "spec_version": "2.1",
+      "created": "2026-10-15T04:39:55.413Z",
+      "modified": "2026-10-15T04:39:55.413Z",
+      "created_by_ref": "identity--4ef00f0d-34a2-45ba-a197-09dba09a4ca8",
+      "extensions": {
+        "extension-definition--fb9c968a-745b-4ade-9b25-c324172197f4": {
+          "extension_type": "new-sdo"
+        }
+      },
+      "type": "attack-action",
+      "id": "attack-action--03facadd-98f5-4b52-a236-b6694fd3c158",
+      "name": "CertUtil downloaded a lab text file.",
+      "description": "Mapping: analyst_proposed. Certainty: medium.\nATT&CK mapping is an analyst proposal based on this behavior, not malware family association\nSource reliability: not independently assessed. Full evidence: attack-flow-provenance.json.\nOutgoing link: reported temporal order; causation not established. The authored source places the CertUtil download before the remote service action.\nRelationship evidence: span_92ce7a479ea055f1a841241db7eac8ab",
+      "external_references": [
+        {
+          "source_name": "iti:behavior",
+          "external_id": "behavior_f129a853541852549a078dfea8a3ffcb"
+        },
+        {
+          "source_name": "iti:evidence-span",
+          "external_id": "span_92ce7a479ea055f1a841241db7eac8ab"
+        }
+      ],
+      "technique_id": "T1105",
+      "effect_refs": [
+        "attack-action--6906a6c5-61bd-4235-802b-49deb201ac9c"
+      ]
+    },
+    {
+      "spec_version": "2.1",
+      "created": "2026-10-15T04:39:55.413Z",
+      "modified": "2026-10-15T04:39:55.413Z",
+      "created_by_ref": "identity--4ef00f0d-34a2-45ba-a197-09dba09a4ca8",
+      "extensions": {
+        "extension-definition--fb9c968a-745b-4ade-9b25-c324172197f4": {
+          "extension_type": "new-sdo"
+        }
+      },
+      "type": "attack-action",
+      "id": "attack-action--6906a6c5-61bd-4235-802b-49deb201ac9c",
+      "name": "After the CertUtil download, a remote service launched a lab marker on a second Windows host.",
+      "description": "Mapping: analyst_proposed. Certainty: medium.\nATT&CK mapping is an analyst proposal based on this behavior, not malware family association\nSource reliability: not independently assessed. Full evidence: attack-flow-provenance.json.",
+      "external_references": [
+        {
+          "source_name": "iti:behavior",
+          "external_id": "behavior_dd98bf4599d35eb7b5125c30cadc56b6"
+        },
+        {
+          "source_name": "iti:evidence-span",
+          "external_id": "span_92ce7a479ea055f1a841241db7eac8ab"
+        }
+      ],
+      "technique_id": "T1569.002"
+    },
+    {
+      "spec_version": "2.1",
+      "created": "2026-10-15T04:39:55.413Z",
+      "modified": "2026-10-15T04:39:55.413Z",
+      "created_by_ref": "identity--4ef00f0d-34a2-45ba-a197-09dba09a4ca8",
+      "extensions": {
+        "extension-definition--fb9c968a-745b-4ade-9b25-c324172197f4": {
+          "extension_type": "new-sdo"
+        }
+      },
+      "type": "attack-action",
+      "id": "attack-action--13e041a9-07d9-414b-af40-42d073672d6c",
+      "name": "AnyDesk was installed on a separate host.",
+      "description": "Mapping: analyst_proposed. Certainty: medium.\nATT&CK mapping is an analyst proposal based on this behavior, not malware family association\nSource reliability: not independently assessed. Full evidence: attack-flow-provenance.json.",
+      "external_references": [
+        {
+          "source_name": "iti:behavior",
+          "external_id": "behavior_8ebac7df91655a01abcaeb83c950aebd"
+        },
+        {
+          "source_name": "iti:evidence-span",
+          "external_id": "span_a7957b859eff5587add75e4634ed167b"
+        }
+      ],
+      "technique_id": "T1219.002"
+    },
+    {
+      "spec_version": "2.1",
+      "created": "2026-10-15T04:39:55.413Z",
+      "modified": "2026-10-15T04:39:55.413Z",
+      "created_by_ref": "identity--4ef00f0d-34a2-45ba-a197-09dba09a4ca8",
+      "extensions": {
+        "extension-definition--fb9c968a-745b-4ade-9b25-c324172197f4": {
+          "extension_type": "new-sdo"
+        }
+      },
+      "type": "attack-flow",
+      "id": "attack-flow--47ac8102-34cb-42e4-aeb2-1762a78bda55",
+      "name": "attack-flow-sequence",
+      "scope": "other",
+      "description": "Reported actions; partial. Entry points include independently unordered components, not simultaneous or AND/OR actions. Temporal arrows do not establish causation. All actions require source review; human validation scenarios are scoped separately.\nSource: /Users/amoore/src/intel-to-improvements/fixtures/attack-flow-sequence.md\nSource document: doc_80e4834f5f4d5ea79d2095642ae127a1\nSource revision: rev_fc608a72ee9455a7bf1ff1ffa45386f0\nExtraction: extraction_1ab4819978ab54b7baaac0d5c390fda2\nPackage: package_aa7931fb43455c42accfacd5415114e1\nCompleteness: complete-for-supported-content; ",
+      "start_refs": [
+        "attack-action--03facadd-98f5-4b52-a236-b6694fd3c158",
+        "attack-action--13e041a9-07d9-414b-af40-42d073672d6c"
+      ],
+      "external_references": [
+        {
+          "source_name": "iti:source-revision",
+          "external_id": "rev_fc608a72ee9455a7bf1ff1ffa45386f0"
+        },
+        {
+          "source_name": "iti:extraction",
+          "external_id": "extraction_1ab4819978ab54b7baaac0d5c390fda2"
+        },
+        {
+          "source_name": "iti:package",
+          "external_id": "package_aa7931fb43455c42accfacd5415114e1"
+        }
+      ]
+    }
+  ]
+}

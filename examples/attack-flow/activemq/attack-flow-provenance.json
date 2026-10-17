@@ -1,0 +1,253 @@
+{
+  "generator": "attack-flow-2",
+  "upstream_revision": "5c8bf4ca9ff64ef9b55c38a2505db318750cbcda",
+  "extension_version": "2.0.0",
+  "source_document_id": "doc_cad182dfa5b05c799dd0997787aa9b87",
+  "source_revision_id": "rev_828789f3de1b5901929eaea7dbd172ed",
+  "source_hash": "9eac251c92911a4a7f8f5dac811635dee09a5881bc5feeda1f9181954885961c",
+  "extraction_id": "extract_153772ecaef85329bee7ada906583ddc",
+  "package_id": "package_497a0e2993a15dcb90fc751f6736c5ca",
+  "assessment_id": "assessment_a99a0e9aef0b52f19f53ba0f749a8fc7",
+  "context": {
+    "customer_id": "fictional-bank",
+    "customer_version": 1,
+    "environment_id": "windows-ad",
+    "environment_version": 1
+  },
+  "source_completeness": "partial",
+  "source_gaps": [
+    "Limited developer-curated derivative, not the full report; original contains image-only evidence",
+    "C2 address discrepancy .52 versus .62 requires source review"
+  ],
+  "mode": "replay",
+  "review_status": "Generated — review required",
+  "edge_policy": "Explicit source-reported relationships only; temporal order does not establish causation. Sequence integers and array order ignored.",
+  "actions": [
+    {
+      "action_id": "attack-action--f54fc71e-2a01-4a08-8515-f23a5da546f5",
+      "behavior_id": "behavior_ee153d6de3ee5cb58cd98a3bd214e1e4",
+      "evidence": [
+        {
+          "schema_version": "1.0",
+          "id": "span_5f0a75f789005e0a8ac065f40713d402",
+          "revision_id": "rev_828789f3de1b5901929eaea7dbd172ed",
+          "text": "The DFIR Report describes two intrusions through an exposed Windows ActiveMQ server vulnerable to CVE-2023-46604. The incident began in mid-February 2024; the second access followed 18 days later.",
+          "heading_path": [
+            "ActiveMQ to LockBit · limited derived case"
+          ],
+          "kind": "paragraph",
+          "start": 0,
+          "end": 196,
+          "offset_space": "normalized_unicode",
+          "raw_start": null,
+          "raw_end": null,
+          "segment": null
+        }
+      ],
+      "mapping_basis": "analyst_proposed",
+      "qualifier": null,
+      "extraction_confidence": "medium",
+      "confidence_rationale": "Curated against the supplied limited source representation",
+      "source_reliability": "not independently assessed",
+      "sequence_annotation_ignored": 1
+    },
+    {
+      "action_id": "attack-action--ca206471-e67b-4eeb-85e7-97e3b62ad638",
+      "behavior_id": "behavior_efa888780f4c50ccaf41a33c6043bf7f",
+      "evidence": [
+        {
+          "schema_version": "1.0",
+          "id": "span_a958d48ad5c15d1986b44a86b0cddb77",
+          "revision_id": "rev_828789f3de1b5901929eaea7dbd172ed",
+          "text": "CertUtil downloaded a Metasploit payload. Java was the parent of command execution.",
+          "heading_path": [
+            "ActiveMQ to LockBit · limited derived case"
+          ],
+          "kind": "paragraph",
+          "start": 198,
+          "end": 281,
+          "offset_space": "normalized_unicode",
+          "raw_start": null,
+          "raw_end": null,
+          "segment": null
+        }
+      ],
+      "mapping_basis": "analyst_proposed",
+      "qualifier": null,
+      "extraction_confidence": "medium",
+      "confidence_rationale": "Curated against the supplied limited source representation",
+      "source_reliability": "not independently assessed",
+      "sequence_annotation_ignored": 2
+    },
+    {
+      "action_id": "attack-action--ccff0b5c-93fc-43b9-afe8-21d489072b83",
+      "behavior_id": "behavior_7eac9ec8e2c45cb78b360058f151a3be",
+      "evidence": [
+        {
+          "schema_version": "1.0",
+          "id": "span_a958d48ad5c15d1986b44a86b0cddb77",
+          "revision_id": "rev_828789f3de1b5901929eaea7dbd172ed",
+          "text": "CertUtil downloaded a Metasploit payload. Java was the parent of command execution.",
+          "heading_path": [
+            "ActiveMQ to LockBit · limited derived case"
+          ],
+          "kind": "paragraph",
+          "start": 198,
+          "end": 281,
+          "offset_space": "normalized_unicode",
+          "raw_start": null,
+          "raw_end": null,
+          "segment": null
+        }
+      ],
+      "mapping_basis": "analyst_proposed",
+      "qualifier": null,
+      "extraction_confidence": "medium",
+      "confidence_rationale": "Curated against the supplied limited source representation",
+      "source_reliability": "not independently assessed",
+      "sequence_annotation_ignored": 2
+    },
+    {
+      "action_id": "attack-action--9ae38353-ec49-413c-b6b9-7973c263139c",
+      "behavior_id": "behavior_19541a05f89350228e60ff7aa5280579",
+      "evidence": [
+        {
+          "schema_version": "1.0",
+          "id": "span_498643b16e395ea891910ee45f2c558c",
+          "revision_id": "rev_828789f3de1b5901929eaea7dbd172ed",
+          "text": "Malicious processes accessed LSASS memory. A privileged service account subsequently enabled lateral activity; its credential origin is an analyst assessment.",
+          "heading_path": [
+            "ActiveMQ to LockBit · limited derived case"
+          ],
+          "kind": "paragraph",
+          "start": 283,
+          "end": 441,
+          "offset_space": "normalized_unicode",
+          "raw_start": null,
+          "raw_end": null,
+          "segment": null
+        }
+      ],
+      "mapping_basis": "analyst_proposed",
+      "qualifier": null,
+      "extraction_confidence": "medium",
+      "confidence_rationale": "Curated against the supplied limited source representation",
+      "source_reliability": "not independently assessed",
+      "sequence_annotation_ignored": 3
+    },
+    {
+      "action_id": "attack-action--52616026-f1bd-44e6-b852-2518fb8986e8",
+      "behavior_id": "behavior_aad5e0ce01025b5e80506bfd6184e1ef",
+      "evidence": [
+        {
+          "schema_version": "1.0",
+          "id": "span_3e85678c09ec5a0f8c67b052e2983d29",
+          "revision_id": "rev_828789f3de1b5901929eaea7dbd172ed",
+          "text": "Remote services launched payloads on additional Windows hosts. Obfuscated PowerShell appeared in this activity.",
+          "heading_path": [
+            "ActiveMQ to LockBit · limited derived case"
+          ],
+          "kind": "paragraph",
+          "start": 443,
+          "end": 554,
+          "offset_space": "normalized_unicode",
+          "raw_start": null,
+          "raw_end": null,
+          "segment": null
+        }
+      ],
+      "mapping_basis": "analyst_proposed",
+      "qualifier": null,
+      "extraction_confidence": "medium",
+      "confidence_rationale": "Curated against the supplied limited source representation",
+      "source_reliability": "not independently assessed",
+      "sequence_annotation_ignored": 4
+    },
+    {
+      "action_id": "attack-action--0ec7bfa3-caeb-4acd-b6d4-60d738652e71",
+      "behavior_id": "behavior_5d00d525ea505fab9e8d4308ac2a6463",
+      "evidence": [
+        {
+          "schema_version": "1.0",
+          "id": "span_3e85678c09ec5a0f8c67b052e2983d29",
+          "revision_id": "rev_828789f3de1b5901929eaea7dbd172ed",
+          "text": "Remote services launched payloads on additional Windows hosts. Obfuscated PowerShell appeared in this activity.",
+          "heading_path": [
+            "ActiveMQ to LockBit · limited derived case"
+          ],
+          "kind": "paragraph",
+          "start": 443,
+          "end": 554,
+          "offset_space": "normalized_unicode",
+          "raw_start": null,
+          "raw_end": null,
+          "segment": null
+        }
+      ],
+      "mapping_basis": "analyst_proposed",
+      "qualifier": null,
+      "extraction_confidence": "medium",
+      "confidence_rationale": "Curated against the supplied limited source representation",
+      "source_reliability": "not independently assessed",
+      "sequence_annotation_ignored": 4
+    },
+    {
+      "action_id": "attack-action--5c7a51e0-c666-4276-9d38-73ee0b583b83",
+      "behavior_id": "behavior_3a87a565cd2e545f8eaa52b254a80000",
+      "evidence": [
+        {
+          "schema_version": "1.0",
+          "id": "span_bc8057780dbc51f4b7e86f4a73e01948",
+          "revision_id": "rev_828789f3de1b5901929eaea7dbd172ed",
+          "text": "AnyDesk was installed with an automatically starting service.",
+          "heading_path": [
+            "ActiveMQ to LockBit · limited derived case"
+          ],
+          "kind": "paragraph",
+          "start": 556,
+          "end": 617,
+          "offset_space": "normalized_unicode",
+          "raw_start": null,
+          "raw_end": null,
+          "segment": null
+        }
+      ],
+      "mapping_basis": "analyst_proposed",
+      "qualifier": null,
+      "extraction_confidence": "medium",
+      "confidence_rationale": "Curated against the supplied limited source representation",
+      "source_reliability": "not independently assessed",
+      "sequence_annotation_ignored": 5
+    },
+    {
+      "action_id": "attack-action--a64a7b2b-46a4-4457-9eca-d423e50bbf3e",
+      "behavior_id": "behavior_4a431faf3b075841bfe83bacfd7ed92a",
+      "evidence": [
+        {
+          "schema_version": "1.0",
+          "id": "span_9a9409e03a4a508895e62df5bba7a4af",
+          "revision_id": "rev_828789f3de1b5901929eaea7dbd172ed",
+          "text": "RDP sessions carried ransomware execution. Attribution to the established LockBit operation is not confirmed: the authors assess independent use of a leaked builder.",
+          "heading_path": [
+            "ActiveMQ to LockBit · limited derived case"
+          ],
+          "kind": "paragraph",
+          "start": 619,
+          "end": 784,
+          "offset_space": "normalized_unicode",
+          "raw_start": null,
+          "raw_end": null,
+          "segment": null
+        }
+      ],
+      "mapping_basis": "analyst_proposed",
+      "qualifier": null,
+      "extraction_confidence": "medium",
+      "confidence_rationale": "Curated against the supplied limited source representation",
+      "source_reliability": "not independently assessed",
+      "sequence_annotation_ignored": 6
+    }
+  ],
+  "edges": [],
+  "omissions": []
+}

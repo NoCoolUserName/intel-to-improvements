@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+"""Build MITRE's pinned Builder in an ignored, isolated dependency directory."""
+from pathlib import Path
+import hashlib, importlib.util, json, os, shutil, subprocess, tarfile, urllib.request
+ROOT=Path(__file__).resolve().parents[1]
+CONFIG=ROOT/'integrations/attack-flow'
+pin=json.loads((CONFIG/'pin.json').read_text())
+work=ROOT/'runtime/attack-flow-build';work.mkdir(parents=True,exist_ok=True)
+archive=work/'source.tar.gz'
+# Reuse a previously downloaded, verified source archive if present.
+previous=ROOT/'runtime/attack-flow-upstream/source.tar.gz'
+if not archive.exists() and previous.exists():shutil.copy2(previous,archive)
+if not archive.exists():
+    url='https://codeload.github.com/center-for-threat-informed-defense/attack-flow/tar.gz/'+pin['revision']
+    with urllib.request.urlopen(url,timeout=90) as response: archive.write_bytes(response.read(40*1024*1024))
+if hashlib.sha256(archive.read_bytes()).hexdigest()!=pin['archive_sha256']:raise SystemExit('Pinned source archive hash mismatch; build stopped')
+# Extract just Builder + required shared config. Never a second repository or service.
+prefix='attack-flow-'+pin['revision']+'/'
+with tarfile.open(archive) as tar:
+    for member in tar:
+        name=member.name.removeprefix(prefix)
+        if not (name.startswith('src/attack_flow_builder/') or name.startswith('config/')):continue
+        target=work/name
+        if '..' in Path(name).parts or not target.resolve().is_relative_to(work.resolve()):raise SystemExit('Unsafe upstream path')
+        if member.isdir():target.mkdir(parents=True,exist_ok=True)
+        elif member.isfile():
+            target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(tar.extractfile(member).read())
+builder=work/'src/attack_flow_builder'
+spec=importlib.util.spec_from_file_location('iti_builder_patch',CONFIG/'patch.py');module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module);module.patch(builder)
+env=os.environ.copy();env['AFB_BASE_URL']=pin['base_url']
+subprocess.run(['npm','ci','--no-audit','--no-fund','--ignore-scripts','--cache',str(ROOT/'runtime/npm-cache')],cwd=builder,env=env,check=True)
+subprocess.run(['npm','run','build'],cwd=builder,env=env,check=True)
+out=ROOT/'runtime/attack-flow-viewer';staging=ROOT/'runtime/attack-flow-viewer-staging'
+if staging.exists():shutil.rmtree(staging)
+shutil.copytree(builder/'dist',staging)
+shutil.copy2(CONFIG/'LICENSE',staging/'LICENSE.txt')
+for notice in ('OASIS-LICENSE','INTER-LICENSE','JETBRAINS-MONO-LICENSE'):
+    shutil.copy2(CONFIG/notice,staging/(notice+'.txt'))
+# Retain notices for installed upstream dependencies in redistributed build output.
+for license_file in (builder/'node_modules').rglob('*'):
+    if license_file.is_file() and license_file.name.upper().split('.')[0] in ('LICENSE','LICENCE','NOTICE','COPYING'):
+        relative=license_file.relative_to(builder/'node_modules')
+        target=staging/'third-party-licenses'/relative
+        target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(license_file,target)
+
+(staging/'build.json').write_text(json.dumps(pin|{'node_version':subprocess.check_output(['node','--version'],text=True).strip(),'npm_version':subprocess.check_output(['npm','--version'],text=True).strip(),'patch_sha256':hashlib.sha256((CONFIG/'patch.py').read_bytes()).hexdigest(),'bridge_sha256':hashlib.sha256((CONFIG/'bridge.ts').read_bytes()).hexdigest(),'lockfile_sha256':hashlib.sha256((builder/'package-lock.json').read_bytes()).hexdigest()},indent=2))
+if out.exists():shutil.rmtree(out)
+staging.rename(out)
+print('Local Attack Flow Builder ready:',out)
