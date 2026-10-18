@@ -2,7 +2,7 @@
 name = "intel-to-improvements"
 version = "0.1.0"
 license = "MIT"
-license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md", "catalogs/*LICENSE", "catalogs/d3fend/*LICENSE", "integrations/attack-flow/*LICENSE"]
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md", "catalogs/*LICENSE", "catalogs/d3fend/*LICENSE", "integrations/attack-flow/*LICENSE", "licenses/DEPENDENCY_LICENSES.txt"]
 description = "Evidence-led local CTI workbench"
 requires-python = ">=3.12"
 dependencies = [

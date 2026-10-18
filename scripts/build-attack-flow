@@ -36,6 +36,8 @@ shutil.copytree(builder/'dist',staging)
 shutil.copy2(CONFIG/'LICENSE',staging/'LICENSE.txt')
 for notice in ('OASIS-LICENSE','INTER-LICENSE','JETBRAINS-MONO-LICENSE'):
     shutil.copy2(CONFIG/notice,staging/(notice+'.txt'))
+# Include version-matched recovered notices that upstream npm archives omit.
+shutil.copy2(ROOT/'web/public/third-party-licenses.txt',staging/'third-party-licenses.txt')
 # Retain notices for installed upstream dependencies in redistributed build output.
 for license_file in (builder/'node_modules').rglob('*'):
     if license_file.is_file() and license_file.name.upper().split('.')[0] in ('LICENSE','LICENCE','NOTICE','COPYING'):
