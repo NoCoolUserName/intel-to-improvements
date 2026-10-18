@@ -125,7 +125,7 @@ class Service:
         with self.store.lock('package:'+assessment_id):
             return self._generate(assessment_id,customer)
     def _generate(self,assessment_id,customer):
-        a=self.scoped('assessment',assessment_id,customer);pid=uid('package',a['id'],'packages-6-attack-flow-2')
+        a=self.scoped('assessment',assessment_id,customer);pid=uid('package',a['id'],'packages-7-license-notices')
         existing=self.store.maybe('package',pid)
         if existing:return existing
         from .models import CoverageAssessment,DetectionCandidate

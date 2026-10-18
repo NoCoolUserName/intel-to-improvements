@@ -40,6 +40,11 @@ def render_markdown(title,package,key):
                 lines += [f'\n### {k.replace("_"," ").title()}']+['- '+(x if isinstance(x,str) else json.dumps(x,ensure_ascii=False)) for x in v]
             elif isinstance(v,dict):lines += [f'\n**{k.replace("_"," ")}**', '```json',json.dumps(v,indent=2,ensure_ascii=False),'```']
             elif v is not None:lines += [f'\n**{k.replace("_"," ")}**: {v}']
+    lines+=['\n## Rule attribution', 'Queries derived from Sigma rules retain their original authors and licenses. Preserve this attribution when sharing queries or messages based on rule matches.']
+    for candidate in package.get('candidates',[]):
+        if any(item['behavior_id']==candidate['behavior_id'] for item in package[key]):
+            lines += [json.dumps({k:candidate.get(k) for k in ('id','title','author','license','source')},ensure_ascii=False)]
+    lines += ['Detection Rule License 1.1: https://github.com/SigmaHQ/Detection-Rule-License']
     lines+=['\n## Evidence excerpts']
     refs={e for item in package[key] for e in item['evidence']}
     for span in package['source']['spans']:
