@@ -131,7 +131,9 @@ def compile_subset(rule):
             return x
         result=disjunction()
         if pos!=len(tokens): raise UnsupportedSigma('Trailing unsupported tokens')
-        return {'result':'match' if result is True else 'no match' if result is False else 'inconclusive','missing_fields':sorted(missing),'method':'synthetic log match','scope':'restricted stateless Sigma semantics; no SIEM, deployment, prevention or SOC validation'}
+        return {'result':'match' if result is True else 'no match' if result is False else 'inconclusive','missing_fields':sorted(missing),'method':'synthetic log match','scope':'restricted stateless Sigma semantics; no SIEM, deployment, prevention or SOC validation',
+                'rule_id':str(rule.get('id','')), 'rule_author':rule.get('author'),
+                'rule_license':rule.get('license','Detection Rule License 1.1 (repository license)')}
     evaluate({}) # Validate complete condition even before first real event.
     return evaluate
 

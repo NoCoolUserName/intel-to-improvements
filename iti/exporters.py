@@ -5,7 +5,7 @@ import stix2
 from stix2patterns.validator import run_validator
 from stix2validator import validate_string,ValidationOptions
 from pymisp import MISPEvent
-from .store import uid,canonical,digest,now
+from .store import uid,canonical,digest,now,ROOT
 from .models import SourceDocument,Extraction
 from .analysis import validate_evidence
 
@@ -125,6 +125,15 @@ def export_package(store,package):
     flow,flow_provenance,flow_status=attack_flow.export(store,package)
     compatibility={'stix':sv,'native_misp':mv,'converter':conversion,'omissions':omissions+package['source']['conversion_losses'],'review_warnings':package['extraction']['warnings'],'readiness':'review required','attack_flow':flow_status,'claim':'Validated serialization is not semantic truth or universal TIP compatibility'}
     data={'cti.stix21.json':stix,'cti.misp.json':misp,'hunt.json':json.dumps({'context':package['context'],'source_gaps':package['source']['gaps'],'hunts':package['hunts']},indent=2),'purple-team.json':json.dumps({'context':package['context'],'source_gaps':package['source']['gaps'],'scenarios':package['emulations']},indent=2),'hunt.md':render_markdown('Evidence-led hunt package',package,'hunts'),'purple-team.md':render_markdown('Human-led controlled validation plan',package,'emulations'),'compatibility.json':json.dumps(compatibility,indent=2),'evidence.json':json.dumps({'source':package['source'],'extraction':package['extraction']},indent=2),'coverage.json':json.dumps({'context':package['context'],'source_revision':package['source']['revision_id'],'rows':package['coverage']},indent=2),'sigma.json':json.dumps({'context':package['context'],'candidates':package['candidates'],'retrieval':package['retrieval']},indent=2)}
+    attributions=[{k:c.get(k) for k in ('id','title','behavior_id','author','license','source')} for c in package.get('candidates',[])]
+    for name in ('hunt.json','purple-team.json'):
+        payload=json.loads(data[name]);payload['rule_attributions']=attributions
+        data[name]=json.dumps(payload,indent=2,ensure_ascii=False)
+    data['RULE_ATTRIBUTIONS.json']=json.dumps({'rules':attributions,'drl_url':'https://github.com/SigmaHQ/Detection-Rule-License','instructions':'Retain supplied authors, source URLs and applicable licenses when sharing rules or derived queries. Messages based on DRL rule matches must retain supplied author attribution. Third-party content is not relicensed under the application MIT license.'},indent=2,ensure_ascii=False)
+    data['LICENSE']=(ROOT/'LICENSE').read_text()
+    data['THIRD_PARTY_NOTICES.md']=(ROOT/'THIRD_PARTY_NOTICES.md').read_text()
+    license_paths=[*sorted((ROOT/'catalogs').rglob('*LICENSE')),*sorted((ROOT/'integrations/attack-flow').glob('*LICENSE'))]
+    data['THIRD_PARTY_LICENSES.txt']='\n\n'.join('===== '+path.relative_to(ROOT).as_posix()+' =====\n'+path.read_text() for path in license_paths)
     if flow:data['attack-flow.json']=flow
     data['attack-flow-provenance.json']=json.dumps(flow_provenance,indent=2,ensure_ascii=False)
     if converted:data['misp-converted.json']=converted

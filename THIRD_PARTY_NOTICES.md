@@ -2,6 +2,30 @@
 
 The application's MIT license does not relicense source articles, catalogs, specifications or dependency code.
 
+## Sharing generated packages
+
+New packages include the application LICENSE, this notice, full bundled catalog and
+integration license texts in THIRD_PARTY_LICENSES.txt, and RULE_ATTRIBUTIONS.json.
+Hunt and purple-team JSON/Markdown retain candidate-rule attribution; synthetic
+match messages retain the supplied rule author. Preserve supplied authors, source
+links and applicable license terms when sharing derived queries. Downstream SIEM
+alert templates must retain the supplied authors for messages based on DRL rule
+matches; this application does not configure a live SIEM or verify those templates.
+Generating a package after this update creates a new package revision and preserves
+historical packages. Previously downloaded packages are not retroactively updated.
+
+The packaged Python/JavaScript application metadata describes original application
+code. Dependency code, bundled catalogs and integration assets keep their own terms.
+Before redistributing an installed environment or compiled application, inventory
+the exact included dependency versions and ship their required license/NOTICE files.
+This repository's notices are not a complete transitive-dependency audit.
+
+Limited attributed derivatives of publisher articles still require a valid rights
+basis. Attribution and exclusion of the full article do not establish permission or
+fair use. Record permission or a documented legal basis before broader redistribution;
+replace a derivative fixture with an independently authored synthetic case if that
+basis cannot be established.
+
 - **The DFIR Report**, “Apache ActiveMQ Exploit Leads to LockBit Ransomware,” published 2026-02-23, analysts @malforsec, @lapadrino and @PeteO. Source: https://thedfirreport.com/2026/02/23/apache-activemq-exploit-leads-to-lockbit-ransomware/ . `fixtures/activemq-derived.md` is an attributed, limited developer/model-curated derivative; its text is not a complete article or screenshot. The fetched complete article remains in ignored `runtime/research/`. No private-report controls were bypassed. Publisher-supported case references TB27524 / PR39767 are distinct from the local document ID. Full source rights remain with the publisher.
 - **SigmaHQ/sigma** public rule subset: exact revision, retrieval date, file paths and SHA256 values in `catalogs/manifest.json`; full original YAML author/reference metadata retained. See `catalogs/SIGMA_LICENSE` and `catalogs/SIGMA_DRL_LICENSE`. The Sigma specification, tools and detection-rule licenses differ; the bundled rule files use Detection Rule License 1.1 unless an individual rule says otherwise.
 - **MITRE ATT&CK** metadata derived from the official enterprise STIX dataset at the pinned revision. © 2026 The MITRE Corporation. This work is reproduced and distributed with the permission of The MITRE Corporation. The license and disclaimers are reproduced in `catalogs/ATTACK_LICENSE`. ATT&CK mapping does not imply complete technique coverage or MITRE endorsement.

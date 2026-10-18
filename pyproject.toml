@@ -1,6 +1,8 @@
 [project]
 name = "intel-to-improvements"
 version = "0.1.0"
+license = "MIT"
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md", "catalogs/*LICENSE", "catalogs/d3fend/*LICENSE", "integrations/attack-flow/*LICENSE"]
 description = "Evidence-led local CTI workbench"
 requires-python = ">=3.12"
 dependencies = [
@@ -29,7 +31,7 @@ dev = ["pytest", "pytest-cov"]
 [project.scripts]
 iti = "iti.cli:main"
 [build-system]
-requires = ["setuptools>=69"]
+requires = ["setuptools>=77.0.3"]
 build-backend = "setuptools.build_meta"
 [tool.setuptools]
 packages = ["iti"]
