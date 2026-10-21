@@ -1,4 +1,4 @@
-# Five-minute interview walkthrough
+# Five-minute walkthrough
 
 Before presenting: `./scripts/bootstrap`, `./scripts/iti demo`, `./scripts/run`. Open **http://127.0.0.1:8000**. Use the latest case/profile version. Repeated demo runs preserve ingestion clocks and existing records. This is an actual local workflow; no prerecorded operational timeline is represented as live evidence.
 
