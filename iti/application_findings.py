@@ -4,7 +4,7 @@ import secrets
 from datetime import datetime, timezone, timedelta
 from . import profiles
 from .application_models import ApplicationContext, ApplicationFinding
-from .application_sarif import parse, normalize
+from .application_sarif import parse, normalize, NORMALIZER_VERSION
 from .store import uid, digest, canonical, now
 
 
@@ -28,7 +28,7 @@ def preview(store, customer, environment, raw, operator):
     rows, warnings = normalize(document, context, operator, sha)
     if len(canonical(context).encode()) * max(1, len(rows)) + len(canonical(rows).encode()) > 32 * 1024 * 1024:
         raise ValueError('Findings with frozen profile context exceed 32 MiB; split the report')
-    batch_id = uid('app_batch', context, sha, operator, 'sarif-normalizer-1')
+    batch_id = uid('app_batch', context, sha, operator, NORMALIZER_VERSION)
     source_id = uid('app_source', customer, environment, sha)
     timestamp = now()
     findings = [ApplicationFinding(**r, id=uid('app_finding', batch_id, r['run_index'], r['result_index']),
@@ -38,7 +38,7 @@ def preview(store, customer, environment, raw, operator):
     store.blob(raw)
     row = {'id': 'app_preview_' + secrets.token_hex(24), 'batch_id': batch_id, 'source_id': source_id,
         'source_sha256': sha, 'context': context, 'operator_context': operator, 'findings': findings,
-        'warnings': warnings, 'recorded_at': timestamp,
+        'warnings': warnings, 'recorded_at': timestamp, 'normalizer': NORMALIZER_VERSION,
         'expires_at': (datetime.now(timezone.utc) + timedelta(hours=1)).isoformat(),
         'runs': [{k: r[k] for k in ('automationDetails','invocations','versionControlProvenance','properties') if k in r} | {'index': i, 'scanner': {k: r['tool']['driver'][k] for k in ('name','version') if k in r['tool']['driver']}, 'results_present': 'results' in r} for i, r in enumerate(document['runs'])]}
     store.put('application_preview', row['id'], row, immutable=True)
@@ -47,6 +47,8 @@ def preview(store, customer, environment, raw, operator):
 
 def confirm(store, preview_id, customer, environment):
     preview_row = scoped(store, 'application_preview', preview_id, customer, environment)
+    if preview_row.get('normalizer') != NORMALIZER_VERSION:
+        raise ValueError('SARIF normalizer changed; preview SARIF again')
     # BEGIN IMMEDIATE makes profile version comparison and all batch writes atomic.
     with store.connect() as connection:
         connection.execute('BEGIN IMMEDIATE')
@@ -65,7 +67,7 @@ def confirm(store, preview_id, customer, environment):
             raise ValueError('Stored SARIF evidence integrity check failed')
         timestamp = now()
         batch = {k: preview_row[k] for k in ('context','operator_context','source_id','source_sha256','warnings','runs')}
-        batch.update(id=preview_row['batch_id'], imported_at=timestamp, normalizer='sarif-normalizer-1',
+        batch.update(id=preview_row['batch_id'], imported_at=timestamp, normalizer=preview_row['normalizer'],
             finding_ids=[r['id'] for r in preview_row['findings']], scan_completeness='unknown')
         source = {'id': batch['source_id'], 'context': frozen, 'sha256': batch['source_sha256'],
             'reference': 'blob:' + batch['source_sha256'], 'byte_length': len(raw), 'recorded_at': timestamp}

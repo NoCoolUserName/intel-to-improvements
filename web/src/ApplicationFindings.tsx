@@ -56,6 +56,7 @@ function Workspace({customer, environment, onDemo}: {customer: string; environme
       <label className="check"><input type="checkbox" name="synthetic"/>Synthetic / demo report</label><button className="primary" type="submit">Preview SARIF</button>
     </fieldset></form>
     {preview && <div><h3>Import preview: {preview.findings.length} findings</h3><p>Frozen profile v{preview.context.customer_version}, environment v{preview.context.environment_version}. Expires {preview.expires_at}.</p>
+      <p>Normalizer: {preview.normalizer || 'sarif-normalizer-1'}. A different normalizer creates a separate batch; existing imports stay unchanged.</p>
       {preview.already_imported && <p>Identical batch already imported; confirmation will return the existing batch.</p>}
       <ul>{preview.warnings.map((w: string, i: number) => <li key={i}>{w}</li>)}</ul>
       <details><summary>Per-finding limitations and run provenance</summary>{json({findings: preview.findings.map((r: Obj) => ({rule: r.rule_id, warnings: r.warnings, invocation: r.invocation_status})), runs: preview.runs})}</details>
@@ -66,7 +67,7 @@ function Workspace({customer, environment, onDemo}: {customer: string; environme
     </div>
     {data && <><div className="panel padded"><h2>Findings in selected scope</h2>{data.findings.length ? table(data.findings, true) : <p>No application findings in this scope.</p>}</div>
       <div className="panel padded"><h2>Import history and limitations</h2>{data.imports.map((batch: Obj) => <details key={batch.id}><summary>{batch.id} · {batch.finding_ids.length} findings · {batch.imported_at}</summary>{json(batch)}<a href={'/api/application-findings/sources/' + encodeURIComponent(batch.source_id) + query} download>Download original SARIF evidence</a></details>)}</div></>}
-    {finding && <div className="panel padded" aria-label="Finding details"><h2>Finding details: {finding.rule_id || 'Unknown rule'}</h2><p>{finding.verification}</p><blockquote>{finding.resolved_message || 'Message unresolved; inspect original message below.'}</blockquote>
+    {finding && <div className="panel padded" aria-label="Finding details"><h2>Finding details: {finding.rule_id || 'Unknown rule'}</h2><p>{finding.verification}</p><blockquote>{finding.resolved_message ?? 'Message unresolved; inspect original message below.'}</blockquote>
       <AppsecGovernance key={finding.id} finding={finding} findings={data?.findings||[]} imports={data?.imports||[]} onInspect={inspect}/>
       <h3>Original reported message</h3>{json(finding.message)}<h3>Rule metadata</h3>{json(finding.rule_metadata)}
       <h3>Scanner and run</h3>{json({scanner: finding.scanner, run_id: finding.run_id, run_index: finding.run_index, result_index: finding.result_index, invocation_status: finding.invocation_status, scan_timestamps: finding.scan_timestamps, scanner_level: finding.scanner_level, level_source: finding.level_source, severity_metadata: finding.severity_metadata})}

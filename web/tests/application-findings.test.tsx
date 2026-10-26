@@ -57,3 +57,29 @@ it('shows validation errors without offering confirmation',async()=>{
   fireEvent.submit(screen.getByRole('button',{name:'Preview SARIF'}).closest('form')!);expect((await screen.findByRole('alert')).textContent).toContain('Invalid SARIF structure');
   expect(screen.queryByRole('button',{name:'Confirm SARIF import'})).toBeNull();
 });
+it.each(['Literal {0}; value <img src=x onerror="alert(1)"> {1}', ''])('renders the persisted resolved message as literal text: %s',async(resolved)=>{
+  const original={text:'Literal {{0}}; value {0}',arguments:['<img src=x onerror="alert(1)"> {1}']};
+  const row={...finding,message:original,resolved_message:resolved};
+  vi.stubGlobal('fetch',vi.fn(async(url:any)=>{
+    if(String(url).includes('/governance?'))return response({detail:'Governance not loaded in this message test'},404);
+    if(String(url).includes('/finding?'))return response({finding:row,source:{sha256:'immutable-source-hash'},import:{normalizer:'sarif-normalizer-2',warnings:[]}});
+    return response({findings:[row],imports:[]});
+  }));
+  const {container}=mount();const user=userEvent.setup();
+  await user.click(await screen.findByRole('button',{name:'Inspect test-rule finding'}));
+  await screen.findByRole('heading',{name:'Finding details: test-rule'});
+  expect(container.querySelector('blockquote')?.textContent).toBe(resolved);
+  expect(container.querySelector('img,script')).toBeNull();
+  expect(container.querySelector('[onerror]')).toBeNull();
+  const message=screen.getByRole('heading',{name:'Original reported message'}).nextElementSibling;
+  expect(message?.textContent).toBe(JSON.stringify(original,null,2));
+  expect(screen.getByText(/immutable-source-hash/)).toBeTruthy();
+});
+it('exposes the preview normalizer and preserves the explicit import confirmation',async()=>{
+  vi.stubGlobal('fetch',vi.fn(async(url:any)=>response(String(url).endsWith('/preview')?{...preview,normalizer:'sarif-normalizer-2'}:{findings:[],imports:[]})));
+  mount();const user=userEvent.setup();await user.upload(screen.getByLabelText('SARIF file'),new File(['{}'],'synthetic.json'));
+  fireEvent.submit(screen.getByRole('button',{name:'Preview SARIF'}).closest('form')!);
+  expect(await screen.findByText(/Normalizer: sarif-normalizer-2/)).toBeTruthy();
+  expect(screen.getByText(/existing imports stay unchanged/)).toBeTruthy();
+  expect(screen.getByRole('button',{name:'Confirm SARIF import'})).toBeTruthy();
+});
