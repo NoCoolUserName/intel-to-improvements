@@ -1,12 +1,12 @@
 # Intel to Improvements
 
-A runnable local analyst workbench connecting source evidence to customer relevance, hunting, human-led validation, existing Sigma rules and evidence-scoped improvements. Coverage is the primary view. Generated artifacts, rule discovery, deployment, detection, prevention and SOC response are separate accomplishments.
+A runnable local analyst workbench connecting source evidence to customer relevance, hunting, human-led validation, existing Sigma rules and evidence-scoped improvements. It also supports CVE intelligence and manually imported application-security findings with human-reviewed remediation, exceptions and retest evidence. Coverage is the primary view. Generated artifacts, rule discovery, deployment, detection, prevention and SOC response are separate accomplishments.
 
 The deliverable is local software, not a hosted service. It requires no credentials, Docker, SIEM or MISP server for the demonstration. Run the commands below from the repository root.
 
 ## Start
 
-Prerequisites: macOS Apple Silicon or Linux, Python 3.12+, Node 22.22.2+ or 24.15+ (even-numbered supported release) and npm, network access for initial package installation. Tested on Apple Silicon macOS with Python 3.14.6; final workbench checks on Node 24.19.0 and pinned Builder build on Node 25.9.0. Linux is supported by portable dependencies/scripts but was not executed in this session.
+Prerequisites: macOS Apple Silicon or Linux, Python 3.12+, Node 22.22.2+ or 24.15+ (even-numbered supported release) and npm, network access for initial package installation. The current workbench was validated on Linux with Python 3.12.14 and Node 24.19.0. Earlier Apple Silicon macOS and pinned Attack Flow Builder validation are recorded in [VALIDATION.md](VALIDATION.md).
 
 ```sh
 ./scripts/bootstrap
@@ -17,6 +17,8 @@ Prerequisites: macOS Apple Silicon or Linux, Python 3.12+, Node 22.22.2+ or 24.1
 Open **http://127.0.0.1:8000**. The run command bootstraps a missing installation automatically; subsequent starts are local. Health: `curl http://127.0.0.1:8000/health`. Interactive API documentation: `/docs` (the restrictive CSP may block the external Swagger assets; the machine-readable `/openapi.json` remains available).
 
 All Python dependencies are in `.venv`; `uv.lock` and `web/package-lock.json` pin installations. Build/install caches, raw articles, database, model responses and generated working packages stay under ignored `runtime/`. No credential files are read except explicitly configured `.env`/environment variables. The runtime database contains sensitive selected source material: protect it like your research files.
+
+For an existing installation, stop the running server, update the checkout from `main`, rerun `./scripts/bootstrap` to install the locked dependency updates and rebuild the frontend, then restart `./scripts/run` and refresh the browser. Existing runtime data is retained; no database reset is required.
 
 ## Desktop launcher and icon
 
@@ -129,13 +131,7 @@ See `VALIDATION.md`, `validation/evaluation.html`, `REQUIREMENTS_TESTS.md`, `ARC
 
 Source material is untrusted; frontend rendering uses React text nodes, not source HTML. The app binds loopback by default, denies cross-origin/cross-site requests, sets restrictive response headers and limits input sizes. It is not designed for public hosting. Back up the SQLite database and immutable blobs together. Source/model/catalog/environment hashes in manifests support reproducible exports; live model answers are not claimed deterministic.
 
-Git initialization/commit could not run because this session’s runtime denies writes to `.git`. If permitted in a later ordinary shell, use your already-configured Git identity:
-
-```sh
-git init
-git add .
-git commit -m "Build Intel to Improvements local proof of concept"
-```
+Dependency security: [patched versions, audit results and the remaining diskcache advisory](docs/DEPENDENCY_SECURITY.md). The tested local Sigma workflow does not open that cache, but the dependency has no patched release and its advisory remains unresolved. Passing CI is not a claim that all dependencies are vulnerability-free.
 
 Review staged content first; `.gitignore` excludes all full reports, live handoffs, secrets and runtime data. Application license and catalog/source notices are separate in `LICENSE` and `THIRD_PARTY_NOTICES.md`.
 
@@ -157,4 +153,22 @@ Open **Vulnerability Intelligence** for source-linked CVEs, dated KEV/EPSS/CNA-C
 
 Review the evidence, accept/override the recommendation with a reason, then create an owner action and record scoped verification. Remediation and prior-compromise hunting stay separate; closure, synthetic results and attestations cannot become live verified remediation. See the [three-minute walkthrough, CSV contract, policy, provenance and limitations](docs/VULNERABILITY_INTELLIGENCE_DEMO.md). Run `npm --prefix web run build`, restart `./scripts/run`, and refresh an existing install to load this view.
 
-Manual SARIF 2.1.0 imports, including non-CVE findings: [Application Findings — Phase 1](docs/APPLICATION_FINDINGS.md). This separate workspace preserves scanner evidence without changing CVE decisions or the improvement ledger.
+## Application Findings and AppSec remediation
+
+Open **Application Findings**, select an existing customer/environment and upload a manually supplied **SARIF 2.1.0** file (up to 4 MiB / 1,000 results). Optionally enter application/repository/commit context, preview the findings and warnings, then explicitly confirm import. Findings can have a CWE, a CVE, or neither. Original bytes and hashes remain immutable; exact repeat imports are idempotent within their scope. Start with the clearly synthetic CodeQL- and Semgrep-shaped files in `fixtures/application-findings/`. See [import fields, provenance and limitations](docs/APPLICATION_FINDINGS.md).
+
+Inspect a finding and use the **Human-governed remediation** section:
+
+1. **Triage:** record the security reviewer, disposition and reason. New findings need review.
+2. **Remediation:** create an engineering commitment in the existing improvement ledger, with an owner, corrective action and retest plan. A fix claim remains **Fix reported / verification pending**.
+3. **Evidence & exceptions:** preserve supporting attachments, record reviewer-evaluated retests, or request a bounded risk exception and separately record an accepting authority's decision. Expired exceptions and stale or contradictory evidence remain visible with their history.
+
+**Reported ≠ Reviewed ≠ Assigned ≠ Implemented ≠ Verified.** An attestation, accepted risk, or absence from a later SARIF report does not establish a fix. Closure requires current reviewed supporting evidence and remains qualified as supplied/synthetic evidence review. Named reviewers and authorities are operator-declared. This local proof of concept does not authenticate enterprise approvals, execute scanners, remediate code, or independently verify operational outcomes.
+
+For a three-to-five-minute demonstration, click **Load synthetic remediation demo**. It selects a separate fictional Juniper Software scope with reviewed remediation, an unresolved finding, active/expired/unapproved exceptions and a contradictory retest. Follow the [Phase 2 walkthrough and evidence semantics](docs/APPSEC_REMEDIATION.md). For an isolated demo using its own runtime data and blocking non-loopback network calls:
+
+```sh
+npm --prefix web run build
+.venv/bin/python scripts/appsec-offline-smoke
+# Open http://127.0.0.1:8002; stop with Ctrl-C.
+```

@@ -248,7 +248,7 @@ class EvidenceAttachment(Model):
     reference: str
     sha256: str|None=None
     description: str
-    kind: Literal['live system','lab execution','synthetic fixture replay','analyst attestation']
+    kind: Literal['live system','lab execution','synthetic fixture replay','analyst attestation','supplied evidence']
 
 class TestRun(Model):
     id: str=''

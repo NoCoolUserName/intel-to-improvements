@@ -1,6 +1,6 @@
 # Application Findings — Phase 1
 
-A bounded, local manual SARIF 2.1.0 importer beside Vulnerability Intelligence. Application findings are scanner observations, including findings without CVEs. They do not enter the CVE-only `ExposureObservation`, response policy, enrichment or improvement/verification ledger. Scanning, remediation, verification and enterprise risk scoring are **not performed**. Successful import does not establish that an application is secure.
+A bounded, local manual SARIF 2.1.0 importer beside Vulnerability Intelligence. Application findings are scanner observations, including findings without CVEs. They do not enter the CVE-only `ExposureObservation`, response policy, enrichment or automatically create improvement/verification records. Human-governed remediation is available separately in [Phase 2](APPSEC_REMEDIATION.md). Scanning, execution of remediation/retests and enterprise risk scoring are **not performed**. Successful import does not establish that an application is secure.
 
 ## Import and inspect
 
@@ -37,7 +37,7 @@ Four identities remain distinct:
 
 Preview records use unguessable server-generated identifiers, freeze scope/context and expire after one hour. Confirmation accepts only that identifier and selected customer/environment; it cannot accept client-forged normalized rows. Cross-scope, expired and changed-profile previews fail. Profile version comparison and all source/batch/finding/event records commit in one SQLite transaction; concurrent confirmations are idempotent. Validation completes before preview storage. Preview blobs/records remain local evidence even if never confirmed; they are not findings. No cleanup scheduler is introduced.
 
-Persistence adds record kinds to the existing SQLite store: `application_preview`, `application_source`, `application_batch`, `application_finding`. There is no migration or database reset. Prior records and raw evidence are not overwritten. A later report that omits a finding does not mean it was fixed, closed or verified. There is no remediation state or ledger mutation.
+Persistence adds record kinds to the existing SQLite store: `application_preview`, `application_source`, `application_batch`, `application_finding`. There is no migration or database reset. Prior records and raw evidence are not overwritten. A later report that omits a finding does not mean it was fixed, closed or verified. The importer creates no remediation state or ledger mutation; explicit Phase 2 governance is separate.
 
 API routes under `/api/application-findings`: `POST /preview` (multipart file + scope + optional context), `POST /confirm` (JSON preview ID + scope), `GET /` (scoped list/history), `GET /{finding_id}`, `GET /imports/{batch_id}`, and `GET /sources/{source_id}` (original bytes). All reads require `customer_id` and `environment_id` query parameters. Scope is enforced server-side, independently of UI selection.
 
@@ -59,6 +59,6 @@ npm --prefix web run build
 
 Backend tests include real FastAPI multipart preview/confirm/list/detail/download, multiple runs and references, both fixtures, unknown metadata, severity provenance, logical identities, concurrent repeats, stale/expired/forged/cross-scope previews, unsafe strings, malformed/oversized/pathological inputs, source integrity and transaction rollback. Frontend tests cover import confirmation, preview invalidation, errors, escaped content and late scope responses. Existing regression suites cover CVE and ledger compatibility. All are offline and deterministic. The repository's unchanged CI runs correctness lint, tests, build, secrets and pinned Semgrep rules.
 
-Phase 2 remediation governance, Phase 3 dashboards, prioritization, live scanner/GitHub/ticket integrations, automatic closure, background polling, AI analysis and autonomous remediation remain deferred and excluded.
+Phase 2 human-governed remediation is documented in [APPSEC_REMEDIATION.md](APPSEC_REMEDIATION.md). Phase 3 dashboards, prioritization, live scanner/GitHub/ticket integrations, automatic closure, background polling, AI analysis and autonomous remediation remain deferred and excluded.
 
 Local validation on 2026-10-26: full backend suite **108 passed**; frontend **35 passed** across five files; TypeScript and production build passed; shared Ruff correctness rules passed; Semgrep 1.180.0 with the six pinned repository security rules found zero issues; Gitleaks 8.24.3 found zero leaks in the publishable snapshot. A real headless Chromium session against an isolated loopback server imported both fixtures (four persisted findings), inspected details, verified downloaded evidence hashes, reloaded persisted data, repeated imports without adding rows, switched scope, and checked mobile visibility/theme changes with zero page errors. These are synthetic import validations, not operational scanner or remediation results. Existing optional live-service acceptance limits remain unchanged.

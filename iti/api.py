@@ -155,6 +155,8 @@ def create_app(service=None):
     register(app,svc)
     from .application_api import register as register_application_findings
     register_application_findings(app,svc)
+    from .appsec_api import register as register_appsec
+    register_appsec(app,svc)
     viewer=ROOT/'runtime/attack-flow-viewer'
     @app.get('/api/attack-flow/viewer')
     def viewer_status():

@@ -12,6 +12,10 @@ def scope_key(assessment):
     c=assessment['context'];return ':'.join([c['customer_id'],c['environment_id'],assessment['source']['id']])
 
 def record_test(store,assessment,test):
+    if assessment.get('application_finding'):
+        from . import appsec
+        return appsec.record_test(store,assessment,test)
+    if any(e.kind=='supplied evidence' for e in test.evidence):raise ValueError('Supplied evidence is restricted to AppSec review, not CTI/CVE verification')
     from . import vulnerabilities
     vulnerability=assessment.get('vulnerability')
     dependencies=vulnerabilities.validate_test(store,assessment,test) if vulnerability else dependency(assessment,test.behavior_id)
@@ -41,6 +45,9 @@ def improve(store,assessment,action,candidate_ref=None):
         return _improve(store,assessment,action,candidate_ref)
 
 def _improve(store,assessment,action,candidate_ref):
+    if assessment.get('application_finding'):
+        from . import appsec
+        return appsec.improve(store,assessment,action,candidate_ref)
     from . import defenses,vulnerabilities
     vulnerability=assessment.get('vulnerability')
     if vulnerability:
