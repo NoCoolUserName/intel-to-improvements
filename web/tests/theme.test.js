@@ -14,7 +14,7 @@ describe('appearance preferences', () => {
     expect(readTheme()).toBe('original');
   });
   it.each([
-    ['original', '#152d31'], ['sailpoint', '#011c48'], ['dropzone', '#14141c'],
+    ['original', '#152d31'], ['sailpoint', '#011c48'], ['dropzone', '#14141c'], ['golden-ledger', '#f5c518'],
   ])('applies and remembers %s', (theme, color) => {
     applyTheme(theme);
     expect(document.documentElement.dataset.theme).toBe(theme);

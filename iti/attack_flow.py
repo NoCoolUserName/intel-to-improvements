@@ -1,6 +1,7 @@
-"""Separate Attack Flow export. No inference, no model calls, no change to core CTI.
+"""Separate reported-action and explicitly labeled synthetic-scenario Flow export.
 
-Only explicit source-reported EntityRelationships can create directed action edges.
+Reported-action edges require explicit source-reported EntityRelationships.
+Curated synthetic scenarios retain their hypothetical status in export provenance.
 Legacy sequence integers, extraction order and ATT&CK order are never evidence.
 """
 import copy
@@ -21,7 +22,7 @@ from .analysis import validate_evidence, resolve_attack
 DIRECTORY = ROOT / 'integrations/attack-flow'
 PIN = json.loads((DIRECTORY / 'pin.json').read_text())
 EXTENSION = 'extension-definition--fb9c968a-745b-4ade-9b25-c324172197f4'
-VERSION = 'attack-flow-2'
+VERSION = 'attack-flow-3'
 # Exact meanings only; all other relationships are retained as omissions.
 DIRECTIONS = {'precedes': False, 'followed-by': False, 'follows': True,
               'enables': False, 'causes': False}
@@ -103,7 +104,9 @@ def export(store, package):
     extraction = Extraction.model_validate(package['extraction'])
     validate_evidence(extraction, source)
     spans = {s.id: s for s in source.spans}
-    supported = [b for b in extraction.behaviors if b.kind == 'source_reported' and b.evidence]
+    scenario = source.metadata.get('synthetic_scenario') is True and extraction.mode == 'analyst-curated'
+    allowed = ('analyst_inference', 'proposed') if scenario else ('source_reported',)
+    supported = [b for b in extraction.behaviors if b.kind in allowed and b.evidence]
     omissions = [{'id': b.id, 'reason': 'Not an evidenced source-reported action; retained in evidence.json for review'}
                  for b in extraction.behaviors if b not in supported]
     provenance = {
@@ -114,6 +117,7 @@ def export(store, package):
         'context': {k: package['context'][k] for k in ('customer_id', 'customer_version', 'environment_id', 'environment_version')},
         'source_completeness': source.completeness, 'source_gaps': source.gaps,
         'mode': extraction.mode, 'review_status': 'Generated — review required',
+        'representation': 'hypothetical synthetic scenario' if scenario else 'reported source actions',
         'edge_policy': 'Explicit source-reported relationships only; temporal order does not establish causation. Sequence integers and array order ignored.',
         'actions': [], 'edges': [], 'omissions': omissions,
     }
@@ -138,7 +142,7 @@ def export(store, package):
     for behavior in supported:
         refs = [{'source_name': 'iti:behavior', 'external_id': behavior.id}]
         refs += [{'source_name': 'iti:evidence-span', 'external_id': s} for s in behavior.evidence]
-        description = 'Mapping: ' + behavior.mapping_basis + '. Certainty: ' + behavior.extraction_confidence + '.'
+        description = ('HYPOTHETICAL SYNTHETIC SCENARIO; no observed intrusion asserted.\n' if scenario else '') + 'Mapping: ' + behavior.mapping_basis + '. Certainty: ' + behavior.extraction_confidence + '.'
         if behavior.qualifier: description += '\n' + behavior.qualifier
         description += '\nSource reliability: ' + behavior.source_reliability + '. Full evidence: attack-flow-provenance.json.'
         obj = dict(common, **extension, type='attack-action', id=sid(behavior.id, 'attack-action'),
@@ -158,7 +162,7 @@ def export(store, package):
     edges = []
     for rel in extraction.relationships:
         reason = None
-        if rel.kind != 'source_reported' or not rel.evidence:
+        if rel.kind not in allowed or not rel.evidence:
             reason = 'Relationship is not an evidenced source report'
         elif rel.relationship not in DIRECTIONS:
             reason = 'Relationship has no supported directed sequence semantics'
@@ -195,6 +199,8 @@ def export(store, package):
     unordered = [b.id for b in supported if b.id not in linked]
     order = 'unordered' if not edges else 'partial' if unordered or source.gaps or omissions else 'supported relationships only'
     note = 'Reported actions; ' + order + '. Entry points include independently unordered components, not simultaneous or AND/OR actions. Temporal arrows do not establish causation. All actions require source review; human validation scenarios are scoped separately.'
+    if scenario:
+        note = 'HYPOTHETICAL SYNTHETIC EXERCISE; no observed intrusion or operational outcome. Scenario ordering only; ' + order + '. Arrows do not establish real-world causation.'
     flow = dict(common, **extension, type='attack-flow', id=sid('flow', 'attack-flow'), name=source.title,
                 scope='other', description=note + '\nSource: ' + source.origin + '\nSource document: ' + source.id + '\nSource revision: ' + source.revision_id + '\nExtraction: ' + extraction.id + '\nPackage: ' + package['id'] + '\nCompleteness: ' + source.completeness + '; ' + '; '.join(source.gaps),
                 start_refs=[o['id'] for o in by_behavior.values() if o['id'] not in targets],

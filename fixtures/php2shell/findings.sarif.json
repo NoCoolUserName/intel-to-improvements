@@ -1,0 +1,133 @@
+{
+  "version": "2.1.0",
+  "properties": {
+    "synthetic": true,
+    "description": "Authored engineering review, not actual scanner output"
+  },
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Harborlight authored deployment review",
+          "version": "1-demo",
+          "rules": [
+            {
+              "id": "demo/runtime-image",
+              "shortDescription": {
+                "text": "Authored PHP runtime image predates the vendor fix; CVE-2026-109618 and CVE-2026-109619 require package and serving-worker evidence."
+              }
+            },
+            {
+              "id": "demo/origin-bypass",
+              "shortDescription": {
+                "text": "Authored direct-origin route bypasses the public WAF; a blocked public-route probe is insufficient."
+              }
+            },
+            {
+              "id": "demo/release-check",
+              "shortDescription": {
+                "text": "Authored release lacks a serving-runtime version/worker-restart evidence gate."
+              }
+            },
+            {
+              "id": "demo/research-compatibility",
+              "shortDescription": {
+                "text": "Authored research-upload compatibility exception while upgrading PHP; temporary network restrictions need review."
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "demo/runtime-image",
+          "level": "warning",
+          "message": {
+            "text": "Authored PHP runtime image predates the vendor fix; CVE-2026-109618 and CVE-2026-109619 require package and serving-worker evidence."
+          },
+          "fingerprints": {
+            "demo/v1": "runtime-image"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "Dockerfile"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "demo/origin-bypass",
+          "level": "warning",
+          "message": {
+            "text": "Authored direct-origin route bypasses the public WAF; a blocked public-route probe is insufficient."
+          },
+          "fingerprints": {
+            "demo/v1": "origin-bypass"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "deploy/origin-policy.txt"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "demo/release-check",
+          "level": "warning",
+          "message": {
+            "text": "Authored release lacks a serving-runtime version/worker-restart evidence gate."
+          },
+          "fingerprints": {
+            "demo/v1": "release-check"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "release/checklist.txt"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "demo/research-compatibility",
+          "level": "warning",
+          "message": {
+            "text": "Authored research-upload compatibility exception while upgrading PHP; temporary network restrictions need review."
+          },
+          "fingerprints": {
+            "demo/v1": "research-compatibility"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "deploy/research-runtime.txt"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

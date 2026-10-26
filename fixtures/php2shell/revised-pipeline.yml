@@ -1,0 +1,30 @@
+# SYNTHETIC teaching fixture. Placeholder action revisions; do not execute.
+name: Harborlight portal release demonstration
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  review:
+    name: Synthetic deployment review
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@1111111111111111111111111111111111111111
+        with:
+          persist-credentials: false
+      - name: Semgrep configuration review
+        run: semgrep scan --config synthetic-review.yml .
+  secrets:
+    name: Synthetic secret check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check secrets
+        uses: gitleaks/gitleaks-action@3333333333333333333333333333333333333333
+  regression:
+    name: Synthetic PHP upload regression
+    runs-on: ubuntu-latest
+    steps:
+      - name: PHP serving runtime and benign upload tests
+        run: python -m pytest synthetic_tests/runtime_and_benign_upload.py -q
+  external:
+    uses: example/shared/.github/workflows/security.yml@4444444444444444444444444444444444444444

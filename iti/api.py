@@ -46,6 +46,20 @@ def create_app(service=None):
     async def os_error(request,exc):return JSONResponse({'detail':str(exc)},status_code=422)
     @app.get('/health')
     def health():return {'status':'ok','version':'0.1.0','mode':'local single operator','utc':now(),'launcher_protocol':LAUNCHER_PROTOCOL,'checkout_id':CHECKOUT_ID,'build_id':BUILD_ID}
+    @app.post('/api/demos/php2shell')
+    def php2shell_demo_load():
+        from .php2shell_demo import load
+        return load(svc)
+    @app.get('/api/demos/php2shell')
+    def php2shell_demo_status():
+        from .php2shell_demo import VERSION
+        return svc.store.maybe('working_case_demo', VERSION)
+    @app.get('/api/demos/php2shell/files/{name}')
+    def php2shell_demo_file(name:str):
+        from .php2shell_demo import FIXTURES
+        allowed={'dossier.md','waf-results.json','findings.sarif.json','initial-pipeline.yml','revised-pipeline.yml','initial-run.json','revised-run.json'}
+        if name not in allowed:raise KeyError('Unknown demo fixture')
+        return FileResponse(FIXTURES/name,filename=name)
     @app.get('/api/bootstrap')
     def bootstrap():return {'customers':svc.store.all('customer'),'sectors':SECTORS,'templates':[profiles.WINDOWS.model_dump(),profiles.MAC.model_dump()],'cases':[{'id':'activemq-derived','title':'ActiveMQ → LockBit','description':'Limited attributed DFIR Report case · exact-content replay'},{'id':'no-ioc','title':'Zero IOCs','description':'Authored healthcare / shared technology case'},{'id':'insufficient','title':'Insufficient intelligence','description':'Authored nontechnical source; no justified emulation'},{'id':'held-out','title':'Held-out change case','description':'Authored negation / benign indicators fixture'}],'capabilities':readiness(svc.store)}
     @app.post('/api/customers')

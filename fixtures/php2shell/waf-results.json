@@ -1,0 +1,9 @@
+{
+  "synthetic": true,
+  "execution": "Authored interpretation exercise; no request was sent",
+  "samples": [
+    {"route": "public-waf", "sample": "blocked", "waf_action": "block", "alert": "received", "meaning": "This authored sample was blocked; broader protection and patch state are unknown"},
+    {"route": "direct-origin", "sample": "signature", "waf_action": "bypassed", "alert": "missing", "meaning": "Investigate exposed origin; signature is not proof of RCE"},
+    {"route": "research-upload", "sample": "no-signature", "waf_action": "allow", "alert": "unknown", "meaning": "Inconclusive; absence of a signature is not proof of patching"}
+  ]
+}

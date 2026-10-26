@@ -5,8 +5,9 @@ The **Appearance** dropdown in the main top bar offers:
 - **Original · Forest**: the original layout and palette, selected by default.
 - **Ocean**: light surfaces, navy navigation, blue actions and cyan highlights.
 - **Midnight**: dark charcoal surfaces, violet actions and teal highlights.
+- **Golden Ledger**: yellow navigation and actions, warm white surfaces, charcoal text, green details and serif display headings.
 
-This is one workbench with three color palettes. Switching themes preserves customer/environment selection, source evidence and operational state. The preference uses browser localStorage (`iti.appearance.theme`), not customer records. Invalid stored values fall back to Original. With storage disabled, switching still works for the current session. Native form color scheme and browser theme-color follow the palette. Responsive styling keeps the control visible on narrower screens.
+This is one workbench with four color palettes. Switching themes preserves customer/environment selection, source evidence and operational state. The preference uses browser localStorage (`iti.appearance.theme`), not customer records. Invalid stored values fall back to Original. With storage disabled, switching still works for the current session. Native form color scheme and browser theme-color follow the palette. Responsive styling keeps the control visible on narrower screens.
 
 ## Sources
 
