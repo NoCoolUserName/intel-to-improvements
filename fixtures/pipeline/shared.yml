@@ -1,0 +1,10 @@
+# SYNTHETIC caller shape; references are not retrieved or authenticated.
+name: Synthetic centralized checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  quality:
+    uses: NoCoolUserName/code-quality/.github/workflows/quality.yml@927052f6ef9ce21c1fec280dcc87affdee1ae87a
+  security:
+    uses: NoCoolUserName/code-quality/.github/workflows/security.yml@7301db3486bf182012a0ab8005207dd9b35f471c

@@ -1,0 +1,39 @@
+# SYNTHETIC: authored configuration, not an executed or audited pipeline.
+name: Synthetic direct controls
+on: [push, pull_request]
+permissions: read-all
+jobs:
+  sast:
+    name: Synthetic SAST
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@1111111111111111111111111111111111111111
+        with:
+          persist-credentials: false
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@2222222222222222222222222222222222222222
+        with:
+          languages: python
+      - name: Analyze CodeQL
+        uses: github/codeql-action/analyze@2222222222222222222222222222222222222222
+  secrets:
+    name: Synthetic secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@1111111111111111111111111111111111111111
+        with:
+          persist-credentials: false
+      - name: Check secrets
+        uses: gitleaks/gitleaks-action@3333333333333333333333333333333333333333
+  tests:
+    name: Synthetic regression
+    runs-on: ubuntu-latest
+    needs: [sast, secrets]
+    steps:
+      - name: Regression tests
+        run: python -m pytest -q
