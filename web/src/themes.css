@@ -1,4 +1,19 @@
-/* Brand-inspired palettes adapted for an evidence workbench. Original CSS stays intact. */
+/* Palettes adapted for an evidence workbench. Original CSS stays intact. */
+:root[data-theme="golden-ledger"] {
+  color-scheme: light;
+  --page: #f7f5ef; --surface: #fffefa; --surface-soft: #f3f0e6;
+  --surface-hover: #fff1b3; --border: #d9d4c3; --border-hover: #9b8434;
+  --text: #292d27; --muted: #565b50; --accent: #f5c518; --accent-hover: #e4b612;
+  --accent-text: #292d27; --link: #315d45; --focus: #71600b;
+  --sidebar: #f5c518; --sidebar-text: #292d27; --sidebar-muted: #4e482d;
+  --sidebar-active: #ffe58a; --sidebar-hover: #f9d64c; --sidebar-border: #b8971e;
+  --text-on-sidebar: #292d27; --mark-bg: #343e32; --mark-text: #ffe177; --highlight: #315d45;
+  --badge-bg: #f3edce; --badge-text: #5c501e; --badge-border: #d5c684;
+  --success-bg: #e6efe5; --success-text: #315d45; --success-border: #b5cdb7;
+  --warning-bg: #fff0c2; --warning-text: #715017; --warning-border: #ddc478;
+  --error-bg: #f8e6df; --error-text: #8b352b; --error-border: #ddb4a7;
+  --scrim: #292d2766; --shadow: #292d2722;
+}
 :root[data-theme="sailpoint"] {
   color-scheme: light;
   --page: #f2f5f7; --surface: #ffffff; --surface-soft: #f2f5f7;
@@ -94,3 +109,12 @@
 
 .job-recovery { width: 100%; padding: 4px 0 12px; }
 .job-recovery p { max-width: 760px; font-size: 12px; }
+
+:root[data-theme="golden-ledger"]:not([data-theme="original"]) {
+  & h1, & .php2shell-intro h2 {font-family:Georgia,"Times New Roman",serif;font-weight:500;letter-spacing:-.025em;}
+  & .sidebar nav button.active {color:#292d27;}
+  & .topbar {border-top:5px solid #f5c518;}
+  & .sidebar {box-shadow:2px 0 0 #b8971e;}
+  & .brand-mark {border-radius:3px;}
+  & .primary {box-shadow:0 2px 0 #c09b17;}
+}

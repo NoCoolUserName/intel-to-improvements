@@ -6,6 +6,13 @@ let host: HTMLDivElement, root: Root;
 const makePackage = (id='package-1', customer='bank') => ({id,context:{customer_id:customer,environment_id:'windows'},source:{title:'A source <img src=x onerror=alert(1)>'},artifacts:{names:['attack-flow.json'],validation:{attack_flow:{status:'generated',actions:2,edges:0,ordering:'unordered',explanation:'Temporal order unknown.',source_gaps:['image-only evidence']}}}});
 const render = (pack=makePackage(), customer='bank', regenerate=vi.fn()) => act(()=>root.render(<><AttackFlowPanel pack={pack} customer={customer} environment="windows" regenerate={regenerate} busy={false}/><h2>Human-led validation scenarios</h2><p>Existing human plan</p></>));
 function frame() {return host.querySelector('iframe')!;}
+it('labels explicitly curated scenario flows without calling them reported attacker actions',async()=>{
+  const pack:any=makePackage();pack.source.metadata={synthetic_scenario:true};pack.extraction={mode:'analyst-curated'};
+  await render(pack);
+  expect(host.textContent).toContain('Hypothetical exercise flow');
+  expect(host.textContent).toContain('2 scenario actions');
+  expect(host.textContent).not.toContain('Reported attacker actions');
+});
 function message(target: HTMLIFrameElement, overrides={}, source: Window|null=target.contentWindow, origin=location.origin) {
   const url=new URL(target.src);
   return new MessageEvent('message',{origin,source,data:{type:'iti-attack-flow',frame:url.searchParams.get('iti_frame'),packageId:url.searchParams.get('iti_package'),status:'ready',nodes:2,...overrides}});

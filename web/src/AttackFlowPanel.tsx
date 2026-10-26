@@ -22,6 +22,8 @@ export default function AttackFlowPanel(props: Props) {
 }
 function ScopedFlow({pack, customer, environment, regenerate, busy}: Props) {
   const info = pack.artifacts.validation.attack_flow;
+  const scenario = pack.source.metadata?.synthetic_scenario === true && pack.extraction?.mode === 'analyst-curated';
+  const flowLabel = scenario ? 'Hypothetical exercise flow' : 'Reported attack flow';
   const available = pack.artifacts.names.includes('attack-flow.json');
   const [frame, setFrame] = useState(() => crypto.randomUUID());
   const [state, setState] = useState<'loading'|'ready'|'error'>('loading');
@@ -58,18 +60,18 @@ function ScopedFlow({pack, customer, environment, regenerate, busy}: Props) {
     if(expanded) {if(document.fullscreenElement) await document.exitFullscreen();setExpanded(false);return;}
     try {await panel.current?.requestFullscreen();setExpanded(true);} catch {setExpanded(true);}
   }
-  return <section ref={panel} className={`panel padded attack-flow-panel ${expanded?'flow-expanded':''}`} aria-label="Reported attack flow">
-    <div className="panel-header"><div><h2>Reported attack flow</h2><p>{pack.source.title}</p></div><span className="badge amber">{available?'Generated — review required':info?.status==='empty'?'No supported actions':'Not generated'}</span></div>
-    <p className="fine">Reported attacker actions, including those outside this environment. The human-led scenarios below are scoped separately.</p>
+  return <section ref={panel} className={`panel padded attack-flow-panel ${expanded?'flow-expanded':''}`} aria-label={flowLabel}>
+    <div className="panel-header"><div><h2>{flowLabel}</h2><p>{pack.source.title}</p></div><span className="badge amber">{available?'Generated — review required':info?.status==='empty'?'No supported actions':'Not generated'}</span></div>
+    <p className="fine">{scenario?'Authored synthetic scenario actions and ordering. No observed intrusion or operational outcome is asserted.':'Reported attacker actions, including those outside this environment. The human-led scenarios below are scoped separately.'}</p>
     {!info ? <div className="flow-empty"><p>This historical package predates Attack Flow. Its existing artifacts remain unchanged.</p><button disabled={busy} onClick={regenerate}>Generate updated package</button></div>
       : info.status === 'empty' ? <div className="flow-empty"><strong>No supported reported actions</strong><p>{info.reason}</p></div>
       : !available ? <div className="banner error">Attack Flow is missing from this package. Other artifacts remain available.</div>
       : <>
         <div className="flow-controls"><button onClick={expand}>{expanded?<Minimize2 size={16}/>:<Maximize2 size={16}/>} {expanded?'Collapse':'Expand / fullscreen'}</button><button disabled={state!=='ready'} onClick={fit}><Scan size={16}/> Fit view</button><a className="button" href={urls.artifact} download="attack-flow.json"><Download size={16}/> Download Attack Flow JSON</a><a className="button" href={urls.editor} target="_blank" rel="noopener noreferrer"><ExternalLink size={16}/> Open in Builder</a></div>
-        <div className="flow-notes"><strong>{info.actions} reported actions · {info.edges} supported links · {info.ordering}</strong><p>{info.explanation}</p>{info.source_gaps?.length>0&&<p>Source gaps: {info.source_gaps.join('; ')}</p>}</div>
+        <div className="flow-notes"><strong>{info.actions} {scenario?'scenario actions':'reported actions'} · {info.edges} {scenario?'scenario links':'supported links'} · {info.ordering}</strong><p>{info.explanation}</p>{info.source_gaps?.length>0&&<p>Source gaps: {info.source_gaps.join('; ')}</p>}</div>
         <div className="flow-viewport" aria-busy={state==='loading'}>
-          {state!=='error'&&<iframe key={frame} ref={iframe} src={urls.viewer} title={`Reported attack flow: ${pack.source.title}`} sandbox="allow-scripts allow-same-origin allow-downloads" allow="fullscreen" onError={()=>{setState('error');setMessage('The local viewer failed to load.');}}/>}
-          {state==='loading'&&<div className="flow-status" role="status">Loading and rendering reported actions…</div>}
+          {state!=='error'&&<iframe key={frame} ref={iframe} src={urls.viewer} title={`${flowLabel}: ${pack.source.title}`} sandbox="allow-scripts allow-same-origin allow-downloads" allow="fullscreen" onError={()=>{setState('error');setMessage('The local viewer failed to load.');}}/>}
+          {state==='loading'&&<div className="flow-status" role="status">{scenario?'Loading and rendering scenario actions…':'Loading and rendering reported actions…'}</div>}
           {state==='error'&&<div className="flow-status" role="alert"><strong>Flow viewer unavailable</strong><p>{message}</p><button onClick={()=>{setState('loading');setMessage('');setFrame(crypto.randomUUID());}}><RotateCcw size={16}/> Retry viewer</button><p className="fine">The validation scenarios and artifact downloads remain available.</p></div>}
         </div>
         <p className="fine">Drag the canvas to pan; scroll to zoom. Builder edits are a separate local draft: use its save/export controls. They do not save into or approve this immutable package.</p>
