@@ -1,6 +1,6 @@
 # Final implementation checkpoint — 2026-10-08
 
-Workspace: `/Users/amoore/src/intel-to-improvements`. No applicable AGENTS.md. Git initialization denied because runtime makes `.git` read-only. Existing Git identity is configured; no invented identity or workaround used.
+Workspace: repository root. No applicable AGENTS.md. Git initialization was unavailable in that runtime. Existing Git identity was preserved.
 
 Implementation complete for the bounded local POC:
 - FastAPI/Pydantic/SQLite services, React/TypeScript/Vite workbench, shared CLI/API, locked local dependencies.

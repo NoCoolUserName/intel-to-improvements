@@ -145,7 +145,7 @@
       "id": "attack-flow--47ac8102-34cb-42e4-aeb2-1762a78bda55",
       "name": "attack-flow-sequence",
       "scope": "other",
-      "description": "Reported actions; partial. Entry points include independently unordered components, not simultaneous or AND/OR actions. Temporal arrows do not establish causation. All actions require source review; human validation scenarios are scoped separately.\nSource: /Users/amoore/src/intel-to-improvements/fixtures/attack-flow-sequence.md\nSource document: doc_80e4834f5f4d5ea79d2095642ae127a1\nSource revision: rev_fc608a72ee9455a7bf1ff1ffa45386f0\nExtraction: extraction_1ab4819978ab54b7baaac0d5c390fda2\nPackage: package_aa7931fb43455c42accfacd5415114e1\nCompleteness: complete-for-supported-content; ",
+      "description": "Reported actions; partial. Entry points include independently unordered components, not simultaneous or AND/OR actions. Temporal arrows do not establish causation. All actions require source review; human validation scenarios are scoped separately.\nSource: fixtures/attack-flow-sequence.md\nSource document: doc_80e4834f5f4d5ea79d2095642ae127a1\nSource revision: rev_fc608a72ee9455a7bf1ff1ffa45386f0\nExtraction: extraction_1ab4819978ab54b7baaac0d5c390fda2\nPackage: package_aa7931fb43455c42accfacd5415114e1\nCompleteness: complete-for-supported-content; ",
       "start_refs": [
         "attack-action--03facadd-98f5-4b52-a236-b6694fd3c158",
         "attack-action--13e041a9-07d9-414b-af40-42d073672d6c"
