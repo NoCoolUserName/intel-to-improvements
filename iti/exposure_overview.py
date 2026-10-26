@@ -123,7 +123,7 @@ def overview(store, customer, environment):
         row['age_days'] = days(row['opened_at'], at) if row['outstanding'] else None
         row['age_band'] = band(row['age_days'])
         date = row['target_date']
-        if date and row['outstanding']:
+        if date and row['outstanding'] and row.get('applicability') not in ('Not applicable','False positive (reviewed determination)',appsec.DUPLICATE,'assessed not affected'):
             try:
                 delta = (today-datetime.strptime(date, '%Y-%m-%d').date()).days
                 row['overdue_days'] = delta if delta > 0 else 0
@@ -147,7 +147,7 @@ def overview(store, customer, environment):
         resolved = bool(action and action['status']=='closed' and outcome['can_close'])
         row = base('app:'+logical, 'AppSec', 'exposure', f['rule_id'] or 'Unknown rule', synthetic,
                    {'finding_id':f['id']}, [f['id'],f['source_id'],f['batch_id']])
-        row.update(status=disposition, verification=verification, scanner_level=f['scanner_level'],
+        row.update(status=disposition, applicability=disposition, verification=verification, scanner_level=f['scanner_level'],
                    owner=action.get('owner') or 'Unassigned' if action else 'Unassigned',
                    application=f['operator_context'].get('application'), repository=f['operator_context'].get('repository'),
                    occurrence_count=len(occurrences), outstanding=not resolved and disposition not in ('Not applicable','False positive (reviewed determination)',appsec.DUPLICATE),
@@ -204,7 +204,7 @@ def overview(store, customer, environment):
             'Attestation only' if test and test['method']=='analyst attestation' else
             'Synthetic / lab evidence only' if test else 'Pending / no qualifying evidence')
         row = base('infra:'+logical,'Infrastructure','exposure',asset['cve']+' · '+asset['asset_id'],synthetic,{'cve':asset['cve']},[asset['id']])
-        row.update(status='needs verification' if stale else asset['applicability'], verification=verification,
+        row.update(status='needs verification' if stale else asset['applicability'], applicability='needs verification' if stale else asset['applicability'], verification=verification,
                    owner=asset.get('owner') or 'Unassigned', application=asset['asset_id'], repository=None,
                    outstanding=not verified and (stale or asset['applicability']!='assessed not affected'),
                    last_retest_at=test['executed_at'] if test else None, test_id=test['id'] if test else None,
@@ -248,7 +248,7 @@ def overview(store, customer, environment):
     metric('implementation','Awaiting implementation','action',lambda r:r['outstanding'] and r['status'] in ('open','in progress'),'Outstanding actions with existing open or in-progress status.')
     metric('fix','Fix reported / retest requested','action',lambda r:r['outstanding'] and r['status'] in ('deployed','retest requested'),'Existing deployment or retest-request status with no qualifying resolution.')
     metric('unassigned','Unassigned outstanding records','exposure',lambda r:r['outstanding'] and not any(a.get('owner')!='Unassigned' for a in rows if a['entity']=='action' and a.get('exposure_id')==r['id']) and r['owner']=='Unassigned','Outstanding exposures without recorded asset/action owner; records without actions stay visible.')
-    metric('overdue','Actions past recorded target','action',lambda r:r['outstanding'] and bool(r['overdue_days']),'Actual AppSec target date or infrastructure asset commitment deadline before today UTC; review dates are not completion targets. No SLA inferred.')
+    metric('overdue','Actions past recorded target','action',lambda r:r['outstanding'] and bool(r['overdue_days']),'Actual AppSec target date or infrastructure asset commitment deadline before today UTC; review dates are not completion targets. Reviewed exclusions are not overdue remediation. No SLA inferred.')
     metric('unassigned_actions','Unassigned outstanding actions','action',lambda r:r['outstanding'] and r['owner']=='Unassigned','Outstanding ledger actions without a recorded owner. Missing commitments remain visible separately as unassigned exposure records.')
     for label in ['Synthetic AppSec evidence reviewed','Supplied AppSec evidence reviewed','Operational infrastructure remediation','Operational mitigation only','Attestation only','Synthetic / lab evidence only','Retest failed','Retest inconclusive','Stale evidence','Pending / no qualifying evidence','Fix reported / verification pending']:
         metric('verification:'+label,label,'exposure',lambda r,s=label:r['verification']==s,'Latest recorded outcome only, qualified by original method, provenance, current dependencies and 30-day freshness. Separate from action status.')

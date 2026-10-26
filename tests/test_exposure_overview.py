@@ -205,3 +205,15 @@ def test_orphan_action_visible_without_verification(service):
     d=show(service)
     assert metrics(d)['work']==1
     assert d['rows'][0]['verification']=='Unknown; origin unavailable'
+
+
+@pytest.mark.parametrize('disposition',['Not applicable','False positive (reviewed determination)',appsec.DUPLICATE])
+def test_excluded_findings_keep_commitments_visible_without_overdue_remediation(service,disposition):
+    f=Workflow(service);f.review();a=f.action()
+    f.action(remediation=a['remediation']|{'target_date':(appsec.dt(now())-timedelta(days=1)).date().isoformat()})
+    assert metrics(show(service))['overdue']==1
+    f.review(disposition=disposition,**({'duplicate_of':f.other['id']} if disposition==appsec.DUPLICATE else {}))
+    data=show(service)
+    assert metrics(data)['overdue']==0 and metrics(data)['work']==1
+    action=next(r for r in data['rows'] if r['entity']=='action')
+    assert action['applicability']==disposition and action['target_date'] is not None
