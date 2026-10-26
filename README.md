@@ -44,11 +44,13 @@ Open **http://127.0.0.1:8000**. The run command bootstraps a missing installatio
 
 All Python dependencies are in `.venv`; `uv.lock` and `web/package-lock.json` pin installations. Build/install caches, raw articles, database, model responses and generated working packages stay under ignored `runtime/`. No credential files are read except explicitly configured `.env`/environment variables. The runtime database contains sensitive selected source material: protect it like your research files.
 
-For an existing installation, stop the running server, update the checkout from `main`, rerun `./scripts/bootstrap` to install the locked dependency updates and rebuild the frontend, then restart `./scripts/run` and refresh the browser. Existing runtime data is retained; no database reset is required.
+For an existing installation, update the checkout from `main` and rerun `./scripts/bootstrap` to install locked dependency updates and rebuild the frontend. Command-line users should restart `./scripts/run`; the current Mac launcher identifies and replaces a stale server from the same checkout when reopened. Existing runtime data is retained; no database reset is required.
 
 ## Desktop launcher and icon
 
-On macOS, after bootstrap, run `./scripts/install-desktop`. This installs **Intel to Improvements.app** on your Desktop with the shield/ascending-arrow icon. Double-click it to start the loopback server if needed and open your default browser. It reuses an already-running workbench; closing the browser leaves the server running. Startup logs are in `runtime/launcher.log`. Reinstall after moving the checkout. `./scripts/install-desktop --build-only` builds the same app in `runtime/desktop/` without writing to Desktop. Linux users can run `./scripts/run` and bookmark the local URL. The web interface includes a matching SVG favicon and Apple touch icon.
+On macOS, after bootstrap, run `./scripts/install-desktop`. This installs **Intel to Improvements.app** on your Desktop with the shield/ascending-arrow icon. Double-click it to start the loopback server if needed and open your default browser. It reuses the server only when its checkout and build identity match. After an update, it safely restarts a stale server only when macOS confirms that listener belongs to the same checkout; it never stops an unrelated service on port 8000. Closing the browser leaves the server running. Startup logs are in `runtime/launcher.log`. Reinstall after moving the checkout. `./scripts/install-desktop --build-only` builds the same app in `runtime/desktop/` without writing to Desktop. Linux users can run `./scripts/run` and bookmark the local URL. The web interface includes a matching SVG favicon and Apple touch icon.
+
+To refresh an existing Mac installation after pulling the repository, run `./scripts/bootstrap && ./scripts/install-desktop` from the current checkout, then reopen the Desktop app. This rebuilds the frontend and rewrites the app bundle's absolute checkout path. Existing SQLite data and immutable evidence under `runtime/` are retained.
 
 ## Appearance
 

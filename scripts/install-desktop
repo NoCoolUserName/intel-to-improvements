@@ -23,7 +23,7 @@ shutil.copy2(root / 'desktop/Info.plist', app / 'Contents/Info.plist')
 shutil.copy2(root / 'desktop/AppIcon.icns', resources / 'AppIcon.icns')
 # Store the actual selected checkout path; never infer it from the owner's name.
 python = root / '.venv/bin/python'
-if not python.exists():
+if not python.exists() or not (root / 'web/dist/index.html').exists():
     parser.error('Run ./scripts/bootstrap before installing the Desktop launcher')
 launch = macos / 'launch'
 launch.write_text('#!/bin/sh\nexec ' + shlex.quote(str(python)) + ' ' + shlex.quote(str(root / 'scripts/desktop-launcher.py')) + '\n')
