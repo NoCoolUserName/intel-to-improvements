@@ -68,3 +68,7 @@ Fixture authorship: all other Markdown, CSV and MIME examples are independently 
 Unresolved upstream notice/conflict items: `@humanfs/types@0.15.0` (missing-license-text), `boolbase@1.0.0` (missing-license-text), `keyv@4.5.4` (missing-license-text), `natural-compare@1.4.0` (missing-license-text), `tr46@0.0.3` (missing-license-text), `vue3-colorpicker@2.3.0` (missing-license-text). These entries are not represented as cleared. Obtain matching upstream terms or exclude/replace the affected dependency before redistribution that requires them.
 
 LGPL/MPL dependencies (including pySigma and its Splunk backend, pycountry, cpe, certifi and selected frontend build tools) retain their own terms. Preserve applicable source, modifications, notices and replacement/relinking rights when redistributing those components. Generated query packages and a bundled Python runtime have different contents; do not infer that the application MIT license covers the runtime. The pinned Attack Flow Builder dependency tree is included in this inventory.
+
+## SARIF validation schema
+
+`iti/schemas/sarif-2.1.0.json` is the unmodified SARIF 2.1.0 schema distributed by [SchemaStore](https://github.com/SchemaStore/schemastore) under Apache-2.0. See `iti/schemas/README.md` for provenance/checksum and `iti/schemas/SARIF-LICENSE` for the full license. Project licensing is unchanged.

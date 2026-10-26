@@ -37,3 +37,6 @@ build-backend = "setuptools.build_meta"
 packages = ["iti"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.setuptools.package-data]
+iti = ["schemas/*.json", "schemas/SARIF-LICENSE", "schemas/README.md"]

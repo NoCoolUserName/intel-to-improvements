@@ -235,3 +235,13 @@ it('keeps manual improvements available when the catalog is invalid',async()=>{
   expect(screen.getByRole('textbox',{name:'Owner'})).toBeTruthy();
   expect(screen.getByRole('combobox',{name:'Behavior'}).disabled).toBe(false);
 });
+
+it('integrates Application Findings with selected scope without requiring a CTI case', async () => {
+  vi.stubGlobal('fetch', vi.fn(async input => String(input).startsWith('/api/application-findings?') ? json({findings:[],imports:[]}) : respond(input)));
+  const {user} = await mount();
+  await user.click(screen.getByRole('button', {name:'Application Findings',exact:true}));
+  await screen.findByText('No application findings in this scope.');
+  expect(screen.queryByRole('combobox',{name:'Working case'})).toBeNull();
+  await user.selectOptions(screen.getByRole('combobox',{name:'Active customer'}),'fictional-cloud');
+  await waitFor(()=>expect(vi.mocked(fetch).mock.calls.some(([url])=>String(url)==='/api/application-findings?customer_id=fictional-cloud&environment_id=mac-cloud')).toBe(true));
+});
