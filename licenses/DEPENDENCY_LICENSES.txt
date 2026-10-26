@@ -1,5 +1,6 @@
 THIRD-PARTY LICENSE AND NOTICE TEXTS
 Snapshot: 2026-10-18. Includes development/build and optional dependencies; this is not a list of components necessarily shipped together. See DEPENDENCIES.json for provenance, exact versions, scope and unresolved items. Upstream wording is retained below; collecting a notice does not resolve license conflicts or source-delivery obligations.
+Security-update notice refresh: 2026-10-26 (pypdf, certifi, setuptools, undici only).
 
 
 ========================================================================
@@ -2635,7 +2636,7 @@ specific language governing permissions and limitations under the License.
 
 ========================================================================
 Notice text SHA256: 09c9bcea95ca086f8bc5bed174e40bc835b297d40fb5f86bbbb570fe0a5581a7
-pypi:setuptools@84.0.0 | https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl | setuptools/config/_validate_pyproject/NOTICE | source SHA256 09c9bcea95ca086f8bc5bed174e40bc835b297d40fb5f86bbbb570fe0a5581a7
+pypi:setuptools@84.1.0 | https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl | setuptools/config/_validate_pyproject/NOTICE | source SHA256 09c9bcea95ca086f8bc5bed174e40bc835b297d40fb5f86bbbb570fe0a5581a7
 ------------------------------------------------------------------------
 The code contained in this directory was automatically generated using the
 following command:
@@ -3262,7 +3263,7 @@ pypi:requests@2.34.2 | https://files.pythonhosted.org/packages/a0/f4/c67b0b3f1b9
 
 ========================================================================
 Notice text SHA256: 09f1c8c9e941af3e584d59641ea9b87d83c0cb0fd007eb5ef391a7e2643c1a46
-pypi:setuptools@84.0.0 | https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl | setuptools/_vendor/more_itertools-10.8.0.dist-info/licenses/LICENSE | source SHA256 09f1c8c9e941af3e584d59641ea9b87d83c0cb0fd007eb5ef391a7e2643c1a46
+pypi:setuptools@84.1.0 | https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl | setuptools/_vendor/more_itertools-10.8.0.dist-info/licenses/LICENSE | source SHA256 09f1c8c9e941af3e584d59641ea9b87d83c0cb0fd007eb5ef391a7e2643c1a46
 ------------------------------------------------------------------------
 Copyright (c) 2012 Erik Rose
 
@@ -3596,7 +3597,7 @@ Notice text SHA256: 0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e9
 npm:pdfjs-dist@4.10.38 | https://registry.npmjs.org/pdfjs-dist/-/pdfjs-dist-4.10.38.tgz | package/LICENSE | source SHA256 0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594
 pypi:coverage@7.16.2 | https://files.pythonhosted.org/packages/3f/0c/7a64e1ac90541a8edf50daef0914848011fb057a5bf55284a4811e21939a/coverage-7.16.2-py3-none-any.whl | coverage-7.16.2.dist-info/licenses/LICENSE.txt | source SHA256 0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594
 pypi:packaging@26.3 | https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl | packaging-26.3.dist-info/licenses/LICENSE.APACHE | source SHA256 0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594
-pypi:setuptools@84.0.0 | https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl | setuptools/_vendor/packaging-26.0.dist-info/licenses/LICENSE.APACHE | source SHA256 0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594
+pypi:setuptools@84.1.0 | https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl | setuptools/_vendor/packaging-26.0.dist-info/licenses/LICENSE.APACHE | source SHA256 0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594
 ------------------------------------------------------------------------
 
                                  Apache License
@@ -6545,7 +6546,7 @@ SOFTWARE.
 
 ========================================================================
 Notice text SHA256: 29e0fd62e929850e86eb28c3fdccf0cefdf4fa94879011cffb3d0d4bed6d4db6
-pypi:setuptools@84.0.0 | https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl | setuptools/_vendor/platformdirs-4.4.0.dist-info/licenses/LICENSE | source SHA256 29e0fd62e929850e86eb28c3fdccf0cefdf4fa94879011cffb3d0d4bed6d4db6
+pypi:setuptools@84.1.0 | https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl | setuptools/_vendor/platformdirs-4.4.0.dist-info/licenses/LICENSE | source SHA256 29e0fd62e929850e86eb28c3fdccf0cefdf4fa94879011cffb3d0d4bed6d4db6
 ------------------------------------------------------------------------
 MIT License
 
@@ -6770,7 +6771,7 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ========================================================================
 Notice text SHA256: 2dddf08818297a3b89d43d95ff659d8da85741108c9136dfa3a4d856c0623bd8
-pypi:setuptools@84.0.0 | https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl | setuptools/config/NOTICE | source SHA256 2dddf08818297a3b89d43d95ff659d8da85741108c9136dfa3a4d856c0623bd8
+pypi:setuptools@84.1.0 | https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl | setuptools/config/NOTICE | source SHA256 2dddf08818297a3b89d43d95ff659d8da85741108c9136dfa3a4d856c0623bd8
 ------------------------------------------------------------------------
 The following files include code from opensource projects
 (either as direct copies or modified versions):
@@ -6985,7 +6986,7 @@ THE SOFTWARE.
 
 ========================================================================
 Notice text SHA256: 30c23618679108f3e8ea1d2a658c7ca417bdfc891c98ef1a89fa4ff0c9828654
-pypi:setuptools@84.0.0 | https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl | setuptools/_vendor/wheel-0.46.3.dist-info/licenses/LICENSE.txt | source SHA256 30c23618679108f3e8ea1d2a658c7ca417bdfc891c98ef1a89fa4ff0c9828654
+pypi:setuptools@84.1.0 | https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl | setuptools/_vendor/wheel-0.46.3.dist-info/licenses/LICENSE.txt | source SHA256 30c23618679108f3e8ea1d2a658c7ca417bdfc891c98ef1a89fa4ff0c9828654
 ------------------------------------------------------------------------
 MIT License
 
@@ -9057,7 +9058,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 ========================================================================
 Notice text SHA256: 458502e12d97bbf64438606a20044aa85eb05fb0a8a807bb35dbec253fd1fc04
-pypi:setuptools@84.0.0 | https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl | setuptools/_vendor/importlib_metadata-8.7.1.dist-info/licenses/LICENSE | source SHA256 458502e12d97bbf64438606a20044aa85eb05fb0a8a807bb35dbec253fd1fc04
+pypi:setuptools@84.1.0 | https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl | setuptools/_vendor/importlib_metadata-8.7.1.dist-info/licenses/LICENSE | source SHA256 458502e12d97bbf64438606a20044aa85eb05fb0a8a807bb35dbec253fd1fc04
 ------------------------------------------------------------------------
 Apache License
 Version 2.0, January 2004
@@ -9828,7 +9829,7 @@ THE SOFTWARE.
 
 ========================================================================
 Notice text SHA256: 4f05cb1d9097c1281d17044b3f15bad364fa99289eba74851cce9fa7ca605bbf
-pypi:setuptools@84.0.0 | https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl | setuptools/_vendor/packaging/licenses/__init__.py | source SHA256 4f05cb1d9097c1281d17044b3f15bad364fa99289eba74851cce9fa7ca605bbf
+pypi:setuptools@84.1.0 | https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl | setuptools/_vendor/packaging/licenses/__init__.py | source SHA256 4f05cb1d9097c1281d17044b3f15bad364fa99289eba74851cce9fa7ca605bbf
 ------------------------------------------------------------------------
 #######################################################################################
 #
@@ -10622,7 +10623,7 @@ def canonicalize_license_expression(
 ========================================================================
 Notice text SHA256: 596ec35e2ca0ebcba9fd8343ff0a51625af548786257815f24b41f7e08613314
 pypi:packaging@26.3 | https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl | packaging/licenses/_spdx.py | source SHA256 596ec35e2ca0ebcba9fd8343ff0a51625af548786257815f24b41f7e08613314
-pypi:setuptools@84.0.0 | https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl | setuptools/_vendor/packaging/licenses/_spdx.py | source SHA256 596ec35e2ca0ebcba9fd8343ff0a51625af548786257815f24b41f7e08613314
+pypi:setuptools@84.1.0 | https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl | setuptools/_vendor/packaging/licenses/_spdx.py | source SHA256 596ec35e2ca0ebcba9fd8343ff0a51625af548786257815f24b41f7e08613314
 ------------------------------------------------------------------------
 
 from __future__ import annotations
@@ -11462,8 +11463,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ========================================================================
 Notice text SHA256: 5a57cb4db85e2a2dd88c290628908add57e3451449e0a9a71fdfb38776fd759d
-pypi:setuptools@84.0.0 | https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl | setuptools/_vendor/jaraco_functools-4.4.0.dist-info/licenses/LICENSE | source SHA256 5a57cb4db85e2a2dd88c290628908add57e3451449e0a9a71fdfb38776fd759d
-pypi:setuptools@84.0.0 | https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl | setuptools/_vendor/zipp-3.23.0.dist-info/licenses/LICENSE | source SHA256 5a57cb4db85e2a2dd88c290628908add57e3451449e0a9a71fdfb38776fd759d
+pypi:setuptools@84.1.0 | https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl | setuptools/_vendor/jaraco_functools-4.4.0.dist-info/licenses/LICENSE | source SHA256 5a57cb4db85e2a2dd88c290628908add57e3451449e0a9a71fdfb38776fd759d
+pypi:setuptools@84.1.0 | https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl | setuptools/_vendor/zipp-3.23.0.dist-info/licenses/LICENSE | source SHA256 5a57cb4db85e2a2dd88c290628908add57e3451449e0a9a71fdfb38776fd759d
 ------------------------------------------------------------------------
 MIT License
 
@@ -14053,9 +14054,9 @@ SOFTWARE.
 
 ========================================================================
 Notice text SHA256: 86da0f01aeae46348a3c3d465195dc1ceccde79f79e87769a64b8da04b2a4741
-pypi:setuptools@84.0.0 | https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl | setuptools-84.0.0.dist-info/licenses/LICENSE | source SHA256 86da0f01aeae46348a3c3d465195dc1ceccde79f79e87769a64b8da04b2a4741
-pypi:setuptools@84.0.0 | https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl | setuptools/_vendor/backports.tarfile-1.2.0.dist-info/LICENSE | source SHA256 86da0f01aeae46348a3c3d465195dc1ceccde79f79e87769a64b8da04b2a4741
-pypi:setuptools@84.0.0 | https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl | setuptools/_vendor/jaraco.text-4.0.0.dist-info/LICENSE | source SHA256 86da0f01aeae46348a3c3d465195dc1ceccde79f79e87769a64b8da04b2a4741
+pypi:setuptools@84.1.0 | https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl | setuptools-84.1.0.dist-info/licenses/LICENSE | source SHA256 86da0f01aeae46348a3c3d465195dc1ceccde79f79e87769a64b8da04b2a4741
+pypi:setuptools@84.1.0 | https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl | setuptools/_vendor/backports.tarfile-1.2.0.dist-info/LICENSE | source SHA256 86da0f01aeae46348a3c3d465195dc1ceccde79f79e87769a64b8da04b2a4741
+pypi:setuptools@84.1.0 | https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl | setuptools/_vendor/jaraco.text-4.0.0.dist-info/LICENSE | source SHA256 86da0f01aeae46348a3c3d465195dc1ceccde79f79e87769a64b8da04b2a4741
 ------------------------------------------------------------------------
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to
@@ -16040,7 +16041,7 @@ SOFTWARE.
 
 ========================================================================
 Notice text SHA256: 9755a18519666e5f0f4cae3daad3d7012bcae48a600b31237d75e9fe134e6683
-pypi:setuptools@84.0.0 | https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl | setuptools/_vendor/jaraco_context-6.1.0.dist-info/licenses/LICENSE | source SHA256 9755a18519666e5f0f4cae3daad3d7012bcae48a600b31237d75e9fe134e6683
+pypi:setuptools@84.1.0 | https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl | setuptools/_vendor/jaraco_context-6.1.0.dist-info/licenses/LICENSE | source SHA256 9755a18519666e5f0f4cae3daad3d7012bcae48a600b31237d75e9fe134e6683
 ------------------------------------------------------------------------
 MIT License
 
@@ -16450,7 +16451,7 @@ SOFTWARE.
 ========================================================================
 Notice text SHA256: a21d6c8d3fc631198b97e57584697f7f9c37805c71c6cf9a12e4442b40394b88
 npm:undici@7.30.0 | https://registry.npmjs.org/undici/-/undici-7.30.0.tgz | package/lib/web/fetch/LICENSE | source SHA256 a21d6c8d3fc631198b97e57584697f7f9c37805c71c6cf9a12e4442b40394b88
-npm:undici@8.11.2 | https://registry.npmjs.org/undici/-/undici-8.11.2.tgz | package/lib/web/fetch/LICENSE | source SHA256 a21d6c8d3fc631198b97e57584697f7f9c37805c71c6cf9a12e4442b40394b88
+npm:undici@8.12.3 | https://registry.npmjs.org/undici/-/undici-8.12.3.tgz | package/lib/web/fetch/LICENSE | source SHA256 a21d6c8d3fc631198b97e57584697f7f9c37805c71c6cf9a12e4442b40394b88
 ------------------------------------------------------------------------
 MIT License
 
@@ -19151,7 +19152,7 @@ npm:xml-name-validator@5.0.0 | https://registry.npmjs.org/xml-name-validator/-/x
 Notice text SHA256: a6db8096b2707bc0102d256917d4d33f298ba36d8c3f25de067a2b5bb379db27
 npm:undici-types@6.20.0 | https://registry.npmjs.org/undici-types/-/undici-types-6.20.0.tgz | package/LICENSE | source SHA256 a6db8096b2707bc0102d256917d4d33f298ba36d8c3f25de067a2b5bb379db27
 npm:undici@7.30.0 | https://registry.npmjs.org/undici/-/undici-7.30.0.tgz | package/LICENSE | source SHA256 a6db8096b2707bc0102d256917d4d33f298ba36d8c3f25de067a2b5bb379db27
-npm:undici@8.11.2 | https://registry.npmjs.org/undici/-/undici-8.11.2.tgz | package/LICENSE | source SHA256 a6db8096b2707bc0102d256917d4d33f298ba36d8c3f25de067a2b5bb379db27
+npm:undici@8.12.3 | https://registry.npmjs.org/undici/-/undici-8.12.3.tgz | package/LICENSE | source SHA256 a6db8096b2707bc0102d256917d4d33f298ba36d8c3f25de067a2b5bb379db27
 ------------------------------------------------------------------------
 MIT License
 
@@ -19693,7 +19694,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ========================================================================
 Notice text SHA256: a97ac230e5f33ef10a5367a850eb01f91f1a0b064e34742c7794d2294557f524
-pypi:pypdf@6.20.0 | https://files.pythonhosted.org/packages/18/42/a945f65cc61c739ec80f4112c4b78ed1791f25d33f45f19389c9c9e247e2/pypdf-6.20.0-py3-none-any.whl | pypdf-6.20.0.dist-info/licenses/LICENSE | source SHA256 a97ac230e5f33ef10a5367a850eb01f91f1a0b064e34742c7794d2294557f524
+pypi:pypdf@6.21.2 | https://files.pythonhosted.org/packages/1b/4d/c9d2d67f204eff463237a1a8f5e25a6923b7b1043982b91fcaf104c8ef60/pypdf-6.21.2-py3-none-any.whl | pypdf-6.21.2.dist-info/licenses/LICENSE | source SHA256 a97ac230e5f33ef10a5367a850eb01f91f1a0b064e34742c7794d2294557f524
 ------------------------------------------------------------------------
 Copyright (c) 2006-2008, Mathieu Fenniak
 Some contributions copyright (c) 2007, Ashish Kulkarni <kulkarni.ashish@gmail.com>
@@ -20116,7 +20117,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ========================================================================
 Notice text SHA256: ade78d04982d69972d444a8e14a94f87a2334dd3855cc80348ea8e240aa0df2d
-pypi:setuptools@84.0.0 | https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl | setuptools/_vendor/autocommand-2.2.2.dist-info/LICENSE | source SHA256 ade78d04982d69972d444a8e14a94f87a2334dd3855cc80348ea8e240aa0df2d
+pypi:setuptools@84.1.0 | https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl | setuptools/_vendor/autocommand-2.2.2.dist-info/LICENSE | source SHA256 ade78d04982d69972d444a8e14a94f87a2334dd3855cc80348ea8e240aa0df2d
 ------------------------------------------------------------------------
 GNU LESSER GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
@@ -21244,7 +21245,7 @@ SOFTWARE.
 ========================================================================
 Notice text SHA256: b70e7e9b742f1cc6f948b34c16aa39ffece94196364bc88ff0d2180f0028fac5
 pypi:packaging@26.3 | https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl | packaging-26.3.dist-info/licenses/LICENSE.BSD | source SHA256 b70e7e9b742f1cc6f948b34c16aa39ffece94196364bc88ff0d2180f0028fac5
-pypi:setuptools@84.0.0 | https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl | setuptools/_vendor/packaging-26.0.dist-info/licenses/LICENSE.BSD | source SHA256 b70e7e9b742f1cc6f948b34c16aa39ffece94196364bc88ff0d2180f0028fac5
+pypi:setuptools@84.1.0 | https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl | setuptools/_vendor/packaging-26.0.dist-info/licenses/LICENSE.BSD | source SHA256 b70e7e9b742f1cc6f948b34c16aa39ffece94196364bc88ff0d2180f0028fac5
 ------------------------------------------------------------------------
 Copyright (c) Donald Stufft and individual contributors.
 All rights reserved.
@@ -21274,7 +21275,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ========================================================================
 Notice text SHA256: b80816b0d530b8accb4c2211783790984a6e3b61922c2b5ee92f3372ab2742fe
-pypi:setuptools@84.0.0 | https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl | setuptools/_vendor/tomli-2.4.0.dist-info/licenses/LICENSE | source SHA256 b80816b0d530b8accb4c2211783790984a6e3b61922c2b5ee92f3372ab2742fe
+pypi:setuptools@84.1.0 | https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl | setuptools/_vendor/tomli-2.4.0.dist-info/licenses/LICENSE | source SHA256 b80816b0d530b8accb4c2211783790984a6e3b61922c2b5ee92f3372ab2742fe
 ------------------------------------------------------------------------
 MIT License
 
@@ -23554,7 +23555,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ========================================================================
 Notice text SHA256: cad1ef5bd340d73e074ba614d26f7deaca5c7940c3d8c34852e65c4909686c48
 pypi:packaging@26.3 | https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl | packaging-26.3.dist-info/licenses/LICENSE | source SHA256 cad1ef5bd340d73e074ba614d26f7deaca5c7940c3d8c34852e65c4909686c48
-pypi:setuptools@84.0.0 | https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl | setuptools/_vendor/packaging-26.0.dist-info/licenses/LICENSE | source SHA256 cad1ef5bd340d73e074ba614d26f7deaca5c7940c3d8c34852e65c4909686c48
+pypi:setuptools@84.1.0 | https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl | setuptools/_vendor/packaging-26.0.dist-info/licenses/LICENSE | source SHA256 cad1ef5bd340d73e074ba614d26f7deaca5c7940c3d8c34852e65c4909686c48
 ------------------------------------------------------------------------
 This software is made available under the terms of *either* of the licenses
 found in LICENSE.APACHE or LICENSE.BSD. Contributions to this software is made
@@ -25341,7 +25342,7 @@ SOFTWARE.
 
 ========================================================================
 Notice text SHA256: e93716da6b9c0d5a4a1df60fe695b370f0695603d21f6f83f053e42cfc10caf7
-pypi:certifi@2026.7.22 | https://files.pythonhosted.org/packages/0b/a7/71ac2cff56fec219ed242bb11b8efb69fcc4bec75db06fb7bfe35de520e6/certifi-2026.7.22-py3-none-any.whl | certifi-2026.7.22.dist-info/licenses/LICENSE | source SHA256 e93716da6b9c0d5a4a1df60fe695b370f0695603d21f6f83f053e42cfc10caf7
+pypi:certifi@2026.10.19 | https://files.pythonhosted.org/packages/c4/51/29046e48f693c54e5b7412216d447a1d8362c9653148d98c02cdf65fa733/certifi-2026.10.19-py3-none-any.whl | certifi-2026.10.19.dist-info/licenses/LICENSE | source SHA256 e93716da6b9c0d5a4a1df60fe695b370f0695603d21f6f83f053e42cfc10caf7
 ------------------------------------------------------------------------
 This package contains a modified version of ca-bundle.crt:
 
@@ -27658,3 +27659,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
+========================================================================
+Notice text SHA256: ca5cc852fbcbe4598fe1f8b04c103c8073a64fa9cbb14b358bfdd87232ae8bd9
+npm:undici@8.12.3 | https://registry.npmjs.org/undici/-/undici-8.12.3.tgz | package/lib/milo/LICENSE.md | source SHA256 ca5cc852fbcbe4598fe1f8b04c103c8073a64fa9cbb14b358bfdd87232ae8bd9
+------------------------------------------------------------------------
+ISC License
+
+Copyright (c) 2023, and above Paolo Insogna, NearForm and other contributors
+
+Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.

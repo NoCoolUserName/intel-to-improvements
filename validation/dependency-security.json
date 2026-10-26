@@ -1,0 +1,200 @@
+{
+  "review_date": "2026-10-26",
+  "base_commit": "cc340cc1634eb530572b5c211f69d06689c4e843",
+  "scope": [
+    "All 89 locked Python dependencies, queried without installation or dependency resolution",
+    "web/package-lock.json, including production and development dependencies"
+  ],
+  "tools": {
+    "pip-audit": "2.10.1",
+    "npm": "11.9.0"
+  },
+  "github_dependabot_alert_read": {
+    "status": "unavailable",
+    "http_status": 403,
+    "reason": "Resource not accessible by integration"
+  },
+  "python": {
+    "packages": 89,
+    "before_unique_advisories": [
+      {
+        "package": "certifi",
+        "version": "2026.7.22",
+        "id": "PYSEC-2026-4320",
+        "aliases": [
+          "GHSA-6q48-6c7w-9gw2"
+        ],
+        "fix_versions": [
+          "2026.10.19"
+        ]
+      },
+      {
+        "package": "diskcache",
+        "version": "5.6.3",
+        "id": "PYSEC-2026-2447",
+        "aliases": [
+          "CVE-2025-69872",
+          "GHSA-w8v5-vhqr-4h9v"
+        ],
+        "fix_versions": []
+      },
+      {
+        "package": "pypdf",
+        "version": "6.20.0",
+        "id": "CVE-2026-113792",
+        "aliases": [
+          "GHSA-qfv9-64jg-mh7p"
+        ],
+        "fix_versions": [
+          "6.20.1"
+        ]
+      },
+      {
+        "package": "pypdf",
+        "version": "6.20.0",
+        "id": "CVE-2026-113793",
+        "aliases": [
+          "GHSA-9mx8-4j7g-633p"
+        ],
+        "fix_versions": [
+          "6.20.1"
+        ]
+      },
+      {
+        "package": "pypdf",
+        "version": "6.20.0",
+        "id": "CVE-2026-113786",
+        "aliases": [
+          "GHSA-5hx5-vpf9-5wcv"
+        ],
+        "fix_versions": [
+          "6.21.1"
+        ]
+      },
+      {
+        "package": "pypdf",
+        "version": "6.20.0",
+        "id": "CVE-2026-113791",
+        "aliases": [
+          "GHSA-cgf9-327m-v77c"
+        ],
+        "fix_versions": [
+          "6.21.0"
+        ]
+      },
+      {
+        "package": "pypdf",
+        "version": "6.20.0",
+        "id": "CVE-2026-113790",
+        "aliases": [
+          "GHSA-f54x-cmq8-qg57"
+        ],
+        "fix_versions": [
+          "6.21.0"
+        ]
+      },
+      {
+        "package": "pypdf",
+        "version": "6.20.0",
+        "id": "CVE-2026-113789",
+        "aliases": [
+          "GHSA-6vvc-x485-93v7"
+        ],
+        "fix_versions": [
+          "6.21.0"
+        ]
+      },
+      {
+        "package": "pypdf",
+        "version": "6.20.0",
+        "id": "CVE-2026-115572",
+        "aliases": [
+          "GHSA-6c7f-9265-g8fw"
+        ],
+        "fix_versions": [
+          "6.21.2"
+        ]
+      },
+      {
+        "package": "pypdf",
+        "version": "6.20.0",
+        "id": "CVE-2026-115585",
+        "aliases": [
+          "GHSA-jr96-gvgh-j3r4"
+        ],
+        "fix_versions": [
+          "6.21.2"
+        ]
+      },
+      {
+        "package": "pypdf",
+        "version": "6.20.0",
+        "id": "CVE-2026-115580",
+        "aliases": [
+          "GHSA-gmh7-3g9r-mjh5"
+        ],
+        "fix_versions": [
+          "6.21.2"
+        ]
+      },
+      {
+        "package": "setuptools",
+        "version": "84.0.0",
+        "id": "GHSA-xmj3-9gf7-h52w",
+        "aliases": [],
+        "fix_versions": [
+          "84.1.0"
+        ]
+      }
+    ],
+    "after_unique_advisories": [
+      {
+        "package": "diskcache",
+        "version": "5.6.3",
+        "id": "PYSEC-2026-2447",
+        "aliases": [
+          "CVE-2025-69872",
+          "GHSA-w8v5-vhqr-4h9v"
+        ],
+        "fix_versions": []
+      }
+    ],
+    "after_raw_advisory_entries": 2
+  },
+  "npm": {
+    "before_advisories": [
+      {
+        "package": "undici",
+        "url": "https://github.com/advisories/GHSA-4qv8-2p9j-2685",
+        "severity": "moderate",
+        "title": "undici vulnerable to Denial of Service via unbounded memory in the EventSource parser"
+      },
+      {
+        "package": "undici",
+        "url": "https://github.com/advisories/GHSA-f72v-6w45-q472",
+        "severity": "moderate",
+        "title": "undici vulnerable to Subresource Integrity bypass via non-lowercase algorithm tokens"
+      },
+      {
+        "package": "undici",
+        "url": "https://github.com/advisories/GHSA-xjj6-f33q-929c",
+        "severity": "high",
+        "title": "undici vulnerable to Denial of Service via unhandled error on excessive content-encodings"
+      }
+    ],
+    "after_vulnerability_summary": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    }
+  },
+  "limitations": [
+    "The diskcache advisory is unpatched and is not ignored or dismissed.",
+    "One identical diskcache advisory is duplicated by the Python feed.",
+    "GitHub default-branch alert closure is not verified.",
+    "Pinned external Attack Flow Builder dependencies are outside these two workbench lockfiles and are unchanged."
+  ]
+}
