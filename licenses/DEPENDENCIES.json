@@ -24192,15 +24192,15 @@
     {
       "ecosystem": "npm",
       "name": "undici",
-      "version": "8.11.2",
+      "version": "8.12.3",
       "license_declared": "MIT",
       "repository": {
         "url": "git+https://github.com/nodejs/undici.git",
         "type": "git"
       },
-      "metadata_url": "https://registry.npmjs.org/undici/8.11.2",
-      "artifact_url": "https://registry.npmjs.org/undici/-/undici-8.11.2.tgz",
-      "artifact_sha256": "c69bf79440dfb262c7a43e35803731b2cfd7e6d264cfda6c54410d60f59bb8d7",
+      "metadata_url": "https://registry.npmjs.org/undici/8.12.3",
+      "artifact_url": "https://registry.npmjs.org/undici/-/undici-8.12.3.tgz",
+      "artifact_sha256": "e03fa2ed347527c915026c04810d3b9bcf9893a2176b314aa4c29c945612d18c",
       "registry_hash_verified": true,
       "matching_lock_or_resolution_hash_verified": true,
       "license_files": [
@@ -24214,6 +24214,12 @@
           "path": "package/LICENSE",
           "sha256": "a6db8096b2707bc0102d256917d4d33f298ba36d8c3f25de067a2b5bb379db27",
           "notice_text_sha256": "a6db8096b2707bc0102d256917d4d33f298ba36d8c3f25de067a2b5bb379db27",
+          "notice_bundle": "DEPENDENCY_LICENSES.txt"
+        },
+        {
+          "path": "package/lib/milo/LICENSE.md",
+          "sha256": "ca5cc852fbcbe4598fe1f8b04c103c8073a64fa9cbb14b358bfdd87232ae8bd9",
+          "notice_text_sha256": "ca5cc852fbcbe4598fe1f8b04c103c8073a64fa9cbb14b358bfdd87232ae8bd9",
           "notice_bundle": "DEPENDENCY_LICENSES.txt"
         }
       ],
@@ -24230,7 +24236,8 @@
           "install_path": "node_modules/undici",
           "version_basis": "committed lock"
         }
-      ]
+      ],
+      "security_refresh_date": "2026-10-26"
     },
     {
       "ecosystem": "npm",
@@ -26525,7 +26532,7 @@
     {
       "ecosystem": "pypi",
       "name": "certifi",
-      "version": "2026.7.22",
+      "version": "2026.10.19",
       "license_declared": "MPL-2.0",
       "license_classifiers": [
         "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)"
@@ -26534,14 +26541,14 @@
         "Homepage": "https://github.com/certifi/python-certifi",
         "Source": "https://github.com/certifi/python-certifi"
       },
-      "metadata_url": "https://pypi.org/pypi/certifi/2026.7.22/json",
-      "artifact_url": "https://files.pythonhosted.org/packages/0b/a7/71ac2cff56fec219ed242bb11b8efb69fcc4bec75db06fb7bfe35de520e6/certifi-2026.7.22-py3-none-any.whl",
-      "artifact_sha256": "62f22742b58a1a33014a2b6b706588a8d7e2a88ae7bd1a6ebe8c992928483775",
+      "metadata_url": "https://pypi.org/pypi/certifi/2026.10.19/json",
+      "artifact_url": "https://files.pythonhosted.org/packages/c4/51/29046e48f693c54e5b7412216d447a1d8362c9653148d98c02cdf65fa733/certifi-2026.10.19-py3-none-any.whl",
+      "artifact_sha256": "42d35340cc5b9ba78e818ddbff0c5b1c2b779de448a340fd1b989f5fa8670e1b",
       "registry_hash_verified": true,
       "matching_lock_or_resolution_hash_verified": true,
       "license_files": [
         {
-          "path": "certifi-2026.7.22.dist-info/licenses/LICENSE",
+          "path": "certifi-2026.10.19.dist-info/licenses/LICENSE",
           "sha256": "e93716da6b9c0d5a4a1df60fe695b370f0695603d21f6f83f053e42cfc10caf7",
           "notice_text_sha256": "e93716da6b9c0d5a4a1df60fe695b370f0695603d21f6f83f053e42cfc10caf7",
           "notice_bundle": "DEPENDENCY_LICENSES.txt"
@@ -26568,7 +26575,8 @@
           "Programming Language :: Python :: 3.11",
           "Programming Language :: Python :: 3.12",
           "Programming Language :: Python :: 3.13",
-          "Programming Language :: Python :: 3.14"
+          "Programming Language :: Python :: 3.14",
+          "Programming Language :: Python :: 3.15"
         ]
       },
       "status": "notice-files-collected",
@@ -26578,7 +26586,8 @@
           "source": "uv.lock",
           "version_basis": "committed lock"
         }
-      ]
+      ],
+      "security_refresh_date": "2026-10-26"
     },
     {
       "ecosystem": "pypi",
@@ -29154,7 +29163,7 @@
     {
       "ecosystem": "pypi",
       "name": "pypdf",
-      "version": "6.20.0",
+      "version": "6.21.2",
       "license_declared": "BSD-3-Clause",
       "license_classifiers": [],
       "project_urls": {
@@ -29163,14 +29172,14 @@
         "Documentation": "https://pypdf.readthedocs.io/en/latest/",
         "Source": "https://github.com/py-pdf/pypdf"
       },
-      "metadata_url": "https://pypi.org/pypi/pypdf/6.20.0/json",
-      "artifact_url": "https://files.pythonhosted.org/packages/18/42/a945f65cc61c739ec80f4112c4b78ed1791f25d33f45f19389c9c9e247e2/pypdf-6.20.0-py3-none-any.whl",
-      "artifact_sha256": "f003fc2014814d264fe7dd3f9d435c158e23e1a85a2233f87a0a2d6d21c914ad",
+      "metadata_url": "https://pypi.org/pypi/pypdf/6.21.2/json",
+      "artifact_url": "https://files.pythonhosted.org/packages/1b/4d/c9d2d67f204eff463237a1a8f5e25a6923b7b1043982b91fcaf104c8ef60/pypdf-6.21.2-py3-none-any.whl",
+      "artifact_sha256": "1d44d1a3a200f25062adff0085b02040e4646431ac2ccac22e42679e91466084",
       "registry_hash_verified": true,
       "matching_lock_or_resolution_hash_verified": true,
       "license_files": [
         {
-          "path": "pypdf-6.20.0.dist-info/licenses/LICENSE",
+          "path": "pypdf-6.21.2.dist-info/licenses/LICENSE",
           "sha256": "a97ac230e5f33ef10a5367a850eb01f91f1a0b064e34742c7794d2294557f524",
           "notice_text_sha256": "a97ac230e5f33ef10a5367a850eb01f91f1a0b064e34742c7794d2294557f524",
           "notice_bundle": "DEPENDENCY_LICENSES.txt"
@@ -29206,7 +29215,8 @@
           "source": "uv.lock",
           "version_basis": "committed lock"
         }
-      ]
+      ],
+      "security_refresh_date": "2026-10-26"
     },
     {
       "ecosystem": "pypi",
@@ -30134,7 +30144,7 @@
     {
       "ecosystem": "pypi",
       "name": "setuptools",
-      "version": "84.0.0",
+      "version": "84.1.0",
       "license_declared": "MIT",
       "license_classifiers": [],
       "project_urls": {
@@ -30142,9 +30152,9 @@
         "Documentation": "https://setuptools.pypa.io/",
         "Source": "https://github.com/pypa/setuptools"
       },
-      "metadata_url": "https://pypi.org/pypi/setuptools/84.0.0/json",
-      "artifact_url": "https://files.pythonhosted.org/packages/95/9c/c510029fc6ef33a6275cd2c5d3cecd6613dfd6aa401d57c54f1c18852ccf/setuptools-84.0.0-py3-none-any.whl",
-      "artifact_sha256": "51a52592b3b99e102b609654876bd65f19f999935166d1352678931132b0c670",
+      "metadata_url": "https://pypi.org/pypi/setuptools/84.1.0/json",
+      "artifact_url": "https://files.pythonhosted.org/packages/18/02/b4bbb90f8f29e334898ff45c6d9b1fffaa6f378017052b3023a06262b5f7/setuptools-84.1.0-py3-none-any.whl",
+      "artifact_sha256": "5231689c6ac8156cd155cfb98c3fd6fb252c3e7e9bd3d78b64d3c55f132624c9",
       "registry_hash_verified": true,
       "matching_lock_or_resolution_hash_verified": true,
       "license_files": [
@@ -30239,7 +30249,7 @@
           "notice_bundle": "DEPENDENCY_LICENSES.txt"
         },
         {
-          "path": "setuptools-84.0.0.dist-info/licenses/LICENSE",
+          "path": "setuptools-84.1.0.dist-info/licenses/LICENSE",
           "sha256": "86da0f01aeae46348a3c3d465195dc1ceccde79f79e87769a64b8da04b2a4741",
           "notice_text_sha256": "86da0f01aeae46348a3c3d465195dc1ceccde79f79e87769a64b8da04b2a4741",
           "notice_bundle": "DEPENDENCY_LICENSES.txt"
@@ -30289,24 +30299,12 @@
         },
         {
           "source": "build-system.requires",
-          "version_basis": "audit-time resolution; not committed lock",
-          "requested": true,
-          "environment": {
-            "implementation_name": "cpython",
-            "implementation_version": "3.12.13",
-            "os_name": "posix",
-            "platform_machine": "arm64",
-            "platform_release": "25.4.0",
-            "platform_system": "Darwin",
-            "platform_version": "Darwin Kernel Version 25.4.0: Thu Mar 19 19:33:43 PDT 2026; root:xnu-12377.101.15~1/RELEASE_ARM64_T8142",
-            "python_full_version": "3.12.13",
-            "platform_python_implementation": "CPython",
-            "python_version": "3.12",
-            "sys_platform": "darwin"
-          },
+          "version_basis": "patched minimum declared in pyproject.toml; isolated builds may resolve newer compatible releases",
+          "requirement": "setuptools>=84.1.0",
           "build_only": true
         }
-      ]
+      ],
+      "security_refresh_date": "2026-10-26"
     },
     {
       "ecosystem": "pypi",
@@ -31558,6 +31556,39 @@
       "version": "2.3.0",
       "status": "missing-license-text",
       "detail": null
+    }
+  ],
+  "dependency_refreshes": [
+    {
+      "date": "2026-10-26",
+      "base_commit": "cc340cc1634eb530572b5c211f69d06689c4e843",
+      "scope": "Security updates only; unchanged inventory entries retain their 2026-10-18 audit provenance.",
+      "packages": [
+        {
+          "ecosystem": "pypi",
+          "name": "pypdf",
+          "from": "6.20.0",
+          "to": "6.21.2"
+        },
+        {
+          "ecosystem": "pypi",
+          "name": "certifi",
+          "from": "2026.7.22",
+          "to": "2026.10.19"
+        },
+        {
+          "ecosystem": "pypi",
+          "name": "setuptools",
+          "from": "84.0.0",
+          "to": "84.1.0"
+        },
+        {
+          "ecosystem": "npm",
+          "name": "undici",
+          "from": "8.11.2",
+          "to": "8.12.3"
+        }
+      ]
     }
   ]
 }
