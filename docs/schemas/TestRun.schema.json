@@ -37,7 +37,8 @@
             "live system",
             "lab execution",
             "synthetic fixture replay",
-            "analyst attestation"
+            "analyst attestation",
+            "supplied evidence"
           ],
           "title": "Kind",
           "type": "string"

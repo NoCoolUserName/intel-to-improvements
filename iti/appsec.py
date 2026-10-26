@@ -240,7 +240,7 @@ def retest(store, assessment, value):
         executed_at=value.executed_at, method=value.method, result=value.result, dimension='remediation', scope=scope(f),
         variant='operator-reviewed retest', improvement_id=value.action_id, measurement=value.model_dump(),
         evidence=[EvidenceAttachment(id=e['id'], reference='appsec-evidence:' + e['id'], sha256=e['sha256'],
-            description=e.get('description', 'Original SARIF'), kind='analyst attestation' if e['kind']=='analyst attestation' else ('synthetic fixture replay' if f['synthetic'] or e['kind']=='synthetic/lab evidence' else 'lab execution')) for e in attachments])
+            description=e.get('description', 'Original SARIF'), kind='analyst attestation' if e['kind']=='analyst attestation' else ('synthetic fixture replay' if f['synthetic'] or e['kind']=='synthetic/lab evidence' else 'supplied evidence')) for e in attachments])
     return ledger.record_test(store, assessment, test)
 
 

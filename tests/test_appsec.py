@@ -307,3 +307,22 @@ def test_ledger_boundary_rejects_inconsistent_test_fields(flow):
     subject=appsec.subject(flow.store,flow.f,appsec.versions(ctx))
     with pytest.raises(ValueError,match='disagree'):ledger.record_test(flow.store,subject,test)
     assert flow.get()['verification']['status']=='Retest failed'
+
+
+def test_supplied_technical_evidence_is_not_labeled_lab_execution(flow):
+    doc=json.loads(flow.raw);doc.pop('properties')
+    p=af.preview(flow.store,C,E,json.dumps(doc).encode(),{'application':'Synthetic app','repository':'synthetic/repo'})
+    af.confirm(flow.store,p['id'],C,E);flow.f=p['findings'][0]
+    assert not flow.f['synthetic']
+    flow.ready();e=flow.evidence(kind='supplied configuration/version evidence')
+    result=flow.retest(evidence_ids=[e['id']])
+    assert result['evidence'][0]['kind']=='supplied evidence'
+    assert result['assurance']=='supplied evidence reviewed; not independently verified'
+    assert not flow.get()['verification']['independent_operational_verification']
+
+
+def test_supplied_evidence_cannot_enter_legacy_verification(service,assessed):
+    from iti import ledger
+    from iti.models import TestRun
+    test=TestRun(behavior_id=assessed['extraction']['behaviors'][0]['id'],environment_version=assessed['context']['environment_version'],control_id='example',control_version='1',procedure='Authored test',expected='Expected',actual='Actual',executed_at=now(),method='analyst attestation',result='passed',dimension='detection',scope='Synthetic scope',variant='Synthetic example',evidence=[{'id':'example','reference':'example','description':'Supplied only','kind':'supplied evidence'}])
+    with pytest.raises(ValueError,match='restricted to AppSec'):ledger.record_test(service.store,assessed,test)

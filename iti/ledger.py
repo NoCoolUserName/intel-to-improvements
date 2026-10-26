@@ -15,6 +15,7 @@ def record_test(store,assessment,test):
     if assessment.get('application_finding'):
         from . import appsec
         return appsec.record_test(store,assessment,test)
+    if any(e.kind=='supplied evidence' for e in test.evidence):raise ValueError('Supplied evidence is restricted to AppSec review, not CTI/CVE verification')
     from . import vulnerabilities
     vulnerability=assessment.get('vulnerability')
     dependencies=vulnerabilities.validate_test(store,assessment,test) if vulnerability else dependency(assessment,test.behavior_id)
