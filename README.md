@@ -157,6 +157,8 @@ Review the evidence, accept/override the recommendation with a reason, then crea
 
 Open **Application Findings**, select an existing customer/environment and upload a manually supplied **SARIF 2.1.0** file (up to 4 MiB / 1,000 results). Optionally enter application/repository/commit context, preview the findings and warnings, then explicitly confirm import. Findings can have a CWE, a CVE, or neither. Original bytes and hashes remain immutable; exact repeat imports are idempotent within their scope. Start with the clearly synthetic CodeQL- and Semgrep-shaped files in `fixtures/application-findings/`. See [import fields, provenance and limitations](docs/APPLICATION_FINDINGS.md).
 
+The **Exposure Overview** leadership view summarizes scoped findings, ownership, overdue commitments, qualified verification and exceptions, with definitions and drill-down records. Load its isolated synthetic leadership demo to explore the workflow. See [dashboard metrics and demonstration](docs/EXPOSURE_MANAGEMENT_DASHBOARD.md).
+
 Message normalization v2 expands direct and referenced message arguments and preserves escaped braces. Existing imports remain unchanged; explicit reimport after a normalizer upgrade creates a separate batch and can require renewed review. See [normalizer versions and historical evidence](docs/APPLICATION_FINDINGS.md#message-normalization-versions).
 
 Inspect a finding and use the **Human-governed remediation** section:
