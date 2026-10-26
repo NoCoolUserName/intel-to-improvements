@@ -9,10 +9,10 @@ async function request(path: string, options?: RequestInit) {
   return data;
 }
 const json = (value: unknown) => <pre className="json">{JSON.stringify(value, null, 2)}</pre>;
-export default function ApplicationFindings(props: {customer: string; environment: string; onDemo?: (value:Obj)=>void}) {
+export default function ApplicationFindings(props: {customer: string; environment: string; onDemo?: (value:Obj)=>void; initialFindingId?: string}) {
   return <Workspace key={props.customer + ':' + props.environment} {...props}/>;
 }
-function Workspace({customer, environment, onDemo}: {customer: string; environment: string; onDemo?: (value:Obj)=>void}) {
+function Workspace({customer, environment, onDemo, initialFindingId}: {customer: string; environment: string; onDemo?: (value:Obj)=>void; initialFindingId?: string}) {
   const [data, setData] = useState<Obj>(), [preview, setPreview] = useState<Obj>(), [detail, setDetail] = useState<Obj>();
   const [error, setError] = useState(''), [notice, setNotice] = useState(''), [busy, setBusy] = useState(false);
   const selectedFile = useRef<File | undefined>(undefined);
@@ -29,6 +29,7 @@ function Workspace({customer, environment, onDemo}: {customer: string; environme
     const token = ++selection.current; setDetail(undefined);
     await action(async () => {const value = await request('/' + encodeURIComponent(id) + query); if (alive.current && token === selection.current) setDetail(value);});
   }
+  useEffect(() => {if (initialFindingId) inspect(initialFindingId);}, [initialFindingId]);
   function table(rows: Obj[], persisted: boolean) {
     return <div className="table-wrap"><table><caption>{persisted ? 'Persisted scanner findings' : 'Previewed scanner findings'}</caption><thead><tr>{['Application / repository','Scanner','Rule','CWE','Scanner level','Source location','Import identity'].map(h => <th key={h}>{h}</th>)}</tr></thead><tbody>{rows.map(r => <tr key={r.id}>
       <td>{r.operator_context.application || 'Unknown application'}<small>{r.operator_context.repository || r.reported_context[0]?.repositoryUri || 'Unknown repository'}</small>{r.synthetic && <small>Synthetic fixture</small>}</td>

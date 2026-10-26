@@ -157,6 +157,8 @@ def create_app(service=None):
     register_application_findings(app,svc)
     from .appsec_api import register as register_appsec
     register_appsec(app,svc)
+    from .exposure_overview import register as register_overview
+    register_overview(app,svc)
     viewer=ROOT/'runtime/attack-flow-viewer'
     @app.get('/api/attack-flow/viewer')
     def viewer_status():

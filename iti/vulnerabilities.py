@@ -134,7 +134,7 @@ def active_assertions(store,ctx,cve):
     superseded={r['supersedes'] for r in rows if r.get('supersedes') and r['review_status']=='reviewed'}
     return [r for r in rows if r['id'] not in superseded]
 
-def verification(store,ctx,asset):
+def verification(store,ctx,asset,as_of=None):
     if not asset:return {'status':'not tested','tests':[],'verified_at':None,'method':None}
     tests=[t for t in store.all('test') if t.get('vulnerability_asset_id')==asset['logical_id'] and in_scope(t,ctx)]
     eligible=[]
@@ -142,7 +142,7 @@ def verification(store,ctx,asset):
         dependencies=t.get('dependencies',{})
         action=store.maybe('improvement',t.get('improvement_id',''))
         action_current=action and dependencies.get('implementation_hash')==implementation_hash(action)
-        fresh=action_current and same_version(t['context'],ctx) and dependencies.get('exposure_revision')==asset['id'] and datetime.now(timezone.utc)-datetime.fromisoformat(t['executed_at'].replace('Z','+00:00'))<=timedelta(days=30)
+        fresh=action_current and same_version(t['context'],ctx) and dependencies.get('exposure_revision')==asset['id'] and datetime.fromisoformat((as_of or now()).replace('Z','+00:00'))-datetime.fromisoformat(t['executed_at'].replace('Z','+00:00'))<=timedelta(days=30)
         supported=t['method'] in ('reliable rescan','version/configuration evidence','targeted human-led test') and all(e['kind']=='live system' for e in t['evidence']) and asset['evidence_kind']!='synthetic fixture'
         eligible.append(t|{'fresh':fresh,'qualifies':supported})
     current=eligible[-1] if eligible else None

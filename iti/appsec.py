@@ -299,7 +299,7 @@ def record_test(store, assessment, test):
     return row
 
 
-def verification(store, f, action):
+def verification(store, f, action, as_of=None):
     tests = [r for r in store.all('test') if r.get('appsec_logical_id') == f['logical_id'] and af.in_scope(r, f['context']['customer_id'], f['context']['environment_id'])]
     reviews = records(store, 'appsec_review', f)
     expected = dependencies(store, f) | {'implementation_hash': implementation_hash(action) if action else None,
@@ -313,7 +313,7 @@ def verification(store, f, action):
             reasons.append('Retest predates the recorded implementation/change; it cannot support current closure')
         if expected['changed_context_batches']:
             reasons.append('Later explicit repository context changed; inspect the new context without assuming finding equivalence')
-        if dt(now()) - dt(test['executed_at']) > timedelta(days=30):
+        if dt(as_of or now()) - dt(test['executed_at']) > timedelta(days=30):
             reasons.append('Evidence older than 30 days')
         try:
             original = store.get('application_finding', test['finding_id'])
