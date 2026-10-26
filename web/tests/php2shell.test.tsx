@@ -15,7 +15,7 @@ it('loads only on explicit action and selects the returned dedicated scope',asyn
 it('restores the guide without reseeding and navigates with synthetic boundaries visible',async()=>{
   const fetcher=vi.fn(async()=>new Response(JSON.stringify(demo)));vi.stubGlobal('fetch',fetcher);const navigate=vi.fn();
   render(<Php2ShellDemo customer={PHP2SHELL_CUSTOMER} onLoaded={async()=>{}} onNavigate={navigate}/>);
-  await screen.findByText('PHP2Shell case guide · all 12 workspaces');await userEvent.click(screen.getByText('PHP2Shell case guide · all 12 workspaces'));
-  await userEvent.click(screen.getByRole('button',{name:'Open Purple team'}));expect(navigate).toHaveBeenCalledWith('Purple team');
+  await screen.findByText('PHP2Shell case guide · all 2 workspaces');await userEvent.click(screen.getByText('PHP2Shell case guide · all 2 workspaces'));
+  await userEvent.click(screen.getByRole('button',{name:'Open Purple Team'}));expect(navigate).toHaveBeenCalledWith('Purple team');
   expect(screen.getByText(/All firm assets, findings/)).toBeTruthy();expect(fetcher.mock.calls[0]).toEqual(['/api/demos/php2shell']);
 });

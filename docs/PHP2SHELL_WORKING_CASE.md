@@ -1,6 +1,6 @@
 # PHP2Shell working case — Harborlight Capital
 
-Open **Add Intelligence → Open PHP2Shell working case**. This explicitly creates/selects **Harborlight Capital · PHP2Shell fictional demo**, a fictional investment manager, and **Client portal and research lab · synthetic**. Expand the case guide to navigate all twelve workspaces. Reopening returns the existing case and preserves operator edits. The loader stages the case separately and publishes its records in one database transaction; it refuses to replace a preexisting customer with the reserved ID.
+Open **Add Intelligence → Open PHP2Shell working case**. This explicitly creates/selects **Harborlight Capital · PHP2Shell fictional demo**, a fictional investment manager, and **Client portal and research lab · synthetic**. Expand the case guide to navigate all thirteen workspaces. Reopening returns the existing case and preserves operator edits. The loader stages the case separately and publishes its records in one database transaction; it refuses to replace a preexisting customer with the reserved ID.
 
 The case uses limited, attributed source paraphrases plus an authored scenario. It records no real investor data, scan, model call, AttackIQ run or operational outcome. Original publisher bytes were not imported; the dossier is the hashed input. The PHP vendor advisory, AttackIQ article and Unit 42 correction are linked in the guide and dossier. Dates describe those sources, not a new customer intrusion.
 
@@ -9,17 +9,18 @@ The case uses limited, attributed source paraphrases plus an authored scenario. 
 | Workspace | Explore |
 | --- | --- |
 | Add Intelligence | Read the dossier and separate vendor reporting, the source correction and synthetic hypotheses. |
-| Case overview | Inspect four proposed ATT&CK mappings and supporting authored spans. No actor or real incident is invented. |
+| Cases & Analysis | Inspect four proposed ATT&CK mappings and supporting authored spans. No actor or real incident is invented. |
 | Coverage | Compare declared Linux telemetry, readiness gaps, D3FEND candidates and open improvements with frozen catalog provenance. |
 | Hunts | Follow bounded request/worker/process/file/egress questions; inspect benign controls and inconclusive branches. |
-| Purple team | Read the AttackIQ reference and three authored result samples. Review exact-route scope, content revision, telemetry, benign upload, stop conditions and cleanup. |
+| Purple Team | Read the AttackIQ reference and three authored result samples. Review exact-route scope, content revision, telemetry, benign upload, stop conditions and cleanup. |
 | Vulnerability Intelligence | Compare the affected portal, uncertain research-upload service and authored patched reporting host for both CVEs. Inspect reviewed decisions, owner actions and qualified synthetic mitigation evidence. |
 | Application Findings | Inspect four authored engineering observations, their SARIF source and three open commitments. The research compatibility case has a two-day exception, a named fictional authority, compensating controls and residual risk. |
+| Improvement Actions | Follow existing commitments, inspect frozen origins and open the original management workflow. |
 | Exposure Overview | Drill into this firm's open infrastructure and AppSec records. Qualified synthetic results do not become operational remediation. |
 | Pipeline Assurance | Inspect two snapshots with exact repository/ref/commit context. The initial regression fails despite run-level success; the revised regression reports success while secrets remain skipped. An external reusable workflow remains uninspected. |
-| Intelligence exports | Download the package, STIX/MISP and schema-validated ATT&CK Flow plus evidence provenance. |
+| Intelligence Exports | Download the package, STIX/MISP and schema-validated ATT&CK Flow plus evidence provenance. |
 | Evaluation | Expand the guide's case checks; distinguish these integrity checks from the existing global capability evaluation. |
-| Customer profiles | Inspect investment-business priorities, declared services, Linux telemetry, control claims and disabled model processing. |
+| Customer Profiles | Inspect investment-business priorities, declared services, Linux telemetry, control claims and disabled model processing. |
 
 The ATT&CK Flow is explicitly labeled **HYPOTHETICAL SYNTHETIC EXERCISE**. Its four actions and three arrows encode only the authored scenario. Ordinary analyst inferences still cannot enter a reported-action flow; scenario export requires explicit synthetic-scenario metadata and curated analysis. No exploit, web shell, payload or executable probe is bundled.
 

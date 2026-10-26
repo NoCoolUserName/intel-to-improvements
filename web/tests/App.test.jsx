@@ -25,7 +25,13 @@ function assessment(id, title) {
 const bankCase = assessment('bank-case', 'Bank investigation');
 const cloudCase = assessment('cloud-case', 'Cloud investigation');
 const bankPackage = {id: 'bank-package', assessment_id: bankCase.id, context: {...bankCase.context, destination: ''},
+  hunts:[], emulations:[], source:bankCase.source, extraction:bankCase.extraction,
   artifacts: {names: ['cti.stix21.json', 'cti.misp.json', 'package.zip'], validation: {status: 'fixture'}}};
+function actionRow(bank=true) {
+  const a=bank?bankCase:cloudCase, id=bank?'bank-action':'cloud-action';
+  const action={id,owner:bank?'Bank control owner':'Cloud control owner',priority:'high',status:'open',rationale:'Authored improvement',proposed_change:bank?'Improve Bank defense':'Improve Cloud defense',retest:'Inspect original evidence',context:a.context};
+  return {...action,action,origin_kind:'Intelligence case',related_title:a.source.title,outcome:'No action-linked retest recorded',qualification:'Implementation claims do not prove verification',customer_id:a.context.customer_id,environment_id:a.context.environment_id,reference:{kind:'case',assessment_id:a.id,action_id:id},tests:[],exceptions:[]};
+}
 const bootstrap = {
   customers: [
     {id: 'fictional-bank', name: 'Fictional Bank', version: 1, sector: 'finance',
@@ -45,6 +51,9 @@ function respond(input) {
     case '/api/assessments/bank-case/defenses': case '/api/assessments/cloud-case/defenses':
       return json({state:'ready',behaviors:{}});
     case '/api/evaluation': return json({status: 'NOT RUN'});
+    case '/api/improvements': return json({rows:[actionRow(bank)],qualification:'Existing ledger records only'});
+    case '/api/improvements/bank-action': return bank?json(actionRow()):json({detail:'Not found in this scope'},404);
+    case '/api/improvements/cloud-action': return !bank?json(actionRow(false)):json({detail:'Not found in this scope'},404);
     case '/api/assessments': return json(bank ? [bankCase] : [cloudCase]);
     case '/api/packages': return json(bank ? [bankPackage] : []);
     case '/api/jobs': case '/api/overrides': return json([]);
@@ -55,6 +64,7 @@ function respond(input) {
 }
 beforeEach(() => {
   localStorage.clear();
+  history.replaceState(null,'','/');
   document.head.innerHTML = '<meta name="theme-color" content="#152d31">';
   vi.stubGlobal('fetch', vi.fn(async input => respond(input)));
 });
@@ -91,7 +101,7 @@ it('opens cited evidence as text and closes it with an accessible control', asyn
 
 it('scopes STIX, MISP and ZIP links and clears them when switching customers', async () => {
   const {user} = await mount();
-  await user.click(screen.getByRole('button', {name: 'Intelligence exports'}));
+  await user.click(screen.getByRole('button', {name: 'Intelligence Exports'}));
   for (const [label, name] of [['cti.stix21.json', 'cti.stix21.json'], ['cti.misp.json', 'cti.misp.json'], ['Download ZIP', 'package.zip']]) {
     const link = screen.getByRole('link', {name: label});
     expect(link.getAttribute('href')).toBe(`/api/artifacts/bank-package/${name}?customer_id=fictional-bank&environment_id=windows-ad`);
@@ -244,4 +254,39 @@ it('integrates Application Findings with selected scope without requiring a CTI 
   expect(screen.queryByRole('combobox',{name:'Working case'})).toBeNull();
   await user.selectOptions(screen.getByRole('combobox',{name:'Active customer'}),'fictional-cloud');
   await waitFor(()=>expect(vi.mocked(fetch).mock.calls.some(([url])=>String(url)==='/api/application-findings?customer_id=fictional-cloud&environment_id=mac-cloud')).toBe(true));
+});
+
+it('opens an existing scoped action in its original case workflow and continues into Hunts',async()=>{
+  const {user}=await mount();
+  await user.click(screen.getByRole('button',{name:'Improvement Actions',exact:true}));
+  await screen.findByText('Improve Bank defense');
+  await user.click(screen.getByRole('button',{name:'Inspect action bank-action'}));
+  await screen.findByRole('button',{name:'Open originating workflow'});
+  await user.click(screen.getByRole('button',{name:'Open originating workflow'}));
+  expect(screen.getByRole('heading',{name:'Coverage',exact:true})).toBeTruthy();
+  const drawer=screen.getByRole('complementary',{name:'Evidence and detail drawer'});
+  expect(within(drawer).getByText('Improve Bank defense')).toBeTruthy();
+  expect(within(drawer).getByRole('button',{name:'Edit improvement'})).toBeTruthy();
+  expect(screen.getByRole('combobox',{name:'Active customer'}).value).toBe('fictional-bank');
+  await user.click(within(drawer).getByRole('button',{name:'Close drawer'}));
+  await user.click(screen.getByRole('button',{name:'Open case hunts'}));
+  expect(screen.getByRole('heading',{name:'Hunts',exact:true})).toBeTruthy();
+  expect(screen.getByRole('combobox',{name:'Working case'}).value).toBe('bank-case');
+});
+
+it('restores direct nested action links in their explicit scope without fetching the previous customer ledger',async()=>{
+  history.replaceState(null,'','/#/improvement-actions/cloud-action?customer=fictional-cloud&environment=mac-cloud');
+  render(<App/>);await screen.findByRole('heading',{name:'Improvement action',exact:true});
+  expect(screen.getByRole('combobox',{name:'Active customer'}).value).toBe('fictional-cloud');
+  expect(screen.getByRole('combobox',{name:'Active environment'}).value).toBe('mac-cloud');
+  expect(screen.getByRole('button',{name:'Improvement Actions',exact:true}).getAttribute('aria-current')).toBe('page');
+  const calls=fetch.mock.calls.filter(([input])=>String(input).startsWith('/api/improvements'));
+  expect(calls.every(([input])=>String(input).includes('customer_id=fictional-cloud&environment_id=mac-cloud'))).toBe(true);
+  expect(screen.queryByText('Improve Bank defense')).toBeNull();
+});
+
+it('keeps the renamed parent workspace active for direct and nested legacy case links',async()=>{
+  history.replaceState(null,'','/#/case-overview/revision-a?customer=fictional-bank&environment=windows-ad');
+  render(<App/>);await screen.findByRole('heading',{name:'Cases & Analysis',exact:true});
+  expect(within(screen.getByRole('navigation',{name:'Workbench navigation'})).getByRole('button',{name:'Cases & Analysis',exact:true}).getAttribute('aria-current')).toBe('page');
 });
