@@ -1,5 +1,7 @@
 # Five-minute walkthrough
 
+For a screenshot overview of the workspaces, see the [README visual tour](README.md#visual-tour). Separate focused demos cover [AppSec remediation](docs/APPSEC_REMEDIATION.md), [Exposure Overview](docs/EXPOSURE_MANAGEMENT_DASHBOARD.md) and [Pipeline Assurance](docs/PIPELINE_ASSURANCE.md#three-to-five-minute-offline-demonstration). Pipeline examples are manual, synthetic, offline imports; configuration and supplied execution are kept separate.
+
 Before presenting: `./scripts/bootstrap`, `./scripts/iti demo`, `./scripts/run`. Open **http://127.0.0.1:8000**. Use the latest case/profile version. Repeated demo runs preserve ingestion clocks and existing records. This is an actual local workflow; no prerecorded operational timeline is represented as live evidence.
 
 **0:00–0:40 — Customer, sector and source.** Select **Northstar Bank · fictional → Windows / AD lab**. Customer Profiles exposes the financial-services sector, priorities and editable environment telemetry. In **Add Intelligence**, choose **ActiveMQ → LockBit** and **Load selected case**. Explain that this is an exact-content curated replay of a limited, attributed real report derivative. URL mode can fetch the full operator-selected report; the full source is retained only in the ignored cache. Publication is February 2026; the intrusion began in February 2024. Do not interchange these dates.

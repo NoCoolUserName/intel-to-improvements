@@ -1,12 +1,38 @@
 # Intel to Improvements
 
-A runnable local analyst workbench connecting source evidence to customer relevance, hunting, human-led validation, existing Sigma rules and evidence-scoped improvements. It also supports CVE intelligence and manually imported application-security findings with human-reviewed remediation, exceptions and retest evidence. Coverage is the primary view. Generated artifacts, rule discovery, deployment, detection, prevention and SOC response are separate accomplishments.
+A runnable local security workbench connecting threat intelligence to customer relevance, hunting, human-led validation and evidence-scoped improvements. It brings together CVE intelligence, non-CVE application findings, accountable remediation, an exposure overview and CI/CD pipeline assurance. Each workspace preserves its source evidence and distinguishes reported claims from reviewed or verified outcomes.
 
 The deliverable is local software, not a hosted service. It requires no credentials, Docker, SIEM or MISP server for the demonstration. Run the commands below from the repository root.
 
+## Visual tour
+
+The main pieces are **workspaces**: each supports a distinct analyst or governance task while sharing customer/environment scope, evidence storage and history. These are actual screenshots of the running application using fictional demo environments. CTI views use the attributed, limited ActiveMQ report replay; asset, AppSec, leadership and pipeline examples are synthetic. No screenshot represents independently verified enterprise security or remediation. Click an image for full resolution.
+
+| Intelligence analysis | Threat hunting |
+| --- | --- |
+| [![Case overview with source provenance and customer relevance](docs/images/intelligence-analysis.png)](docs/images/intelligence-analysis.png) | [![Sequential hunt plan with telemetry prerequisites and query template](docs/images/threat-hunting.png)](docs/images/threat-hunting.png) |
+| Source parsing, exact evidence spans, ATT&CK mappings and customer relevance. [CTI walkthrough](DEMO.md) | Source-supported investigation plans and existing Sigma candidates; queries require human review. [Hunt/query contract](docs/SPLUNK.md) |
+
+| Purple-team planning | Vulnerability Intelligence |
+| --- | --- |
+| [![Human-led validation scenario with evidence requirements](docs/images/purple-team.png)](docs/images/purple-team.png) | [![CVE intelligence with exploitation evidence and per-asset response](docs/images/vulnerability-intelligence.png)](docs/images/vulnerability-intelligence.png) |
+| Bounded lab scenarios, Attack Flow and D3FEND suggestions. No autonomous emulation. [Demo](DEMO.md#attack-flow-addition) | Source-linked CVEs, dated KEV/EPSS/CVSS and reviewed asset decisions. [CVE demo](docs/VULNERABILITY_INTELLIGENCE_DEMO.md) |
+
+| Application Findings & remediation | Exposure Overview |
+| --- | --- |
+| [![Synthetic AppSec finding with reviewed triage, engineering ownership and qualified evidence outcome](docs/images/appsec-remediation.png)](docs/images/appsec-remediation.png) | [![Scoped exposure and accountability metrics with explicit definitions](docs/images/exposure-overview.png)](docs/images/exposure-overview.png) |
+| SARIF findings with or without CVEs, human triage, existing ledger actions, exceptions and retests. [AppSec demo](docs/APPSEC_REMEDIATION.md) | Current ownership, overdue commitments and qualified evidence states with source drill-down. [Overview demo](docs/EXPOSURE_MANAGEMENT_DASHBOARD.md) |
+
+| Pipeline Assurance | Intelligence exports |
+| --- | --- |
+| [![Pipeline configuration observations separated from supplied successful and skipped execution evidence](docs/images/pipeline-assurance.png)](docs/images/pipeline-assurance.png) | [![Portable intelligence package with STIX, MISP, plans and validation results](docs/images/intelligence-exports.png)](docs/images/intelligence-exports.png) |
+| Manually imported Actions YAML, conservative checks, immutable history and optional supplied run/job evidence. [Pipeline demo](docs/PIPELINE_ASSURANCE.md#three-to-five-minute-offline-demonstration) | Portable STIX/MISP, hunt and validation plans, Sigma assessment and provenance. [Export workflow](#commands) |
+
+**Evidence before assurance:** reported ≠ reviewed ≠ assigned ≠ implemented ≠ verified. For pipelines, configured ≠ executed ≠ effective. Coverage, action history and verification remain separate; no universal risk score or “secure application” badge is generated.
+
 ## Start
 
-Prerequisites: macOS Apple Silicon or Linux, Python 3.12+, Node 22.22.2+ or 24.15+ (even-numbered supported release) and npm, network access for initial package installation. The current workbench was validated on Linux with Python 3.12.14 and Node 24.19.0. Earlier Apple Silicon macOS and pinned Attack Flow Builder validation are recorded in [VALIDATION.md](VALIDATION.md).
+Prerequisites: macOS Apple Silicon or Linux, Python 3.12+, Node 22.22.2+ or 24.15+ (even-numbered supported release) and npm, network access for initial package installation. The current workbench was validated on Linux with Python 3.12.14 and Node 24.19.0. Earlier Apple Silicon macOS and pinned Attack Flow Builder validation are recorded in [VALIDATION.md](VALIDATION.md). Native Windows installation is not currently supported or tested; the launcher and process locks use macOS/Linux conventions.
 
 ```sh
 ./scripts/bootstrap
@@ -129,6 +155,15 @@ Stable identity is scoped to customer, destination and logical report. Upsert pr
 
 See `VALIDATION.md`, `validation/evaluation.html`, `REQUIREMENTS_TESTS.md`, `ARCHITECTURE.md`, and `DEMO.md`. The actual evaluation includes successful cases and a held-out unsupported cloud behavior. No live SIEM, ransomware, exploit, credential theft or red-team tool is executed. The one supported query target is documented in `docs/SPLUNK.md`.
 
+Phase 4 local regression validation: **278 backend tests and 54 frontend tests passed**, together with TypeScript checks, the production build and the repository's applicable lint/security checks. Real local Chromium acceptance exercised configuration and execution preview/confirmation, original-byte/hash downloads, mismatch rejection, immutable revisions, customer switching and mobile/theme behavior. The screenshots above were captured from the running production frontend. These checks validate workbench behavior, not the security of a supplied repository.
+
+```sh
+.venv/bin/python -m pytest -q
+npm --prefix web run typecheck
+npm --prefix web test
+npm --prefix web run build
+```
+
 Source material is untrusted; frontend rendering uses React text nodes, not source HTML. The app binds loopback by default, denies cross-origin/cross-site requests, sets restrictive response headers and limits input sizes. It is not designed for public hosting. Back up the SQLite database and immutable blobs together. Source/model/catalog/environment hashes in manifests support reproducible exports; live model answers are not claimed deterministic.
 
 Dependency security: [patched versions, audit results and the remaining diskcache advisory](docs/DEPENDENCY_SECURITY.md). The tested local Sigma workflow does not open that cache, but the dependency has no patched release and its advisory remains unresolved. Passing CI is not a claim that all dependencies are vulnerability-free.
@@ -157,8 +192,6 @@ Review the evidence, accept/override the recommendation with a reason, then crea
 
 Open **Application Findings**, select an existing customer/environment and upload a manually supplied **SARIF 2.1.0** file (up to 4 MiB / 1,000 results). Optionally enter application/repository/commit context, preview the findings and warnings, then explicitly confirm import. Findings can have a CWE, a CVE, or neither. Original bytes and hashes remain immutable; exact repeat imports are idempotent within their scope. Start with the clearly synthetic CodeQL- and Semgrep-shaped files in `fixtures/application-findings/`. See [import fields, provenance and limitations](docs/APPLICATION_FINDINGS.md).
 
-The **Exposure Overview** leadership view summarizes scoped findings, ownership, overdue commitments, qualified verification and exceptions, with definitions and drill-down records. Load its isolated synthetic leadership demo to explore the workflow. See [dashboard metrics and demonstration](docs/EXPOSURE_MANAGEMENT_DASHBOARD.md).
-
 Message normalization v2 expands direct and referenced message arguments and preserves escaped braces. Existing imports remain unchanged; explicit reimport after a normalizer upgrade creates a separate batch and can require renewed review. See [normalizer versions and historical evidence](docs/APPLICATION_FINDINGS.md#message-normalization-versions).
 
 Inspect a finding and use the **Human-governed remediation** section:
@@ -176,3 +209,21 @@ npm --prefix web run build
 .venv/bin/python scripts/appsec-offline-smoke
 # Open http://127.0.0.1:8002; stop with Ctrl-C.
 ```
+
+## Exposure Overview
+
+The **Exposure Overview** leadership workspace summarizes selected customer/environment records: reported findings, reviewed applicability, ownership, overdue commitments, exceptions and qualified verification. Every metric has a definition and a drill-down to its underlying records. Historical occurrences do not inflate current AppSec findings; source-only CVE mentions remain distinct from asset exposure.
+
+Choose **Load synthetic leadership demo** to explore an isolated fictional Juniper scope with open work, pending/failed/inconclusive retests, current and stale evidence, and active/expired/unapproved exceptions. Synthetic or supplied-evidence review does not become independently verified operational remediation. Timing is shown only for eligible records and is not a claim of enterprise risk reduction. See [metric definitions and three-minute demonstration](docs/EXPOSURE_MANAGEMENT_DASHBOARD.md).
+
+## Pipeline Assurance
+
+Open **Pipeline Assurance** to inspect manually supplied GitHub Actions YAML. Enter operator-provided repository/ref and optional application/commit context, choose files, preview the deterministic observations and explicitly confirm. Snapshot history preserves original bytes, SHA-256 hashes, frozen customer/environment context and the assessment rule version. No scanner, GitHub credential, network integration or additional service is needed.
+
+The bounded checks cover declared permissions, action pinning, checkout credential handling, sensitive triggers/event interpolation, recognized security/test steps and failure-continuation configuration. External reusable workflows—including `NoCoolUserName/code-quality`—remain referenced but uninspected; downstream controls are **Unknown**, not falsely marked absent. Branch-protection enforcement and control effectiveness remain unknown.
+
+Optionally attach supplied run/job JSON to an exact repository/workflow/ref/commit snapshot. Unique named controls can show **Reported successful**, **Reported failed**, **Reported skipped**, **Reported cancelled**, **Incomplete**, or **Unknown / no evidence**. A workflow success does not establish that every scanner ran. Uploaded metadata is never described as independently authenticated.
+
+For a three-to-five-minute demo, select a fictional scope, enter `synthetic/juniper`, ref `main`, commit `aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa`, and mark the snapshot synthetic. Import `good.yml`, `concerns.yml` and `shared.yml` from `fixtures/pipeline/`. Attach `run.json`, then `incomplete.json`; try the rejected `mismatch.json`, and import `revised/good.yml` to show preserved history. **These are authored evidence fixtures, not runnable production workflows.** Follow the [complete walkthrough, input envelope, control definitions and limitations](docs/PIPELINE_ASSURANCE.md).
+
+Pipeline observations do not create AppSec/CVE findings, modify the improvement ledger, or enter exposure metrics. This phase does not execute or modify pipelines, fetch external definitions, monitor GitHub, score risk or automate remediation.

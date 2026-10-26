@@ -1,0 +1,24 @@
+# SYNTHETIC: inspect only. Never run this authored trust-boundary example.
+name: Synthetic concerns
+on:
+  pull_request_target:
+  workflow_run:
+    workflows: [Synthetic upstream]
+    types: [completed]
+permissions: write-all
+jobs:
+  inspect:
+    name: Synthetic conditional scanning
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request_target'
+    steps:
+      - name: Checkout head
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Event interpolation example
+        run: echo "${{ github.event.pull_request.title }}"
+      - name: Nonblocking SAST
+        continue-on-error: true
+        run: semgrep ci

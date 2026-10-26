@@ -130,3 +130,24 @@ The isolated acceptance process denied non-loopback DNS/sockets, with same-origi
 Primary CISA PDF and CrowdStrike HTML were fetched through the existing protected fetcher and inspected before authoring derivatives. Full articles stay ignored; bundled primary hashes/qualifiers and dated enrichment facts are attributable. No actual organizational inventory, vulnerability scan, patch deployment, compromise hunt, offensive test, prevention or verified exposure reduction was run. No new MISP, Gmail, live-model or SIEM acceptance is claimed. Those existing limits remain unchanged.
 
 Final local required checks also passed: Ruff 0.17.0 correctness rules; Semgrep 1.180.0 with all six existing pinned security rules (42 supported targets, zero findings, zero parse errors); Gitleaks 8.24.3 default rules over the publishable snapshot (zero leaks, no exclusions). Existing dependency locks and remote CI/security workflows are preserved. GitHub CI results are checked on the feature PR separately from these local results.
+
+## Phase 4 — manual CI/CD Pipeline Assurance (2026-10-26)
+
+Baseline Phases 1–3 were merged in PRs #16, #17 and #20; this extension starts from `4cdef442d50bf34d581f192b225696b92834808b`. Existing SARIF message-normalization fixes are retained. No dependency locks, CI policies, database schema, ledger semantics or dashboard metrics were changed.
+
+Actual local commands/results:
+
+- `.venv/bin/python -m pytest -q tests/test_pipeline.py`: **61 passed**.
+- `.venv/bin/python -m pytest -q -o faulthandler_timeout=30`: **278 passed in 37.37s**.
+- `npm --prefix web run typecheck`: passed.
+- `npm --prefix web test`: **54 passed across 8 files**.
+- `npm --prefix web run build`: passed (TypeScript / Vite production build).
+- Ruff 0.17.0 correctness rules `E9,F63,F7,F82` on `iti` and `tests`: passed.
+- Semgrep 1.180.0, six established pinned security rules, strict parsing: **0 findings** on 52 applicable application targets. A separate explicit scan of all six new backend/frontend implementation files also returned **0 findings / 0 errors**.
+- Gitleaks 8.24.3 default rules on the publishable file snapshot: **0 leaks**, no rule exclusions. Existing public path/owner-identifier scan passed; focused documentation links resolve.
+
+Actual local Chromium acceptance used the production frontend and an isolated temporary SQLite/blob store. The application process denied non-loopback networking; browser requests were restricted to its loopback origin. Through real UI/API paths it imported three authored workflows (46 observations), confirmed imports, downloaded and compared all original source bytes/SHA-256 values, attached successful/skipped/failed supplied metadata, retained an incomplete run, rejected mismatched evidence, imported a revised snapshot without replacing old evidence, reloaded persisted history, changed customer scope, and exercised mobile layout/theme selection. No application JavaScript errors occurred. The README's eight PNGs are genuine screenshots of the running workspaces, using fictional/synthetic demo scopes and the existing attributed limited CTI replay.
+
+Browser harness issues encountered and resolved: an existing temporary dataset violated the first-import assertion, so acceptance was restarted with fresh data; text selectors were corrected to match actual cells containing explanatory text. No product assertion or security control was relaxed. A local Semgrep settings-directory permission error was resolved by placing tool settings/logs in temporary storage.
+
+This validates the local workbench, not GitHub execution or supply-chain security. No uploaded workflow ran, no external reusable definition was retrieved, no scanner was executed and no independent operational assurance was established. Existing live-model/MISP/SIEM and dependency-advisory limitations remain unchanged. GitHub PR checks are inspected separately before the user-authorized merge. See [control rules, evidence format and reproducible demo](docs/PIPELINE_ASSURANCE.md).
