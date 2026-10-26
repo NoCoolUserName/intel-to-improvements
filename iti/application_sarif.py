@@ -9,6 +9,9 @@ from .store import canonical, uid
 
 MAX_BYTES = 4 * 1024 * 1024
 MAX_RESULTS = 1000
+NORMALIZER_VERSION = 'sarif-normalizer-2'
+MAX_MESSAGE_CHARS = 32768
+MESSAGE_TOKEN = re.compile(r'\{\{|\}\}|\{([0-9]+)\}')
 SCHEMA = json.loads((Path(__file__).parent / 'schemas/sarif-2.1.0.json').read_text())
 VALIDATOR = Draft7Validator(SCHEMA, registry=Registry(), format_checker=FormatChecker(formats=["date-time"]))
 LIMITATIONS = [
@@ -110,6 +113,42 @@ def identifiers(value, pattern):
     return sorted(set(re.findall(pattern, canonical(value), flags=re.I)), key=str.upper)
 
 
+def resolve_message(message, rule, component, gaps):
+    """SARIF 3.11.5/3.11.7/3.11.11; substitute once, never interpret arguments."""
+    template = message.get('text') or message.get('markdown')
+    if template is None and message.get('id'):
+        referenced = rule.get('messageStrings', {}).get(message['id']) or component.get('globalMessageStrings', {}).get(message['id'], {})
+        template = referenced.get('text') or referenced.get('markdown')
+    if template is None:
+        return None
+    args = message.get('arguments', [])
+    pieces = []
+    length = position = 0
+    for token in MESSAGE_TOKEN.finditer(template):
+        replacement = token[0][0]  # Doubled braces represent one literal brace.
+        if token[1] is not None:
+            digits = token[1].lstrip('0') or '0'
+            # Avoid converting attacker-controlled, arbitrarily long integers.
+            index = int(digits) if len(digits) <= len(str(len(args))) else len(args)
+            if index < len(args):
+                replacement = args[index]
+            else:
+                replacement = token[0]
+                gaps.append('Message placeholder has no supplied argument; placeholder retained')
+        prefix = template[position:token.start()]
+        length += len(prefix) + len(replacement)
+        if length > MAX_MESSAGE_CHARS:
+            gaps.append('Message substitution exceeds limit; original template retained')
+            return template
+        pieces.extend((prefix, replacement))
+        position = token.end()
+    if length + len(template) - position > MAX_MESSAGE_CHARS:
+        gaps.append('Message substitution exceeds limit; original template retained')
+        return template
+    pieces.append(template[position:])
+    return ''.join(pieces)
+
+
 def normalize(document, scope, operator, source_hash):
     findings = []
     normalized_bytes = 0
@@ -163,16 +202,7 @@ def normalize(document, scope, operator, source_hash):
                         gaps.append('Rule configuration overrides are not evaluated; level unknown')
             metadata = {'rule.properties': rule.get('properties', {}), 'result.properties': result.get('properties', {})}
             message = result['message']
-            resolved_message = message.get('text') or message.get('markdown')
-            if resolved_message is None and message.get('id'):
-                template = rule.get('messageStrings', {}).get(message['id']) or component.get('globalMessageStrings', {}).get(message['id'], {})
-                resolved_message = template.get('text') or template.get('markdown')
-                if resolved_message:
-                    args = message.get('arguments', [])
-                    if len(resolved_message) * max([len(a) for a in args] + [1]) > 32768:
-                        gaps.append('Message substitution exceeds limit; original template retained')
-                        args = []
-                    resolved_message = re.sub(r'\{(\d+)\}', lambda m: args[int(m[1])] if int(m[1]) < len(args) else m[0], resolved_message)
+            resolved_message = resolve_message(message, rule, component, gaps)
             fp, partial = result.get('fingerprints', {}), result.get('partialFingerprints', {})
             # Partial fingerprints need locations too; no context means no cross-document correlation.
             identity_context = {'operator': operator, 'reported': reported_context}
@@ -183,9 +213,11 @@ def normalize(document, scope, operator, source_hash):
             if not has_context or not rule_id or (not fp and not locations):
                 key += [source_hash, ri, index]
                 basis += '; document-local because correlation context is incomplete'
-            for field, value in {'rule metadata': rule, 'rule identifier': rule_id, 'scanner version': driver.get('version'), 'scanner level': level, 'source location': locations, 'scan timestamp': any(timestamps), 'repository/commit from SARIF': reported_context, 'resolved message': resolved_message}.items():
+            for field, value in {'rule metadata': rule, 'rule identifier': rule_id, 'scanner version': driver.get('version'), 'scanner level': level, 'source location': locations, 'scan timestamp': any(timestamps), 'repository/commit from SARIF': reported_context}.items():
                 if not value:
                     gaps.append('Missing or unresolved: ' + field)
+            if resolved_message is None:
+                gaps.append('Missing or unresolved: resolved message')
             synthetic_basis = []
             if operator.get('synthetic'):
                 synthetic_basis.append('operator supplied')
