@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import './vulnerability.css';
+import AppsecGovernance from './AppsecGovernance';
 type Obj = Record<string, any>;
 async function request(path: string, options?: RequestInit) {
   const response = await fetch('/api/application-findings' + path, options);
@@ -8,10 +9,10 @@ async function request(path: string, options?: RequestInit) {
   return data;
 }
 const json = (value: unknown) => <pre className="json">{JSON.stringify(value, null, 2)}</pre>;
-export default function ApplicationFindings(props: {customer: string; environment: string}) {
+export default function ApplicationFindings(props: {customer: string; environment: string; onDemo?: (value:Obj)=>void}) {
   return <Workspace key={props.customer + ':' + props.environment} {...props}/>;
 }
-function Workspace({customer, environment}: {customer: string; environment: string}) {
+function Workspace({customer, environment, onDemo}: {customer: string; environment: string; onDemo?: (value:Obj)=>void}) {
   const [data, setData] = useState<Obj>(), [preview, setPreview] = useState<Obj>(), [detail, setDetail] = useState<Obj>();
   const [error, setError] = useState(''), [notice, setNotice] = useState(''), [busy, setBusy] = useState(false);
   const selectedFile = useRef<File | undefined>(undefined);
@@ -40,7 +41,8 @@ function Workspace({customer, environment}: {customer: string; environment: stri
   const finding = detail?.finding;
   return <section className="vulnerability-workspace application-findings">
     <h2>SARIF imports and findings</h2><p>Manually import SARIF 2.1.0 for the customer and environment selected above. Scanner reports are not independently validated vulnerabilities.</p>
-    <p className="fine">No scanning, remediation, verification or enterprise risk scoring is performed. Scan completeness is unknown. Missing findings never mean fixed.</p>
+    <p className="fine">No scanner execution, automated remediation or enterprise risk scoring is performed. Supplied evidence review is separate; scan completeness is unknown. Missing findings never mean fixed.</p>
+    {onDemo&&<button disabled={busy} onClick={()=>action(async()=>{const response=await fetch('/api/appsec/demo',{method:'POST'});const value=await response.json();if(!response.ok)throw new Error(value.detail);if(alive.current)onDemo(value);})}>Load synthetic remediation demo</button>}
     {error && <div role="alert" className="banner error">{error}<button disabled={busy} onClick={() => action(load)}>Retry findings</button></div>}
     {notice && <p role="status">{notice}</p>}
     <div className="panel padded"><h2>Import SARIF</h2><form onChange={() => {setPreview(undefined); setNotice('');}} onSubmit={e => {
@@ -65,6 +67,7 @@ function Workspace({customer, environment}: {customer: string; environment: stri
     {data && <><div className="panel padded"><h2>Findings in selected scope</h2>{data.findings.length ? table(data.findings, true) : <p>No application findings in this scope.</p>}</div>
       <div className="panel padded"><h2>Import history and limitations</h2>{data.imports.map((batch: Obj) => <details key={batch.id}><summary>{batch.id} · {batch.finding_ids.length} findings · {batch.imported_at}</summary>{json(batch)}<a href={'/api/application-findings/sources/' + encodeURIComponent(batch.source_id) + query} download>Download original SARIF evidence</a></details>)}</div></>}
     {finding && <div className="panel padded" aria-label="Finding details"><h2>Finding details: {finding.rule_id || 'Unknown rule'}</h2><p>{finding.verification}</p><blockquote>{finding.resolved_message || 'Message unresolved; inspect original message below.'}</blockquote>
+      <AppsecGovernance key={finding.id} finding={finding} findings={data?.findings||[]} imports={data?.imports||[]} onInspect={inspect}/>
       <h3>Original reported message</h3>{json(finding.message)}<h3>Rule metadata</h3>{json(finding.rule_metadata)}
       <h3>Scanner and run</h3>{json({scanner: finding.scanner, run_id: finding.run_id, run_index: finding.run_index, result_index: finding.result_index, invocation_status: finding.invocation_status, scan_timestamps: finding.scan_timestamps, scanner_level: finding.scanner_level, level_source: finding.level_source, severity_metadata: finding.severity_metadata})}
       <h3>Location, identifiers and fingerprints</h3>{json({locations: finding.locations, cwes: finding.cwes, cves: finding.cves, fingerprints: finding.fingerprints, partial_fingerprints: finding.partial_fingerprints, logical_id: finding.logical_id, identity_basis: finding.identity_basis})}

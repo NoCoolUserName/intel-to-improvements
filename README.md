@@ -158,3 +158,5 @@ Open **Vulnerability Intelligence** for source-linked CVEs, dated KEV/EPSS/CNA-C
 Review the evidence, accept/override the recommendation with a reason, then create an owner action and record scoped verification. Remediation and prior-compromise hunting stay separate; closure, synthetic results and attestations cannot become live verified remediation. See the [three-minute walkthrough, CSV contract, policy, provenance and limitations](docs/VULNERABILITY_INTELLIGENCE_DEMO.md). Run `npm --prefix web run build`, restart `./scripts/run`, and refresh an existing install to load this view.
 
 Manual SARIF 2.1.0 imports, including non-CVE findings: [Application Findings — Phase 1](docs/APPLICATION_FINDINGS.md). This separate workspace preserves scanner evidence without changing CVE decisions or the improvement ledger.
+
+Application Findings also supports [human-governed AppSec remediation](docs/APPSEC_REMEDIATION.md): triage, engineering commitments in the existing ledger, expiring exceptions and qualified evidence-reviewed retests. Use **Load synthetic remediation demo** for the isolated fictional workflow.

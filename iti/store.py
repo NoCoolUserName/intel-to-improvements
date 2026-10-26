@@ -71,3 +71,13 @@ PRAGMA user_version=1;''')
             fcntl.flock(handle.fileno(),fcntl.LOCK_EX)
             try:yield
             finally:fcntl.flock(handle.fileno(),fcntl.LOCK_UN)
+
+
+class TransactionStore(Store):
+    """Existing Store operations on one caller-owned transaction, without nested commits."""
+    def __init__(self, store, connection):
+        self.root, self.db, self.connection = store.root, store.db, connection
+
+    @contextmanager
+    def connect(self):
+        yield self.connection

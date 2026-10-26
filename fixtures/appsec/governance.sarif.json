@@ -1,0 +1,255 @@
+{
+  "version": "2.1.0",
+  "properties": {
+    "synthetic": true,
+    "description": "Authored CodeQL-/Semgrep-shaped governance examples; not actual scanner outputs"
+  },
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "CodeQL (synthetic fixture)",
+          "version": "0.0-demo",
+          "rules": [
+            {
+              "id": "synthetic/case-A",
+              "shortDescription": {
+                "text": "Synthetic CWE example; not a real scan"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-079"
+                ],
+                "security-severity": "7.5"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              }
+            },
+            {
+              "id": "synthetic/case-B",
+              "shortDescription": {
+                "text": "Synthetic CWE example; not a real scan"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-079"
+                ],
+                "security-severity": "7.5"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              }
+            },
+            {
+              "id": "synthetic/case-C-active",
+              "shortDescription": {
+                "text": "Synthetic CWE example; not a real scan"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-079"
+                ],
+                "security-severity": "7.5"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "synthetic/case-A",
+          "ruleIndex": 0,
+          "message": {
+            "text": "Synthetic AppSec governance case A; NOT an actual scanner result."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "synthetic/case-A.txt"
+                },
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "synthetic/v1": "case-A"
+          }
+        },
+        {
+          "ruleId": "synthetic/case-B",
+          "ruleIndex": 1,
+          "message": {
+            "text": "Synthetic AppSec governance case B; NOT an actual scanner result."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "synthetic/case-B.txt"
+                },
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "synthetic/v1": "case-B"
+          }
+        },
+        {
+          "ruleId": "synthetic/case-C-active",
+          "ruleIndex": 2,
+          "message": {
+            "text": "Synthetic AppSec governance case C-active; NOT an actual scanner result."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "synthetic/case-C-active.txt"
+                },
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "synthetic/v1": "case-C-active"
+          }
+        }
+      ]
+    },
+    {
+      "tool": {
+        "driver": {
+          "name": "Semgrep (synthetic fixture)",
+          "version": "0.0-demo",
+          "rules": [
+            {
+              "id": "synthetic/case-C-expired",
+              "shortDescription": {
+                "text": "Synthetic CWE example; not a real scan"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-079"
+                ]
+              }
+            },
+            {
+              "id": "synthetic/case-C-unapproved",
+              "shortDescription": {
+                "text": "Synthetic CWE example; not a real scan"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-079"
+                ]
+              }
+            },
+            {
+              "id": "synthetic/case-D",
+              "shortDescription": {
+                "text": "Synthetic CWE example; not a real scan"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "external/cwe/cwe-079"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "synthetic/case-C-expired",
+          "ruleIndex": 0,
+          "message": {
+            "text": "Synthetic AppSec governance case C-expired; NOT an actual scanner result."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "synthetic/case-C-expired.txt"
+                },
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "synthetic/v1": "case-C-expired"
+          }
+        },
+        {
+          "ruleId": "synthetic/case-C-unapproved",
+          "ruleIndex": 1,
+          "message": {
+            "text": "Synthetic AppSec governance case C-unapproved; NOT an actual scanner result."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "synthetic/case-C-unapproved.txt"
+                },
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "synthetic/v1": "case-C-unapproved"
+          }
+        },
+        {
+          "ruleId": "synthetic/case-D",
+          "ruleIndex": 2,
+          "message": {
+            "text": "Synthetic AppSec governance case D; NOT an actual scanner result."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "synthetic/case-D.txt"
+                },
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 1
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "synthetic/v1": "case-D"
+          }
+        }
+      ]
+    }
+  ]
+}
