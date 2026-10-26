@@ -16,7 +16,7 @@ def test_connected_case_preserves_existing_records_and_reopening_edits(service):
     result = demo.load(service)
     after = state(service.store)
     assert set(before).issubset(set(after))
-    assert len(result['stops']) == 12
+    assert len(result['stops']) == 13
     assert result['checks']['d3fend_candidates'] > 0
     assert result['checks']['operational_tests_executed'] is False
     customer = service.store.get('customer', demo.CUSTOMER)

@@ -28,6 +28,7 @@ STOPS = [
     ('Purple team', 'Review the AttackIQ probe plan and blocked / signature / no-signature interpretation exercise.'),
     ('Vulnerability Intelligence', 'Compare affected portal, uncertain research service and patched reporting host; inspect owners and mitigation evidence.'),
     ('Application Findings', 'Review synthetic runtime, origin-bypass and release-check findings, commitments and a bounded exception.'),
+    ('Improvement Actions', 'Follow existing scoped commitments back to their case, finding or vulnerability evidence.'),
     ('Exposure Overview', 'Drill into open work and qualified synthetic results for this investment firm.'),
     ('Pipeline Assurance', 'Compare original and revised configuration, failed regression and skipped control reports.'),
     ('Intelligence exports', 'Download the case package, STIX/MISP and validated ATT&CK Flow with provenance.'),

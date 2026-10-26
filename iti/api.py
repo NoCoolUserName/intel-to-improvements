@@ -116,6 +116,14 @@ def create_app(service=None):
     def coverage(id:str,customer_id:str,environment_id:str):
         a=svc.scoped('assessment',id,customer_id,environment_id)
         return ledger.view(svc.store,a)
+    @app.get('/api/improvements')
+    def improvement_actions(customer_id:str,environment_id:str):
+        from .improvement_actions import workspace
+        return workspace(svc.store,customer_id,environment_id)
+    @app.get('/api/improvements/{id}')
+    def improvement_action(id:str,customer_id:str,environment_id:str):
+        from .improvement_actions import workspace
+        return workspace(svc.store,customer_id,environment_id,id)
     @app.post('/api/ledger/{id}/test')
     def test(id:str,body:dict):return ledger.record_test(svc.store,svc.scoped('assessment',id,body['customer_id']),TestRun.model_validate(body['test']))
     @app.post('/api/ledger/{id}/improve')

@@ -8,8 +8,8 @@ const text = (f: FormData, name: string) => String(f.get(name) || '');
 function Field({label,name,value='',area=false,required=true,type='text'}:{label:string;name:string;value?:string;area?:boolean;required?:boolean;type?:string}) {
   return <label>{label}{area ? <textarea name={name} required={required} maxLength={4000} defaultValue={value}/> : <input name={name} type={type} required={required} maxLength={4000} defaultValue={value}/>}</label>;
 }
-export default function AppsecGovernance({finding,findings,imports,onInspect}:{finding:Obj;findings:Obj[];imports:Obj[];onInspect:(id:string)=>void}) {
-  const [data,setData]=useState<Obj>(),[error,setError]=useState(''),[notice,setNotice]=useState(''),[busy,setBusy]=useState(false),[tab,setTab]=useState('Triage');
+export default function AppsecGovernance({finding,findings,imports,onInspect,initialTab,onActions}:{finding:Obj;findings:Obj[];imports:Obj[];onInspect:(id:string)=>void;initialTab?:string;onActions?:(id:string)=>void}) {
+  const [data,setData]=useState<Obj>(),[error,setError]=useState(''),[notice,setNotice]=useState(''),[busy,setBusy]=useState(false),[tab,setTab]=useState(initialTab||'Triage');
   const alive=useRef(true), flight=useRef(false), file=useRef<File | undefined>(undefined);
   const scope=new URLSearchParams({customer_id:finding.context.customer_id,environment_id:finding.context.environment_id});
   const base='/api/application-findings/'+encodeURIComponent(finding.id);
@@ -29,6 +29,7 @@ export default function AppsecGovernance({finding,findings,imports,onInspect}:{f
     {!data&&!error&&<p>Loading governance…</p>}
     {data&&<><p><strong>Triage:</strong> <span>{data.disposition}</span> · <strong>Work:</strong> <span>{data.lifecycle}</span></p><p><strong>Evidence outcome:</strong> <span>{data.verification.status}</span></p><p><strong>Risk acceptance:</strong> {data.exceptions.some((r:Obj)=>r.status.startsWith('active'))?'Active operator-recorded acceptance; finding remains':'No current approved exception'}</p>
       {!editable&&<p role="status">A later occurrence requires review. <button onClick={()=>onInspect(data.latest_finding_id)}>Inspect latest occurrence</button></p>}
+      {action&&onActions&&<button onClick={()=>onActions(action.id)}>View in Improvement Actions</button>}
       <div className="toolbar" aria-label="Governance workflow">{['Triage','Remediation','Evidence & exceptions'].map(t=><button key={t} aria-pressed={tab===t} onClick={()=>setTab(t)}>{t}</button>)}<button disabled={busy} onClick={()=>act(load)}>Refresh governance</button></div>
       {tab==='Triage'&&<><form onSubmit={e=>submit(e,f=>post('/review',{review:{reviewer:text(f,'reviewer'),disposition:text(f,'disposition'),reason:text(f,'reason'),duplicate_of:text(f,'duplicate')||null,evidence_ids:[finding.source_id]}}))}>
         <fieldset disabled={busy||!editable}><legend>Record security triage</legend><Field label="Triage reviewer" name="reviewer"/><label>Disposition<select aria-label="Disposition" name="disposition" defaultValue="Needs review">{dispositions.map(v=><option key={v}>{v}</option>)}</select></label><Field label="Triage reason" name="reason" area/>

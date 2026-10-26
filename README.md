@@ -4,13 +4,19 @@ A runnable local security workbench connecting threat intelligence to customer r
 
 The deliverable is local software, not a hosted service. It requires no credentials, Docker, SIEM or MISP server for the demonstration. Run the commands below from the repository root.
 
+## Navigate the workbench
+
+Threat-Informed Defense organizes **Understand → Assess → Validate → Improve → Measure → Repeat**. The sidebar groups **Overview**, **Intelligence**, **Exposures & Improvements**, **Validation**, **Assurance & Quality**, and **Workspace**. **Cases & Analysis** is the renamed case view. **Improvement Actions** surfaces the existing scoped ledger and links back to the original case, AppSec finding or CVE action workflow. Related-case controls connect analysis, hunts, validation and existing actions without creating new records.
+
+CTEM aligns through scoping, discovery, prioritization, validation and mobilization capabilities across these workspaces. Navigation remains direct; Coverage and Exposure Overview retain their separate definitions, and pipeline configuration/execution and analytical evaluation retain their own evidence boundaries. See [navigation, relationships and limitations](docs/WORKBENCH_NAVIGATION.md).
+
 ## Visual tour
 
 The main pieces are **workspaces**: each supports a distinct analyst or governance task while sharing customer/environment scope, evidence storage and history. These are actual screenshots of the running application using fictional demo environments. CTI views use the attributed, limited ActiveMQ report replay; asset, AppSec, leadership and pipeline examples are synthetic. No screenshot represents independently verified enterprise security or remediation. Click an image for full resolution.
 
 | Intelligence analysis | Threat hunting |
 | --- | --- |
-| [![Case overview with source provenance and customer relevance](docs/images/intelligence-analysis.png)](docs/images/intelligence-analysis.png) | [![Sequential hunt plan with telemetry prerequisites and query template](docs/images/threat-hunting.png)](docs/images/threat-hunting.png) |
+| [![Cases & Analysis with source provenance and customer relevance](docs/images/intelligence-analysis.png)](docs/images/intelligence-analysis.png) | [![Sequential hunt plan with telemetry prerequisites and query template](docs/images/threat-hunting.png)](docs/images/threat-hunting.png) |
 | Source parsing, exact evidence spans, ATT&CK mappings and customer relevance. [CTI walkthrough](DEMO.md) | Source-supported investigation plans and existing Sigma candidates; queries require human review. [Hunt/query contract](docs/SPLUNK.md) |
 
 | Purple-team planning | Vulnerability Intelligence |
@@ -23,7 +29,7 @@ The main pieces are **workspaces**: each supports a distinct analyst or governan
 | [![Synthetic AppSec finding with reviewed triage, engineering ownership and qualified evidence outcome](docs/images/appsec-remediation.png)](docs/images/appsec-remediation.png) | [![Scoped exposure and accountability metrics with explicit definitions](docs/images/exposure-overview.png)](docs/images/exposure-overview.png) |
 | SARIF findings with or without CVEs, human triage, existing ledger actions, exceptions and retests. [AppSec demo](docs/APPSEC_REMEDIATION.md) | Current ownership, overdue commitments and qualified evidence states with source drill-down. [Overview demo](docs/EXPOSURE_MANAGEMENT_DASHBOARD.md) |
 
-| Pipeline Assurance | Intelligence exports |
+| Pipeline Assurance | Intelligence Exports |
 | --- | --- |
 | [![Pipeline configuration observations separated from supplied successful and skipped execution evidence](docs/images/pipeline-assurance.png)](docs/images/pipeline-assurance.png) | [![Portable intelligence package with STIX, MISP, plans and validation results](docs/images/intelligence-exports.png)](docs/images/intelligence-exports.png) |
 | Manually imported Actions YAML, conservative checks, immutable history and optional supplied run/job evidence. [Pipeline demo](docs/PIPELINE_ASSURANCE.md#three-to-five-minute-offline-demonstration) | Portable STIX/MISP, hunt and validation plans, Sigma assessment and provenance. [Export workflow](#commands) |
@@ -103,7 +109,7 @@ Copy `.env.example` to `.env` only when enabling optional integrations. Set `OPE
 
 General live extraction is **NOT VERIFIED** in this build session; the actual selected-report attempt is saved as a failed job because API key/model configuration was absent.
 
-## Customer profiles and relevance
+## Customer Profiles and relevance
 
 Northstar Bank and Cedar Cloud are fictional. Create/edit customer name, initial sector taxonomy, requirements, priorities and multiple child environments. The default sector taxonomy has stable IDs, including Unspecified and Other/custom, and is not claimed to be an official standard. Environment JSON exposes fields, retention, technologies, assets, controls and an explicit raw Splunk map.
 
@@ -174,19 +180,19 @@ Review staged content first; `.gitignore` excludes all full reports, live handof
 
 ## Reported Attack Flow
 
-The Purple team page includes the actual locally served MITRE Attack Flow Builder above the human validation scenarios. Generate an updated package to add **attack-flow.json** and its evidence/provenance sidecar. Historical packages remain unchanged. The existing ActiveMQ case is honestly unordered: its saved sequence numbers do not prove relationships.
+The Purple Team page includes the actual locally served MITRE Attack Flow Builder above the human validation scenarios. Generate an updated package to add **attack-flow.json** and its evidence/provenance sidecar. Historical packages remain unchanged. The existing ActiveMQ case is honestly unordered: its saved sequence numbers do not prove relationships.
 
 Fresh bootstrap builds the viewer. For an existing install, run `./scripts/build-attack-flow` and `npm --prefix web run build`, then restart `./scripts/run` and refresh the page. No extra running service, internet access after setup, or AI credential is needed to view a flow. The **Open in Builder** link opens a separate editable local draft; it never overwrites or approves the immutable package. See [integration setup, pin, semantics and smoke test](integrations/attack-flow/README.md).
 
 ## Possible defensive countermeasures
 
-Open **Purple team**, expand a scenario, and inspect **Possible defensive countermeasures**. Exact ATT&CK-ID associations come from a pinned local D3FEND catalog. **Create improvement** opens the existing editable form: choose an owner, specify a concrete control/configuration and retest, then save. The ledger retains the source evidence and frozen catalog origin; subsequent visits offer **View improvement**. The same section is available in the behavior evidence drawer.
+Open **Purple Team**, expand a scenario, and inspect **Possible defensive countermeasures**. Exact ATT&CK-ID associations come from a pinned local D3FEND catalog. **Create improvement** opens the existing editable form: choose an owner, specify a concrete control/configuration and retest, then save. The ledger retains the source evidence and frozen catalog origin; subsequent visits offer **View improvement**. The same section is available in the behavior evidence drawer.
 
 These are suggestions requiring review. Creating, deploying or closing an action does not verify detection/prevention or stop verification clocks. No additional service, AI call, Builder install or internet access is needed for lookup. See [catalog provenance and refresh](catalogs/d3fend/README.md), [schema details](docs/SCHEMAS.md) and [validation](VALIDATION.md).
 
 ## Vulnerability Intelligence
 
-For one connected demonstration across all workspaces, open **Add Intelligence → Open PHP2Shell working case**. It creates/selects **Harborlight Capital · PHP2Shell fictional demo**, a fictional investment firm, with attributed CTI, hypothetical ATT&CK Flow, D3FEND improvements, hunts, purple-team plans, CVE response, AppSec commitments/exceptions, exposure drill-downs and pipeline configuration/execution examples. Expand its case guide for the twelve-workspace walkthrough and downloadable inputs. Reopening preserves edits; all firm data and results are synthetic. See [the complete PHP2Shell working case](docs/PHP2SHELL_WORKING_CASE.md). Choose **Golden Ledger** in Appearance for the yellow-led investment-workbench palette.
+For one connected demonstration across all workspaces, open **Add Intelligence → Open PHP2Shell working case**. It creates/selects **Harborlight Capital · PHP2Shell fictional demo**, a fictional investment firm, with attributed CTI, hypothetical ATT&CK Flow, D3FEND improvements, hunts, purple-team plans, CVE response, AppSec commitments/exceptions, exposure drill-downs and pipeline configuration/execution examples. Expand its case guide for the thirteen-workspace walkthrough and downloadable inputs. Reopening preserves edits; all firm data and results are synthetic. See [the complete PHP2Shell working case](docs/PHP2SHELL_WORKING_CASE.md). Choose **Golden Ledger** in Appearance for the yellow-led investment-workbench palette.
 
 Open **Vulnerability Intelligence** for source-linked CVEs, dated KEV/EPSS/CNA-CVSS enrichment, a manual/CSV exposure register, explained per-asset response proposals and reviewed actions in the existing improvement ledger. No scanner or AI credential is required. **Load historical examples** explicitly selects a fictional software company with TeamCity and BYOVD cases; real historical reporting and synthetic asset observations remain labeled separately.
 
