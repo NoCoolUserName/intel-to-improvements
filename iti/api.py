@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 from .services import Service
 from .store import ROOT,now,uid
+from .build_identity import BUILD_ID,CHECKOUT_ID,LAUNCHER_PROTOCOL
 from .models import CustomerProfile,GmailScope,TestRun,ImprovementAction,EvidenceAttachment,SECTORS
 from . import profiles,gmail,ledger,detection,misp,ingestion,defenses
 
@@ -44,7 +45,7 @@ def create_app(service=None):
     @app.exception_handler(OSError)
     async def os_error(request,exc):return JSONResponse({'detail':str(exc)},status_code=422)
     @app.get('/health')
-    def health():return {'status':'ok','version':'0.1.0','mode':'local single operator','utc':now()}
+    def health():return {'status':'ok','version':'0.1.0','mode':'local single operator','utc':now(),'launcher_protocol':LAUNCHER_PROTOCOL,'checkout_id':CHECKOUT_ID,'build_id':BUILD_ID}
     @app.get('/api/bootstrap')
     def bootstrap():return {'customers':svc.store.all('customer'),'sectors':SECTORS,'templates':[profiles.WINDOWS.model_dump(),profiles.MAC.model_dump()],'cases':[{'id':'activemq-derived','title':'ActiveMQ → LockBit','description':'Limited attributed DFIR Report case · exact-content replay'},{'id':'no-ioc','title':'Zero IOCs','description':'Authored healthcare / shared technology case'},{'id':'insufficient','title':'Insufficient intelligence','description':'Authored nontechnical source; no justified emulation'},{'id':'held-out','title':'Held-out change case','description':'Authored negation / benign indicators fixture'}],'capabilities':readiness(svc.store)}
     @app.post('/api/customers')
