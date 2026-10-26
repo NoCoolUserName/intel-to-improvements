@@ -19,7 +19,7 @@ dependencies = [
     "pysigma-backend-splunk",
     "openai",
     "python-multipart",
-    "pypdf",
+    "pypdf>=6.21.2",
     "PyYAML",
     "python-dotenv",
     "misp-stix",
@@ -31,7 +31,7 @@ dev = ["pytest", "pytest-cov"]
 [project.scripts]
 iti = "iti.cli:main"
 [build-system]
-requires = ["setuptools>=77.0.3"]
+requires = ["setuptools>=84.1.0"]
 build-backend = "setuptools.build_meta"
 [tool.setuptools]
 packages = ["iti"]
