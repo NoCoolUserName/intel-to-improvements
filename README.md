@@ -2,7 +2,7 @@
 
 A runnable local analyst workbench connecting source evidence to customer relevance, hunting, human-led validation, existing Sigma rules and evidence-scoped improvements. Coverage is the primary view. Generated artifacts, rule discovery, deployment, detection, prevention and SOC response are separate accomplishments.
 
-The deliverable is local software, not a hosted service. It requires no credentials, Docker, SIEM or MISP server for the demonstration. The repository path used in this session is `/Users/amoore/src/intel-to-improvements`.
+The deliverable is local software, not a hosted service. It requires no credentials, Docker, SIEM or MISP server for the demonstration. Run the commands below from the repository root.
 
 ## Start
 

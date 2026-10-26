@@ -2,7 +2,7 @@
   "application": "Intel to Improvements",
   "version": "0.1.0",
   "built_at": "2026-10-08T18:24:01.366851+00:00",
-  "workspace": "/Users/amoore/src/intel-to-improvements",
+  "workspace": "repository root",
   "spec": "IMPLEMENTATION_SPEC.md",
   "test_result": "validation/pytest.xml",
   "evaluation": "validation/evaluation.json",
