@@ -94,3 +94,20 @@ uvx --from pip-audit==2.10.1 pip-audit \
 The last command intentionally returns a nonzero status while diskcache remains
 affected. Do not suppress that failure or use an advisory ignore list to call
 the dependency audit clean.
+
+## Pull request audit gate
+
+`.github/workflows/dependency-audit.yml` checks dependency-changing pull
+requests and supports a manual run. Its separate Python and frontend jobs run
+independently, so a finding or feed outage in one ecosystem does not hide the
+other result. It has no schedule or merge authority.
+
+The Python job exports all external package/version pairs from `uv.lock`,
+including development and platform-specific entries, and queries them with
+`pip-audit` without installing the project or those dependencies. The frontend
+job runs `npm audit` against `web/package-lock.json` with no production-only
+filter and without `npm ci`. The independently pinned audit tools are the only
+packages installed by this workflow. An advisory returns a failing status and
+prints distinct IDs; invalid/incomplete output and unavailable feeds produce a
+separately labeled tooling error. Existing unresolved advisories, including
+diskcache while its feed reports it, keep the Python job red.
