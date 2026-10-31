@@ -11,7 +11,7 @@ The workbench follows **Understand → Assess → Validate → Improve → Measu
 | Assurance & Quality | Pipeline Assurance · Evaluation |
 | Workspace | Customer Profiles |
 
-CTEM aligns with these capabilities: profiles define scope; supplied findings and CVE evidence support discovery; relevance, applicability and triage support prioritization; hunts and human-led tests support validation; owners, commitments and exceptions support mobilization. Coverage and Exposure Overview provide distinct feedback. This alignment adds no engine, risk score or mandatory sequence.
+The CTEM stages map to these workspaces: profiles define scope; supplied findings and CVE evidence support discovery; relevance, applicability and triage support prioritization; hunts and human-led tests support validation; owners, commitments and exceptions support mobilization. Coverage and Exposure Overview provide distinct feedback. This alignment adds no engine, risk score or mandatory sequence.
 
 **Coverage** retains intelligence-assessment, telemetry, test and timing meanings. **Exposure Overview** retains its defined leadership metrics and source-record drill-downs. **Pipeline Assurance** keeps configuration, supplied execution and effectiveness separate; its observations do not become findings or ledger actions automatically. **Evaluation** describes the workbench's analytical quality, not an organization's control effectiveness.
 
@@ -29,4 +29,4 @@ The sidebar scrolls vertically on desktop. Smaller screens use horizontal, group
 
 Workspace bookmarks use fragments such as `#/cases-and-analysis` and `#/improvement-actions/ACTION_ID?customer=CUSTOMER_ID&environment=ENVIRONMENT_ID`. Action links restore explicit scope; missing or cross-scope actions show a recoverable message. Browser Back/Forward updates the active workspace. The legacy `#/case-overview` spelling and encoded internal workspace names are accepted. The original root URL still opens Coverage. Backend routes, record identifiers and export contracts retain their names.
 
-This change deliberately leaves exception approval, action editing and retests in the original domain workflows. It adds no cross-finding remediation engine, inferred case correlation, unified score, new schema, model call or pipeline-to-exposure conversion. The action list has a bounded limit of 1,000 scoped actions / 16 MiB and reports unavailability rather than silently truncating.
+Exception approval, action editing, and retests remain in their original domain workflows. The navigation adds no cross-finding remediation engine, inferred case correlation, unified score, new schema, model call or pipeline-to-exposure conversion. The action list has a bounded limit of 1,000 scoped actions / 16 MiB and reports unavailability rather than silently truncating.
