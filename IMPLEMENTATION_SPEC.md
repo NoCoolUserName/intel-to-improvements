@@ -1,4 +1,6 @@
-# Intel to Improvements — reconciled implementation specification
+<a id="intel-to-improvements--reconciled-implementation-specification"></a>
+
+# Intel to Improvements — implementation specification
 
 Precedence: replacement third prompt > Customer Profile addendum > original build prompt. Local-only, single-operator Python/FastAPI/Pydantic/SQLite service and React/TypeScript/Vite workbench. No remote hosting, automatic emulation, autonomous agents, mailbox polling, or credential-dependent demo.
 
@@ -9,7 +11,7 @@ Customer is the top-level context, with editable sector taxonomy and versioned c
 A. Versioned evidence schemas, customer editing, immutable snapshots, safe selected URL/local path/upload ingestion, limited attributed real case, standards-valid STIX and native PyMISP exports.
 B. Deterministic relevance policy, evidence-linked ordered hunts and safe human-led validation plans, pinned public Sigma/ATT&CK/Atomic catalogs, independent coverage dimensions and append-only validation/improvement history.
 C. Chat-connected Gmail assisted handoff only: prepare frozen request, copy instructions, validate/preview/process bounded versioned JSON through the same services. No app Gmail authentication or direct network adapter. Support text/Markdown/HTML/CSV/STIX/MISP/EML/text PDF and explicitly flag unparsed images/attachments.
-D. Regression/evaluation reports, polished local UI, real browser checks, documented five-minute demonstration, reproducible packages and initial implementation commit if permitted.
+D. Regression/evaluation reports, polished local UI, browser checks, documented five-minute demonstration, reproducible packages and initial implementation commit if permitted.
 
 ## Evidence and processing
 Canonical schemas cover source, spans, claims, observables, behaviors, relationships, customers/environments, hunts, emulation, candidates, coverage, improvements, tests and attachments. Every assertion has supporting span IDs; proposed actions also name assumptions. Source reports, inferences, proposals and unsupported/conflicting claims stay distinct. Negation and attribution uncertainty are retained. Confidence separates extraction certainty from source reliability. Deterministic code controls IDs, validation, storage, exports and transitions.
