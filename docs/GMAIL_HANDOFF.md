@@ -1,6 +1,6 @@
 # Chat-connected Gmail handoff, version 1.0
 
-Gmail handoff uses portable JSON files. The standalone app never reads Gmail, creates credentials, enumerates labels, or sends mailbox writes. The existing plugin setup has been confirmed. A stored request freezes query, optional known label, date range, maximum messages, customer/environment versions, policy and destination. A request is not a retrieval result.
+Gmail handoff uses portable JSON files. The standalone app never reads Gmail, creates credentials, enumerates labels, or sends mailbox writes. Existing plugin setup is user-confirmed. A stored request freezes query, optional known label, date range, maximum messages, customer/environment versions, policy and destination. A request is not a retrieval result.
 
 The normative validator is `GmailHandoff` in `iti/models.py`, exported in `schemas/GmailHandoff.schema.json`. Prepare a real request before importing a file; request IDs are local database identities. `runtime/gmail-request.txt` is a prepared copyable request for this build's database, and `runtime/gmail-sample.json` is clearly synthetic. To make a fresh sample against a new database, run `gmail-request`, then `gmail-sample REQUEST_ID --output FILE`.
 
