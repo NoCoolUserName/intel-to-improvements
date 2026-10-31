@@ -2,7 +2,7 @@
 
 Upstream: https://github.com/center-for-threat-informed-defense/attack-flow
 
-Pinned revision: **5c8bf4ca9ff64ef9b55c38a2505db318750cbcda**. Builder 4.0.1; Attack Flow extension 2.0.0. No alternative revision was used. `pin.json` records the source-archive and individual schema hashes. `LICENSE` is the upstream Apache-2.0 license; see the additional license notices and the root third-party notices. No MITRE endorsement is implied. No separate upstream NOTICE file was present in this revision.
+Pinned revision: **5c8bf4ca9ff64ef9b55c38a2505db318750cbcda**. Builder 4.0.1; Attack Flow extension 2.0.0. `pin.json` records the source-archive and individual schema hashes. `LICENSE` is the upstream Apache-2.0 license; see the additional license notices and the root third-party notices. No MITRE endorsement is implied. No separate upstream NOTICE file was present in this revision.
 
 ## Setup and serving
 
@@ -40,7 +40,7 @@ One action is emitted per evidenced **source_reported** behavior, including envi
 
 Directed links require existing evidence-referencing `EntityRelationship` records: `precedes`/`followed-by` are forward; `follows` reverses direction; explicitly reported `enables`/`causes` are labeled separately. Temporal order does not imply causation. Unsupported relationship kinds, nonreported relationships, self-links and cycles are omitted with reasons. Sequence integers, list order, scenario numbering and ATT&CK tactics do not create links. `start_refs` include roots of each component, not an assertion of simultaneity or a logical AND/OR. No conditions/operators are invented. No second model call is made.
 
-The current curated ActiveMQ extraction has **8 actions and no explicit inter-behavior relationships**. Its legacy sequence numbers are insufficient to justify edges, so it is intentionally unordered. Current offline/live extraction providers do not produce explicit sequence relationships; the flow generator consumes such records when present (the independently authored acceptance fixture supplies them through the canonical model). Adding evidence-bound relationship extraction to the existing provider is future work, not a claim of this release.
+The curated ActiveMQ extraction has **8 actions and no explicit inter-behavior relationships**. Its legacy sequence numbers are insufficient to justify edges, so it is intentionally unordered. Current offline/live extraction providers do not produce explicit sequence relationships; the flow generator consumes such records when present (the independently authored acceptance fixture supplies them through the canonical model). Evidence-bound relationship extraction is planned but not implemented in the existing provider.
 
 No actions means no invalid empty STIX bundle. The manifest/provenance records the reason, and the UI displays an empty state. Unknown/partial source warnings propagate. Validation uses pinned Attack Flow + pinned STIX JSON schemas, typed reference integrity, UUID/timestamp checks and a separate STIX library parse. The registry resolves locally without HTTP. Some upstream schema dialect identifiers use HTTP; the code explicitly selects Draft 2020-12 without rewriting the pinned bytes. Schema success does not approve semantic truth.
 
@@ -60,7 +60,7 @@ The last command starts an **isolated test workbench** on http://127.0.0.1:8001,
 
 Select the curated `attack-flow-sequence` assessment and open Purple team. Verify 3 actions, **CertUtil download → remote service** temporal arrow, and a disconnected AnyDesk action. Confirm initial fit, wheel zoom, drag pan, Fit view, Expand/fullscreen, JSON download, and Open in Builder. The editor must show editable Properties, no Chat, and the same package's source URL. Modify a draft title and confirm the downloaded immutable package is unchanged. Switch customer to Cedar Cloud and confirm the old diagram disappears. Inspect console and resources: only loopback loads; no model/API/catalog request. A missing build or invalid artifact must leave the human plans and downloads accessible. Frontend tests additionally exercise forged/stale bridge messages, rapid scope changes, missing build, load-without-render and timeouts.
 
-Actual results and real screenshots are in `validation/attack-flow/` and `VALIDATION.md`. This is local rendering/export acceptance, not defensive coverage, live-model validation or live MISP validation.
+Results and screenshots are in `validation/attack-flow/` and `VALIDATION.md`. This is local rendering/export acceptance, not defensive coverage, live-model validation or live MISP validation.
 
 ## Update / remove / deferred
 
