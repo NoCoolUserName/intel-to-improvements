@@ -11,6 +11,6 @@ concurrency:
   cancel-in-progress: true
 jobs:
   security:
-    uses: NoCoolUserName/code-quality/.github/workflows/security.yml@7301db3486bf182012a0ab8005207dd9b35f471c
+    uses: NoCoolUserName/code-quality/.github/workflows/security.yml@ac145b028142302c4904094779ec4543726851da
     with:
       framework-ref: 7301db3486bf182012a0ab8005207dd9b35f471c
