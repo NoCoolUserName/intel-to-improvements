@@ -1,5 +1,7 @@
 # Dependency security review — 2026-10-26
 
+**2026-11-02 follow-up:** The separately pinned Attack Flow Builder now uses a reviewed dependency overlay. Its fresh npm audit has zero findings (previously 7 high and 21 moderate affected package entries). See [the integration notes](../integrations/attack-flow/README.md#dependency-security-overlay-2026-11-02) and [audit evidence](../validation/attack-flow/dependency-security-2026-11-02.json). The diskcache advisory below remains unresolved. The October review below is a historical record.
+
 This focused update fixes the available dependency advisories without changing
 application behavior or dependency automation policy. It is based on main at
 `cc340cc1634eb530572b5c211f69d06689c4e843`, independently of the Phase 2 PR.
