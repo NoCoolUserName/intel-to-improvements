@@ -6,9 +6,11 @@ the snapshot require a source-rule and Splunk operator-semantics review.
 
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 import yaml
+from sigma.exceptions import SigmaRegularExpressionError
 
 from iti import detection
 from iti.store import digest
@@ -77,3 +79,34 @@ def test_invalid_selector_reports_conversion_failure():
     raw = _rule({"selection": {"Image": "certutil.exe"}, "condition": "missing"})
     with pytest.raises(Exception, match="Detection 'missing' not defined"):
         detection.convert(raw, FIELD_MAP)
+
+
+@pytest.mark.parametrize("pattern", [r"(?<=foo)bar", r"(foo)\1"])
+def test_regex_outside_re2_support_is_rejected(pattern):
+    raw = _rule({"selection": {"CommandLine|re": pattern}, "condition": "selection"})
+    with pytest.raises(SigmaRegularExpressionError, match="invalid"):
+        detection.convert(raw, FIELD_MAP)
+
+
+def test_assessment_preserves_attribution_and_reports_policy_rejection(monkeypatch):
+    from iti.profiles import WINDOWS
+    rule = yaml.safe_load(_rule({
+        "selection": {"CommandLine|re": r"(?<=foo)bar"}, "condition": "selection",
+    }))
+    rule.update(id="d099ca29-2350-4eb6-9edd-b3a66a1fe1d0", title="Certutil regex fixture", author="Fixture author", license="MIT")
+    raw = yaml.safe_dump(rule)
+    source = {"url": "https://example.invalid/authored-rule", "sha256": digest(raw)}
+    monkeypatch.setattr(detection, "catalog", lambda: [(rule, raw, source)])
+    extraction = SimpleNamespace(cited_rules=[], behaviors=[SimpleNamespace(
+        key="certutil", technology=[], id="fixture-behavior", evidence=["fixture-evidence"],
+    )])
+    candidates, _ = detection.assess(extraction, SimpleNamespace(environment_snapshot=WINDOWS))
+    candidate, = candidates
+    assert not candidate.conversion_supported and candidate.query is None
+    assert candidate.conversion_error and "Regular expression" in candidate.conversion_error
+    assert candidate.evidence == ["fixture-evidence"]
+    assert candidate.author == "Fixture author" and candidate.license == "MIT"
+    assert candidate.source["sha256"] == digest(raw)
+    assert candidate.source["url"] == source["url"]
+    assert not candidate.execution_tested
+    assert "Conversion does not establish live Splunk execution" in candidate.limitations
