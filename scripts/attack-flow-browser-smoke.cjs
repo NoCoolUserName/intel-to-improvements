@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const http = require('node:http');
-const { chromium } = require('../runtime/browser-check/node_modules/playwright');
+const { chromium, expect } = require('../runtime/browser-check/node_modules/playwright/test');
 const root = path.resolve(__dirname, '..');
 const artifacts = path.join(root, 'runtime/attack-flow-smoke/artifacts');
 const viewer = path.join(root, 'runtime/attack-flow-viewer');
@@ -55,14 +55,33 @@ const server = http.createServer((req, res) => {
       assert.equal(ready.nodes,3);assert.equal(ready.edges,1);
       assert.equal(ready.packageId,packageId);assert.equal(ready.frame,'smoke');
       const frame = page.frameLocator('iframe');
-      if (mode==='editor') await frame.getByText('Properties',{exact:true}).first().waitFor();
-      assert.equal(await frame.getByText('Chat',{exact:true}).count(),0);
+      const sidebar = frame.locator('#app-sidebar');
+      if (mode==='editor') {
+        // AccordionBox renders its heading text in uppercase, not title case.
+        await expect(sidebar.locator('.accordion-box-head').filter({hasText:/^properties$/i})).toBeVisible();
+        const name = sidebar.locator('.properties-pane .field-item')
+          .filter({has:frame.locator('.field-name').getByText('Name',{exact:true})})
+          .getByRole('textbox');
+        const flowName = JSON.parse(original).objects.find(o=>o.type==='attack-flow').name;
+        await expect(name).toHaveValue(flowName);
+        await expect(name).toBeEditable();
+        await name.fill(flowName+' (local draft)');
+        await name.press('Tab');
+        await expect(name).toHaveValue(flowName+' (local draft)');
+        assert.equal(await page.evaluate(url=>fetch(url).then(r=>r.text()),artifactPath),original.toString());
+      } else {
+        await expect(sidebar).toHaveCount(0);
+      }
+      await expect(frame.getByText(/^chat$/i)).toHaveCount(0);
       await page.evaluate(()=>{window.messages=[];document.querySelector('iframe').contentWindow.postMessage({type:'iti-attack-flow-fit',frame:'smoke',packageId:new URL(document.querySelector('iframe').src).searchParams.get('iti_package')},location.origin);});
       await page.waitForFunction(()=>window.messages.some(m=>m.status==='ready'));
+      const fitted = await page.evaluate(()=>window.messages.find(m=>m.status==='ready'));
+      assert.equal(fitted.nodes,3);assert.equal(fitted.edges,1);
+      assert.equal(fitted.packageId,packageId);assert.equal(fitted.frame,'smoke');
       assert.equal(await page.evaluate(()=>window.messages.some(m=>m.status==='error')),false);
     }
     assert.deepEqual(errors,[]);assert.deepEqual(outbound,[]);
     assert.deepEqual(fs.readFileSync(path.join(artifacts,packageId,'attack-flow.json')),original);
-    console.log('Browser smoke passed: viewer/editor, 3 nodes / 1 edge, Fit bridge, no Chat/outbound/page errors, immutable artifact preserved.');
+    console.log('Browser smoke passed: viewer/editor, editable draft name, 3 nodes / 1 edge before and after Fit, no Chat/outbound/page errors, immutable artifact preserved.');
   } finally {if(browser)await browser.close();await new Promise(resolve=>server.close(resolve));}
 })().catch(e=>{console.error(e);process.exitCode=1;});
