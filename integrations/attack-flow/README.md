@@ -17,7 +17,7 @@ npm --prefix web run build
 
 Use the usual http://127.0.0.1:8000. Open **Purple team**, select an assessment, and generate its updated package. There is one FastAPI server. The optional acceptance server below is for testing only.
 
-The build script verifies the archive hash, extracts only `src/attack_flow_builder/` and its required root `config/`, applies the fail-closed patch, and runs **upstream `npm ci` using its unchanged package-lock**, Vue type checking, and Vite. Dependencies and source are isolated in ignored `runtime/attack-flow-build/`; output is ignored `runtime/attack-flow-viewer/`, served at `/attack-flow-builder/`. No runtime npm process or external viewer host is used. `build.json` records upstream, schema, lock, patch, bridge and tool versions. Missing assets produce a clear UI setup error. API export generation does not need npm or the viewer build.
+The build script verifies the archive hash, extracts only `src/attack_flow_builder/` and its required root `config/`, applies the fail-closed patch, and runs **`npm ci` using the reviewed manifests in `dependencies/`**, Vue type checking, and Vite. Dependencies and source are isolated in ignored `runtime/attack-flow-build/`; output is ignored `runtime/attack-flow-viewer/`, served at `/attack-flow-builder/`. No runtime npm process or external viewer host is used. `build.json` records upstream, schema, lock, patch, bridge and tool versions. Missing assets produce a clear UI setup error. API export generation does not need npm or the viewer build.
 
 Build-time network access is necessary for source/dependencies. Runtime assets, settings and fonts are local. The server CSP permits only same-origin script, stylesheet, font and connection loads; the viewer has same-origin framing permission while the workbench still disallows framing. No model/provider credentials enter the iframe URL.
 
@@ -30,7 +30,7 @@ Build-time network access is necessary for source/dependencies. Runtime assets, 
 - Disconnected actions with **no edges** use a presentation grid to avoid an unreadably tall column. The grid adds no semantic links or order. Connected/partial graphs retain upstream layout. Fit uses the visible viewport; wheel/drag retain upstream zoom/pan.
 - Generator and MITRE extension identities remain in the export and author metadata; they are excluded as diagram nodes/edges. Otherwise upstream would display attribution arrows as if they were attack progression.
 - Chat, AI-generation entry points, predictive/networked recommender and Atomic links are disabled. Existing workbench Atomic candidates remain the only assessed candidates. Upstream device save/export stays available in editor mode; autosave to a shared recovery bank is disabled.
-- The production build excludes Vue DevTools: its pinned devtools-kit accesses Node 25's experimental `localStorage` as a browser Storage object and failed the unpatched build. This is a build-plugin change, not a change of upstream revision or dependency lock. Upstream dependencies include AI libraries but no AI path is invoked here.
+- The production build excludes Vue DevTools: its pinned devtools-kit accesses Node 25's experimental `localStorage` as a browser Storage object and failed the unpatched build. The source revision is unchanged; the separately reviewed dependency overlay supplies the current lock. Upstream dependencies include AI libraries but no AI path is invoked here.
 
 ## Artifact and sequence contract
 
@@ -64,8 +64,14 @@ Results and screenshots are in `validation/attack-flow/` and `VALIDATION.md`. Th
 
 ## Update / remove / deferred
 
-To update, select a reviewed upstream commit, replace archive/schema hashes and license notices, inspect each patch anchor, rebuild with that revision's own lockfile and rerun all checks plus the real browser smoke. Bump package generator when artifact semantics change. Never backfill immutable directories. The downloaded archive is a build cache, not a branch or source checkout.
+To update, select a reviewed upstream commit, replace archive/schema hashes and license notices, inspect each patch anchor, review the dependency overlay against that revision, rebuild and rerun all checks plus the real browser smoke. Bump package generator when artifact semantics change. Never backfill immutable directories. The downloaded archive is a build cache, not a branch or source checkout.
 
 To remove the viewer, remove its bootstrap step, static mount and `AttackFlowPanel` import/render. Already-generated files remain ordinary downloadable artifacts. Removing generation requires a new package generator revision; retain archived manifests and provenance.
 
 Deferred: evidence/scenario node navigation; candidate D3FEND defenses linked to improvements; evidence-backed coverage overlays; sequence extraction in the existing provider. No new dashboards, automated emulation, Gmail changes, chatbot, model setup, or editor-to-package approval/persistence workflow is implemented.
+
+## Dependency security overlay (2026-11-02)
+
+`dependencies/package.json` and `dependencies/package-lock.json` replace the upstream manifests after every verified source extraction. This preserves the pinned renderer source while updating vulnerable libraries. Vue is at least 3.5.44; minimatch 11.0.4 and glob 14.0.3 overrides address shared vulnerable dependencies. The installed dependency contracts, upstream unit tests and production build are checked; `build.json` records both manifest and lock hashes. Installed third-party notices continue to be copied into the distribution.
+
+The path-filtered Attack Flow Builder workflow audits this lock, builds the viewer, checks dependency contracts, runs upstream tests and exercises real Chromium viewer/editor rendering with the authored three-node/one-edge fixture. It does not run for unrelated changes. See `validation/attack-flow/dependency-security-2026-11-02.json` for the audit evidence.

@@ -1,0 +1,49 @@
+name: Attack Flow Builder
+on:
+  pull_request:
+    paths:
+      - 'integrations/attack-flow/**'
+      - 'scripts/build-attack-flow'
+      - 'scripts/attack-flow-browser-smoke.cjs'
+      - '.github/workflows/attack-flow-builder.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'integrations/attack-flow/**'
+      - 'scripts/build-attack-flow'
+      - 'scripts/attack-flow-browser-smoke.cjs'
+      - '.github/workflows/attack-flow-builder.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: attack-flow-builder-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  builder:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - name: Audit reviewed Builder dependency lock
+        run: npm --prefix integrations/attack-flow/dependencies audit --package-lock-only
+      - name: Build pinned source with reviewed dependencies
+        run: python3 scripts/build-attack-flow
+      - name: Check installed dependency contracts
+        run: npm --prefix runtime/attack-flow-build/src/attack_flow_builder ls --all
+      - name: Run upstream Builder unit tests
+        run: npm --prefix runtime/attack-flow-build/src/attack_flow_builder run test:unit
+      - name: Prepare isolated authored browser fixture
+        run: |
+          python3 -m pip install --only-binary=:all: --no-deps uv==0.12.23
+          uv sync --frozen --extra dev
+          uv run --frozen python scripts/attack-flow-smoke-fixture
+      - name: Install pinned browser test tool
+        run: |
+          npm install --prefix runtime/browser-check --no-save --ignore-scripts --no-audit --no-fund playwright@1.56.1
+          runtime/browser-check/node_modules/.bin/playwright install --with-deps chromium
+      - name: Verify real viewer and editor rendering
+        run: node scripts/attack-flow-browser-smoke.cjs
