@@ -1,0 +1,58 @@
+{
+  "065b00ca-5d5c-4557-ac95-64a6d0b64d86": {
+    "condition": "selection and not filter",
+    "queries": [
+      "(process_path IN (\"*\\\\AnyDesk.exe\", \"*\\\\AnyDeskMSI.exe\") OR Description=\"AnyDesk\" OR Product=\"AnyDesk\" OR Company=\"AnyDesk Software GmbH\") NOT (process_path IN (\"*\\\\AppData\\\\*\", \"*Program Files (x86)\\\\AnyDesk*\", \"*Program Files\\\\AnyDesk*\"))"
+    ],
+    "source_sha256": "109c82eb9cc6c657bea76e3cb02b696bd94cc3068fd6fba5bdd39e8246686f0a"
+  },
+  "114e7f1c-f137-48c8-8f54-3088c24ce4b9": {
+    "condition": "selection",
+    "queries": [
+      "command_line=\"*--install*\" command_line=\"*--start-with-win*\" command_line=\"*--silent*\""
+    ],
+    "source_sha256": "52a2359ef3132f90c763807ef0e263e98bded89c597c8733bd858bd9e7ee0e60"
+  },
+  "13e6fe51-d478-4c7e-b0f2-6da9b400a829": {
+    "condition": "all of selection_* and not 1 of filter_main_*",
+    "queries": [
+      "(process_path=\"*\\\\certutil.exe\" OR original_name=\"CertUtil.exe\") (command_line IN (\"*urlcache *\", \"*verifyctl *\", \"*URL *\")) (command_line IN (\"*://1*\", \"*://2*\", \"*://3*\", \"*://4*\", \"*://5*\", \"*://6*\", \"*://7*\", \"*://8*\", \"*://9*\")) NOT command_line=\"*://7-*\""
+    ],
+    "source_sha256": "e541e6f3383f9ab530f44b20dcee5046be96410ab9a48d78d3437ec85ea48fa0"
+  },
+  "19b08b1c-861d-4e75-a1ef-ea0c1baf202b": {
+    "condition": "all of selection_*",
+    "queries": [
+      "(process_path=\"*\\\\certutil.exe\" OR original_name=\"CertUtil.exe\") (command_line IN (\"*urlcache *\", \"*verifyctl *\", \"*URL *\")) command_line=\"*http*\""
+    ],
+    "source_sha256": "1262c65c22592b28f2c63906462f07f9c0d95e8fa065405505d18979a5f278af"
+  },
+  "41f407b5-3096-44ea-a74f-96d04fbc41be": {
+    "condition": "all of selection_* and not 1 of filter_main_*",
+    "queries": [
+      "(process_path=\"*\\\\AnyDesk.exe\" OR Description=\"AnyDesk\" OR Product=\"AnyDesk\" OR Company=\"AnyDesk Software GmbH\") (FileVersion IN (\"7.0.*\", \"7.1.*\", \"8.0.1*\", \"8.0.2*\", \"8.0.3*\", \"8.0.4*\", \"8.0.5*\", \"8.0.6*\", \"8.0.7*\")) NOT (command_line IN (\"* --remove*\", \"* --uninstall*\"))"
+    ],
+    "source_sha256": "608bae60088fcd13373066d4aa2e7830c1f77fcf82b9823540636d902e4415d6"
+  },
+  "42a5f1e7-9603-4f6d-97ae-3f37d130d794": {
+    "condition": "all of selection_*",
+    "queries": [
+      "(process_path=\"*\\\\certutil.exe\" OR original_name=\"CertUtil.exe\") (command_line IN (\"*urlcache *\", \"*verifyctl *\", \"*URL *\")) (command_line IN (\"*.githubusercontent.com*\", \"*0x0.st*\", \"*anonfiles.com*\", \"*bashupload.com*\", \"*cdn.discordapp.com*\", \"*chunk.io*\", \"*ddns.net*\", \"*dl.dropboxusercontent.com*\", \"*ghostbin.co*\", \"*github.com*\", \"*glitch.me*\", \"*gofile.io*\", \"*hastebin.com*\", \"*mediafire.com*\", \"*mega.nz*\", \"*onrender.com*\", \"*pages.dev*\", \"*paste.ee*\", \"*pastebin.com*\", \"*pastebin.pl*\", \"*pastetext.net*\", \"*privatlab.com*\", \"*privatlab.net*\", \"*send.exploit.in*\", \"*sendspace.com*\", \"*storage.googleapis.com*\", \"*storjshare.io*\", \"*supabase.co*\", \"*temp.sh*\", \"*transfer.sh*\", \"*trycloudflare.com*\", \"*ufile.io*\", \"*w3spaces.com*\", \"*workers.dev*\", \"*x0.at*\"))"
+    ],
+    "source_sha256": "8a36aad4a29cf0a1cc3259b3f5a3431d9f3178ef2108d43bae0915ce7b2a290b"
+  },
+  "b1377339-fda6-477a-b455-ac0923f9ec2c": {
+    "condition": "selection",
+    "queries": [
+      "command_line=\"*/c *\" command_line=\"*echo *\" command_line=\"*.exe --set-password*\""
+    ],
+    "source_sha256": "6bdc7deac5c76fcfd1429920844d6d1db69ada5f3a67660191b1bf94e5037f60"
+  },
+  "b52e84a3-029e-4529-b09b-71d19dd27e94": {
+    "condition": "selection",
+    "queries": [
+      "process_path IN (\"*\\\\AnyDesk.exe\", \"*\\\\AnyDeskMSI.exe\") OR Description=\"AnyDesk\" OR Product=\"AnyDesk\" OR Company=\"AnyDesk Software GmbH\""
+    ],
+    "source_sha256": "882fcd6053bd702a2bab15bd55e5bac67ff5a7aa5317d76e1c6b0b7355f8edee"
+  }
+}
