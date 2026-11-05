@@ -15,7 +15,7 @@
 | C: isolation | switch/edit customer during job, scoped artifact/evidence/destination access |
 | Jobs | duplicate concurrent submission, cancellation, failure/restart/resume, extraction cache reuse |
 | D: generality | held-out changed facts; unseen live extraction separately NOT VERIFIED when unavailable |
-| D: runtime | CLI/API same services, health, frontend build, browser workflow and real screenshot |
+| D: runtime | CLI/API same services, health, frontend build, browser workflow and screenshot |
 | External | real selected report retrieval; converter; Gmail selected handoff; live model; MISP readback each independent |
 
 ## Completion evidence (2026-10-08)
@@ -37,5 +37,5 @@
 - [x] Manifest hashes, ZIP, historical preservation and unchanged native CTI/MISP/scenarios.
 - [x] Customer/environment download enforcement and same-origin framing/network policy.
 - [x] React scope gate/remount, stale/forged readiness messages, timeout, failure/retry, old/empty state (`web/tests/attack-flow.test.tsx`).
-- [x] Actual browser: ActiveMQ unordered nodes; authored temporal arrow/disconnected action; fit, pan/zoom, fullscreen, download and local editable draft. See actual evidence in `validation/attack-flow/`.
+- [x] Browser: ActiveMQ unordered nodes; authored temporal arrow/disconnected action; fit, pan/zoom, fullscreen, download and local editable draft. See actual evidence in `validation/attack-flow/`.
 - [x] Offline acceptance: backend outbound deny guard plus browser same-origin CSP; observed resources and console retained. This is application-scoped network denial, not a claim that the host's network adapter was disabled.

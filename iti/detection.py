@@ -2,12 +2,15 @@ import json, re, fnmatch
 import yaml
 from sigma.collection import SigmaCollection
 from sigma.backends.splunk import SplunkBackend
+from sigma.policy import SafePolicy
 from sigma.processing.pipeline import ProcessingPipeline, ProcessingItem
 from sigma.processing.transformations import FieldMappingTransformation
 from .models import DetectionCandidate
 from .store import ROOT,digest
 
 MANIFEST=json.loads((ROOT/'catalogs/manifest.json').read_text())
+# RE2-compatible regex only; no fallback to Python regex or trusted pipeline features.
+SIGMA_POLICY=SafePolicy
 def catalog():
     rows=[]
     for entry in MANIFEST['files']:
@@ -28,8 +31,8 @@ def required_fields(det):
     return sorted(result)
 
 def convert(raw,field_map):
-    collection=SigmaCollection.from_yaml(raw)
-    pipeline=ProcessingPipeline(name='ITI explicit raw Windows field map v1',items=[ProcessingItem(identifier='iti_fields',transformation=FieldMappingTransformation(field_map))])
+    collection=SigmaCollection.from_yaml(raw,policy=SIGMA_POLICY)
+    pipeline=ProcessingPipeline(name='ITI explicit raw Windows field map v1',items=[ProcessingItem(identifier='iti_fields',transformation=FieldMappingTransformation(field_map))],policy=SIGMA_POLICY)
     return SplunkBackend(processing_pipeline=pipeline).convert(collection)
 
 def assess(extraction,context):
@@ -46,7 +49,7 @@ def assess(extraction,context):
             scored.append((score,rule,raw,entry))
         for _,rule,raw,entry in sorted(scored,key=lambda x:-x[0])[:3]:
             syntax=True; query=None; error=None
-            try: SigmaCollection.from_yaml(raw)
+            try: SigmaCollection.from_yaml(raw,policy=SIGMA_POLICY)
             except Exception as e: syntax=False; error=str(e)
             if syntax:
                 try: query=' OR '.join('('+q+')' for q in convert(raw,env.field_map))

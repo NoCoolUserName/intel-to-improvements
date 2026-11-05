@@ -2,7 +2,7 @@
 
 Upstream: https://github.com/center-for-threat-informed-defense/attack-flow
 
-Pinned revision: **5c8bf4ca9ff64ef9b55c38a2505db318750cbcda**. Builder 4.0.1; Attack Flow extension 2.0.0. No alternative revision was used. `pin.json` records the source-archive and individual schema hashes. `LICENSE` is the upstream Apache-2.0 license; see the additional license notices and the root third-party notices. No MITRE endorsement is implied. No separate upstream NOTICE file was present in this revision.
+Pinned revision: **5c8bf4ca9ff64ef9b55c38a2505db318750cbcda**. Builder 4.0.1; Attack Flow extension 2.0.0. `pin.json` records the source-archive and individual schema hashes. `LICENSE` is the upstream Apache-2.0 license; see the additional license notices and the root third-party notices. No MITRE endorsement is implied. No separate upstream NOTICE file was present in this revision.
 
 ## Setup and serving
 
@@ -17,7 +17,7 @@ npm --prefix web run build
 
 Use the usual http://127.0.0.1:8000. Open **Purple team**, select an assessment, and generate its updated package. There is one FastAPI server. The optional acceptance server below is for testing only.
 
-The build script verifies the archive hash, extracts only `src/attack_flow_builder/` and its required root `config/`, applies the fail-closed patch, and runs **upstream `npm ci` using its unchanged package-lock**, Vue type checking, and Vite. Dependencies and source are isolated in ignored `runtime/attack-flow-build/`; output is ignored `runtime/attack-flow-viewer/`, served at `/attack-flow-builder/`. No runtime npm process or external viewer host is used. `build.json` records upstream, schema, lock, patch, bridge and tool versions. Missing assets produce a clear UI setup error. API export generation does not need npm or the viewer build.
+The build script verifies the archive hash, extracts only `src/attack_flow_builder/` and its required root `config/`, applies the fail-closed patch, and runs **`npm ci` using the reviewed manifests in `dependencies/`**, Vue type checking, and Vite. Dependencies and source are isolated in ignored `runtime/attack-flow-build/`; output is ignored `runtime/attack-flow-viewer/`, served at `/attack-flow-builder/`. No runtime npm process or external viewer host is used. `build.json` records upstream, schema, lock, patch, bridge and tool versions. Missing assets produce a clear UI setup error. API export generation does not need npm or the viewer build.
 
 Build-time network access is necessary for source/dependencies. Runtime assets, settings and fonts are local. The server CSP permits only same-origin script, stylesheet, font and connection loads; the viewer has same-origin framing permission while the workbench still disallows framing. No model/provider credentials enter the iframe URL.
 
@@ -30,7 +30,7 @@ Build-time network access is necessary for source/dependencies. Runtime assets, 
 - Disconnected actions with **no edges** use a presentation grid to avoid an unreadably tall column. The grid adds no semantic links or order. Connected/partial graphs retain upstream layout. Fit uses the visible viewport; wheel/drag retain upstream zoom/pan.
 - Generator and MITRE extension identities remain in the export and author metadata; they are excluded as diagram nodes/edges. Otherwise upstream would display attribution arrows as if they were attack progression.
 - Chat, AI-generation entry points, predictive/networked recommender and Atomic links are disabled. Existing workbench Atomic candidates remain the only assessed candidates. Upstream device save/export stays available in editor mode; autosave to a shared recovery bank is disabled.
-- The production build excludes Vue DevTools: its pinned devtools-kit accesses Node 25's experimental `localStorage` as a browser Storage object and failed the unpatched build. This is a build-plugin change, not a change of upstream revision or dependency lock. Upstream dependencies include AI libraries but no AI path is invoked here.
+- The production build excludes Vue DevTools: its pinned devtools-kit accesses Node 25's experimental `localStorage` as a browser Storage object and failed the unpatched build. The source revision is unchanged; the separately reviewed dependency overlay supplies the current lock. Upstream dependencies include AI libraries but no AI path is invoked here.
 
 ## Artifact and sequence contract
 
@@ -40,7 +40,7 @@ One action is emitted per evidenced **source_reported** behavior, including envi
 
 Directed links require existing evidence-referencing `EntityRelationship` records: `precedes`/`followed-by` are forward; `follows` reverses direction; explicitly reported `enables`/`causes` are labeled separately. Temporal order does not imply causation. Unsupported relationship kinds, nonreported relationships, self-links and cycles are omitted with reasons. Sequence integers, list order, scenario numbering and ATT&CK tactics do not create links. `start_refs` include roots of each component, not an assertion of simultaneity or a logical AND/OR. No conditions/operators are invented. No second model call is made.
 
-The current curated ActiveMQ extraction has **8 actions and no explicit inter-behavior relationships**. Its legacy sequence numbers are insufficient to justify edges, so it is intentionally unordered. Current offline/live extraction providers do not produce explicit sequence relationships; the flow generator consumes such records when present (the independently authored acceptance fixture supplies them through the canonical model). Adding evidence-bound relationship extraction to the existing provider is future work, not a claim of this release.
+The curated ActiveMQ extraction has **8 actions and no explicit inter-behavior relationships**. Its legacy sequence numbers are insufficient to justify edges, so it is intentionally unordered. Current offline/live extraction providers do not produce explicit sequence relationships; the flow generator consumes such records when present (the independently authored acceptance fixture supplies them through the canonical model). Evidence-bound relationship extraction is planned but not implemented in the existing provider.
 
 No actions means no invalid empty STIX bundle. The manifest/provenance records the reason, and the UI displays an empty state. Unknown/partial source warnings propagate. Validation uses pinned Attack Flow + pinned STIX JSON schemas, typed reference integrity, UUID/timestamp checks and a separate STIX library parse. The registry resolves locally without HTTP. Some upstream schema dialect identifiers use HTTP; the code explicitly selects Draft 2020-12 without rewriting the pinned bytes. Schema success does not approve semantic truth.
 
@@ -60,12 +60,18 @@ The last command starts an **isolated test workbench** on http://127.0.0.1:8001,
 
 Select the curated `attack-flow-sequence` assessment and open Purple team. Verify 3 actions, **CertUtil download → remote service** temporal arrow, and a disconnected AnyDesk action. Confirm initial fit, wheel zoom, drag pan, Fit view, Expand/fullscreen, JSON download, and Open in Builder. The editor must show editable Properties, no Chat, and the same package's source URL. Modify a draft title and confirm the downloaded immutable package is unchanged. Switch customer to Cedar Cloud and confirm the old diagram disappears. Inspect console and resources: only loopback loads; no model/API/catalog request. A missing build or invalid artifact must leave the human plans and downloads accessible. Frontend tests additionally exercise forged/stale bridge messages, rapid scope changes, missing build, load-without-render and timeouts.
 
-Actual results and real screenshots are in `validation/attack-flow/` and `VALIDATION.md`. This is local rendering/export acceptance, not defensive coverage, live-model validation or live MISP validation.
+Results and screenshots are in `validation/attack-flow/` and `VALIDATION.md`. This is local rendering/export acceptance, not defensive coverage, live-model validation or live MISP validation.
 
 ## Update / remove / deferred
 
-To update, select a reviewed upstream commit, replace archive/schema hashes and license notices, inspect each patch anchor, rebuild with that revision's own lockfile and rerun all checks plus the real browser smoke. Bump package generator when artifact semantics change. Never backfill immutable directories. The downloaded archive is a build cache, not a branch or source checkout.
+To update, select a reviewed upstream commit, replace archive/schema hashes and license notices, inspect each patch anchor, review the dependency overlay against that revision, rebuild and rerun all checks plus the real browser smoke. Bump package generator when artifact semantics change. Never backfill immutable directories. The downloaded archive is a build cache, not a branch or source checkout.
 
 To remove the viewer, remove its bootstrap step, static mount and `AttackFlowPanel` import/render. Already-generated files remain ordinary downloadable artifacts. Removing generation requires a new package generator revision; retain archived manifests and provenance.
 
 Deferred: evidence/scenario node navigation; candidate D3FEND defenses linked to improvements; evidence-backed coverage overlays; sequence extraction in the existing provider. No new dashboards, automated emulation, Gmail changes, chatbot, model setup, or editor-to-package approval/persistence workflow is implemented.
+
+## Dependency security overlay (2026-11-02)
+
+`dependencies/package.json` and `dependencies/package-lock.json` replace the upstream manifests after every verified source extraction. This preserves the pinned renderer source while updating vulnerable libraries. Vue is at least 3.5.44; minimatch 11.0.4 and glob 14.0.3 overrides address shared vulnerable dependencies. The installed dependency contracts, upstream unit tests and production build are checked; `build.json` records both manifest and lock hashes. Installed third-party notices continue to be copied into the distribution.
+
+The path-filtered Attack Flow Builder workflow audits this lock, builds the viewer, checks dependency contracts, runs upstream tests and exercises real Chromium viewer/editor rendering with the authored three-node/one-edge fixture. It does not run for unrelated changes. See `validation/attack-flow/dependency-security-2026-11-02.json` for the audit evidence.

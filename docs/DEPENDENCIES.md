@@ -1,6 +1,6 @@
 # STIX validator dependency compatibility
 
-The application intentionally pins `stix2-validator==3.2.0`.
+The application pins `stix2-validator==3.2.0`.
 
 On 2026-10-11, Dependabot PR #2 proposed 3.3.1. Its Code quality run
 38116571420 failed eight existing export/workflow tests (40 passed) with:

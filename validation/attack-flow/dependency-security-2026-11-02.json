@@ -1,0 +1,813 @@
+{
+  "review_date": "2026-11-02",
+  "source_revision": "5c8bf4ca9ff64ef9b55c38a2505db318750cbcda",
+  "upstream_lock_sha256": "d6d5fba53c799c316ac0f3c6c069d5638ad3a35fb9dc7fa9cc5e9c7116d14d67",
+  "reviewed_lock_sha256": "03fb9fa75c15ef316b9fc74135d6ebb2628acc7ebffb7f9bf72aeefe0f488a81",
+  "before": {
+    "info": 0,
+    "low": 0,
+    "moderate": 21,
+    "high": 7,
+    "critical": 0,
+    "total": 28
+  },
+  "after": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "affected_packages_before": {
+    "@eslint-community/eslint-utils": {
+      "severity": "moderate",
+      "advisories": []
+    },
+    "@eslint/config-array": {
+      "severity": "moderate",
+      "advisories": []
+    },
+    "@stylistic/eslint-plugin-js": {
+      "severity": "moderate",
+      "advisories": []
+    },
+    "@stylistic/eslint-plugin-ts": {
+      "severity": "moderate",
+      "advisories": []
+    },
+    "@typescript-eslint/eslint-plugin": {
+      "severity": "moderate",
+      "advisories": []
+    },
+    "@typescript-eslint/parser": {
+      "severity": "moderate",
+      "advisories": []
+    },
+    "@typescript-eslint/type-utils": {
+      "severity": "moderate",
+      "advisories": []
+    },
+    "@typescript-eslint/typescript-estree": {
+      "severity": "moderate",
+      "advisories": []
+    },
+    "@typescript-eslint/utils": {
+      "severity": "moderate",
+      "advisories": []
+    },
+    "@vitest/eslint-plugin": {
+      "severity": "moderate",
+      "advisories": []
+    },
+    "@vitest/mocker": {
+      "severity": "moderate",
+      "advisories": [
+        {
+          "source": 1242767,
+          "name": "@vitest/mocker",
+          "dependency": "@vitest/mocker",
+          "title": "Vitest: Code injection via unauthenticated manual mock registration",
+          "url": "https://github.com/advisories/GHSA-qxg6-89mg-rqv8",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-94",
+            "CWE-116",
+            "CWE-306"
+          ],
+          "cvss": {
+            "score": 4.7,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:L/I:L/A:N"
+          },
+          "range": ">=2.1.0-beta.7 <4.1.12"
+        },
+        {
+          "source": 1242769,
+          "name": "@vitest/mocker",
+          "dependency": "@vitest/mocker",
+          "title": "Vitest: Windows backslash traversal bypasses the @vitest/mocker redirect allowlist fix",
+          "url": "https://github.com/advisories/GHSA-xp26-3454-mjgp",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-22"
+          ],
+          "cvss": {
+            "score": 5.9,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N"
+          },
+          "range": ">=4.1.11 <4.1.12"
+        }
+      ]
+    },
+    "@vue/server-renderer": {
+      "severity": "high",
+      "advisories": [
+        {
+          "source": 1241259,
+          "name": "@vue/server-renderer",
+          "dependency": "@vue/server-renderer",
+          "title": "@vue/server-renderer: XSS via missing CR in attribute-name blacklist",
+          "url": "https://github.com/advisories/GHSA-g2v6-rqmx-r4w6",
+          "severity": "high",
+          "cwe": [
+            "CWE-79",
+            "CWE-116"
+          ],
+          "cvss": {
+            "score": 7.2,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:N"
+          },
+          "range": "<3.5.42"
+        }
+      ]
+    },
+    "editorconfig": {
+      "severity": "moderate",
+      "advisories": []
+    },
+    "eslint": {
+      "severity": "moderate",
+      "advisories": []
+    },
+    "eslint-plugin-vue": {
+      "severity": "moderate",
+      "advisories": []
+    },
+    "glob": {
+      "severity": "moderate",
+      "advisories": [
+        {
+          "source": 1244013,
+          "name": "glob",
+          "dependency": "glob",
+          "title": "Glob: AbortSignal cancellation bypass allows post-timeout filesystem traversal",
+          "url": "https://github.com/advisories/GHSA-3g3m-2fjr-6pw4",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-400"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=9.0.0 <=14.0.1"
+        }
+      ]
+    },
+    "js-beautify": {
+      "severity": "moderate",
+      "advisories": []
+    },
+    "markdown-it": {
+      "severity": "high",
+      "advisories": [
+        {
+          "source": 1242645,
+          "name": "markdown-it",
+          "dependency": "markdown-it",
+          "title": "markdown-it: Quadratic-time denial of service in inline HTML parsing with html enabled",
+          "url": "https://github.com/advisories/GHSA-vfgh-jcmw-g37q",
+          "severity": "low",
+          "cwe": [
+            "CWE-400",
+            "CWE-407"
+          ],
+          "cvss": {
+            "score": 3.7,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:L"
+          },
+          "range": ">=15.0.0 <15.0.3"
+        },
+        {
+          "source": 1242671,
+          "name": "markdown-it",
+          "dependency": "markdown-it",
+          "title": "markdown-it: Quadratic-time rendering of a single multi-line link reference definition with default options (regression since 14.0)",
+          "url": "https://github.com/advisories/GHSA-gfr2-rv44-r23c",
+          "severity": "high",
+          "cwe": [
+            "CWE-400",
+            "CWE-407"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=15.0.0 <15.0.3"
+        }
+      ]
+    },
+    "minimatch": {
+      "severity": "moderate",
+      "advisories": [
+        {
+          "source": 1244012,
+          "name": "minimatch",
+          "dependency": "minimatch",
+          "title": "minimatch has potential denial of service via globparts amplification",
+          "url": "https://github.com/advisories/GHSA-g3hv-75wg-m249",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-405"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<11.0.1"
+        }
+      ]
+    },
+    "postcss-selector-parser": {
+      "severity": "moderate",
+      "advisories": [
+        {
+          "source": 1243380,
+          "name": "postcss-selector-parser",
+          "dependency": "postcss-selector-parser",
+          "title": "PostCSS: Quadratic complexity in flat selector parsing allows CPU exhaustion",
+          "url": "https://github.com/advisories/GHSA-rj75-hqrm-r3gf",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-400",
+            "CWE-407"
+          ],
+          "cvss": {
+            "score": 5.9,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=7.0.0 <7.1.6"
+        }
+      ]
+    },
+    "source-map-js": {
+      "severity": "high",
+      "advisories": [
+        {
+          "source": 1241209,
+          "name": "source-map-js",
+          "dependency": "source-map-js",
+          "title": "source-map-js allows event-loop denial of service through indexed source-map section offsets",
+          "url": "https://github.com/advisories/GHSA-68fv-2mgg-jv7q",
+          "severity": "high",
+          "cwe": [
+            "CWE-1284"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=1.0.0 <1.2.2"
+        }
+      ]
+    },
+    "typescript-eslint": {
+      "severity": "moderate",
+      "advisories": []
+    },
+    "undici": {
+      "severity": "high",
+      "advisories": [
+        {
+          "source": 1243078,
+          "name": "undici",
+          "dependency": "undici",
+          "title": "undici vulnerable to Denial of Service via unbounded memory in the EventSource parser",
+          "url": "https://github.com/advisories/GHSA-4qv8-2p9j-2685",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-770"
+          ],
+          "cvss": {
+            "score": 5.9,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=7.0.0 <7.30.1"
+        },
+        {
+          "source": 1243081,
+          "name": "undici",
+          "dependency": "undici",
+          "title": "undici vulnerable to Subresource Integrity bypass via non-lowercase algorithm tokens",
+          "url": "https://github.com/advisories/GHSA-f72v-6w45-q472",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-178"
+          ],
+          "cvss": {
+            "score": 5.9,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:H/A:N"
+          },
+          "range": ">=7.15.0 <7.30.1"
+        },
+        {
+          "source": 1243113,
+          "name": "undici",
+          "dependency": "undici",
+          "title": "undici vulnerable to Denial of Service via unhandled error on excessive content-encodings",
+          "url": "https://github.com/advisories/GHSA-xjj6-f33q-929c",
+          "severity": "high",
+          "cwe": [
+            "CWE-248",
+            "CWE-459"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=7.18.0 <7.30.1"
+        },
+        {
+          "source": 1243473,
+          "name": "undici",
+          "dependency": "undici",
+          "title": "undici vulnerable to cache poisoning and cross-user disclosure via cross-origin redirects",
+          "url": "https://github.com/advisories/GHSA-4w7w-5xrc-9h26",
+          "severity": "high",
+          "cwe": [
+            "CWE-346",
+            "CWE-524"
+          ],
+          "cvss": {
+            "score": 7.4,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N"
+          },
+          "range": ">=7.0.0 <7.30.1"
+        },
+        {
+          "source": 1243475,
+          "name": "undici",
+          "dependency": "undici",
+          "title": "undici vulnerable to TLS certificate validation bypass via dropped tls options in Agent",
+          "url": "https://github.com/advisories/GHSA-2m5v-pch6-74hx",
+          "severity": "high",
+          "cwe": [
+            "CWE-295"
+          ],
+          "cvss": {
+            "score": 7.4,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N"
+          },
+          "range": ">=7.0.0 <7.30.1"
+        },
+        {
+          "source": 1243478,
+          "name": "undici",
+          "dependency": "undici",
+          "title": "undici vulnerable to Denial of Service via TLS 1.2 certificate-changing renegotiation",
+          "url": "https://github.com/advisories/GHSA-qrxm-fqhp-jwvm",
+          "severity": "high",
+          "cwe": [
+            "CWE-248",
+            "CWE-617"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=7.0.0 <7.30.1"
+        },
+        {
+          "source": 1243481,
+          "name": "undici",
+          "dependency": "undici",
+          "title": "undici WebSocket client vulnerable to Denial of Service via unbounded automatic PONG buffering",
+          "url": "https://github.com/advisories/GHSA-9fm3-97px-rjf6",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-400",
+            "CWE-405",
+            "CWE-770"
+          ],
+          "cvss": {
+            "score": 5.9,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=7.0.0 <7.30.1"
+        },
+        {
+          "source": 1243484,
+          "name": "undici",
+          "dependency": "undici",
+          "title": "undici vulnerable to Denial of Service via unhandled exception in the decompress interceptor",
+          "url": "https://github.com/advisories/GHSA-55wc-3pg8-jfw6",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-248"
+          ],
+          "cvss": {
+            "score": 5.9,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=7.15.0 <7.30.1"
+        }
+      ]
+    },
+    "vite": {
+      "severity": "high",
+      "advisories": [
+        {
+          "source": 1242622,
+          "name": "vite",
+          "dependency": "vite",
+          "title": "launch-editor: escapeCmdArgs() omits % escaping on Windows",
+          "url": "https://github.com/advisories/GHSA-698v-4r3x-3vcv",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-78"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<=6.4.3"
+        },
+        {
+          "source": 1242651,
+          "name": "vite",
+          "dependency": "vite",
+          "title": "launch-editor: Editor CLI flag misinterpretation causing arbitrary command execution for some editors",
+          "url": "https://github.com/advisories/GHSA-r825-w8mm-5pxw",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-88"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<=6.4.3"
+        },
+        {
+          "source": 1242658,
+          "name": "vite",
+          "dependency": "vite",
+          "title": "launch-editor: `fs.existsSync()` existence check can be bypassed on Windows",
+          "url": "https://github.com/advisories/GHSA-587h-7wmj-h5pm",
+          "severity": "high",
+          "cwe": [
+            "CWE-77"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<=6.4.3"
+        },
+        {
+          "source": 1242724,
+          "name": "vite",
+          "dependency": "vite",
+          "title": "Vite: Cross origin script execution through Vite custom middleware",
+          "url": "https://github.com/advisories/GHSA-9jrq-w75r-8gcw",
+          "severity": "low",
+          "cwe": [
+            "CWE-80"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<=6.4.3"
+        },
+        {
+          "source": 1242730,
+          "name": "vite",
+          "dependency": "vite",
+          "title": "Vite: Files outside `server.fs.allow` could be served when project paths match system paths on non-Windows machine",
+          "url": "https://github.com/advisories/GHSA-rq7h-c2jc-7f22",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-22",
+            "CWE-284"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<=6.4.3"
+        }
+      ]
+    },
+    "vitest": {
+      "severity": "moderate",
+      "advisories": []
+    },
+    "vue": {
+      "severity": "high",
+      "advisories": []
+    },
+    "vue-eslint-parser": {
+      "severity": "moderate",
+      "advisories": []
+    },
+    "zod": {
+      "severity": "high",
+      "advisories": [
+        {
+          "source": 1243066,
+          "name": "zod",
+          "dependency": "zod",
+          "title": "Zod can exhaust memory while validating oversized constrained collections",
+          "url": "https://github.com/advisories/GHSA-mrhx-c7xc-m3w5",
+          "severity": "high",
+          "cwe": [
+            "CWE-770"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<4.6.6"
+        }
+      ]
+    }
+  },
+  "version_changes": {
+    "node_modules/@babel/helper-string-parser": {
+      "before": "7.29.7",
+      "after": "7.29.11"
+    },
+    "node_modules/@babel/parser": {
+      "before": "7.29.7",
+      "after": "7.29.12"
+    },
+    "node_modules/@babel/types": {
+      "before": "7.29.7",
+      "after": "7.29.11"
+    },
+    "node_modules/@eslint-community/eslint-utils": {
+      "before": "4.9.1",
+      "after": "4.10.1"
+    },
+    "node_modules/@eslint/plugin-kit": {
+      "before": "0.7.2",
+      "after": "0.7.3"
+    },
+    "node_modules/@stylistic/eslint-plugin-js": {
+      "before": "3.0.0",
+      "after": "3.1.0"
+    },
+    "node_modules/@typescript-eslint/eslint-plugin": {
+      "before": "8.63.0",
+      "after": "8.72.1"
+    },
+    "node_modules/@typescript-eslint/eslint-plugin/node_modules/ignore": {
+      "before": "7.0.6",
+      "after": "7.0.14"
+    },
+    "node_modules/@typescript-eslint/parser": {
+      "before": "8.63.0",
+      "after": "8.72.1"
+    },
+    "node_modules/@typescript-eslint/project-service": {
+      "before": "8.63.0",
+      "after": "8.72.1"
+    },
+    "node_modules/@typescript-eslint/scope-manager": {
+      "before": "8.63.0",
+      "after": "8.72.1"
+    },
+    "node_modules/@typescript-eslint/tsconfig-utils": {
+      "before": "8.63.0",
+      "after": "8.72.1"
+    },
+    "node_modules/@typescript-eslint/type-utils": {
+      "before": "8.63.0",
+      "after": "8.72.1"
+    },
+    "node_modules/@typescript-eslint/types": {
+      "before": "8.63.0",
+      "after": "8.72.1"
+    },
+    "node_modules/@typescript-eslint/typescript-estree": {
+      "before": "8.63.0",
+      "after": "8.72.1"
+    },
+    "node_modules/@typescript-eslint/utils": {
+      "before": "8.63.0",
+      "after": "8.72.1"
+    },
+    "node_modules/@typescript-eslint/visitor-keys": {
+      "before": "8.63.0",
+      "after": "8.72.1"
+    },
+    "node_modules/@vitest/expect": {
+      "before": "4.1.11",
+      "after": "4.1.12"
+    },
+    "node_modules/@vitest/mocker": {
+      "before": "4.1.11",
+      "after": "4.1.12"
+    },
+    "node_modules/@vitest/pretty-format": {
+      "before": "4.1.11",
+      "after": "4.1.12"
+    },
+    "node_modules/@vitest/runner": {
+      "before": "4.1.11",
+      "after": "4.1.12"
+    },
+    "node_modules/@vitest/snapshot": {
+      "before": "4.1.11",
+      "after": "4.1.12"
+    },
+    "node_modules/@vitest/spy": {
+      "before": "4.1.11",
+      "after": "4.1.12"
+    },
+    "node_modules/@vitest/utils": {
+      "before": "4.1.11",
+      "after": "4.1.12"
+    },
+    "node_modules/@vue/compiler-core": {
+      "before": "3.5.13",
+      "after": "3.5.44"
+    },
+    "node_modules/@vue/compiler-dom": {
+      "before": "3.5.13",
+      "after": "3.5.44"
+    },
+    "node_modules/@vue/compiler-sfc": {
+      "before": "3.5.13",
+      "after": "3.5.44"
+    },
+    "node_modules/@vue/compiler-ssr": {
+      "before": "3.5.13",
+      "after": "3.5.44"
+    },
+    "node_modules/@vue/reactivity": {
+      "before": "3.5.13",
+      "after": "3.5.44"
+    },
+    "node_modules/@vue/runtime-core": {
+      "before": "3.5.13",
+      "after": "3.5.44"
+    },
+    "node_modules/@vue/runtime-dom": {
+      "before": "3.5.13",
+      "after": "3.5.44"
+    },
+    "node_modules/@vue/server-renderer": {
+      "before": "3.5.13",
+      "after": "3.5.44"
+    },
+    "node_modules/@vue/shared": {
+      "before": "3.5.13",
+      "after": "3.5.44"
+    },
+    "node_modules/argparse": {
+      "before": "3.0.2",
+      "after": "3.0.4"
+    },
+    "node_modules/chai": {
+      "before": "6.2.2",
+      "after": "6.3.0"
+    },
+    "node_modules/csstype": {
+      "before": "3.1.3",
+      "after": "3.2.3"
+    },
+    "node_modules/eslint": {
+      "before": "10.8.0",
+      "after": "10.14.0"
+    },
+    "node_modules/eslint-plugin-vue": {
+      "before": "10.10.0",
+      "after": "10.12.0"
+    },
+    "node_modules/file-entry-cache": {
+      "before": "8.0.0",
+      "after": "11.1.5"
+    },
+    "node_modules/flat-cache": {
+      "before": "4.0.1",
+      "after": "6.1.23"
+    },
+    "node_modules/flatted": {
+      "before": "3.4.2",
+      "after": "3.4.4"
+    },
+    "node_modules/glob": {
+      "before": "13.0.6",
+      "after": "14.0.3"
+    },
+    "node_modules/json-buffer": {
+      "before": "3.0.1",
+      "after": null
+    },
+    "node_modules/keyv": {
+      "before": "4.5.4",
+      "after": "5.6.0"
+    },
+    "node_modules/markdown-it": {
+      "before": "15.0.2",
+      "after": "15.0.3"
+    },
+    "node_modules/minimatch": {
+      "before": "10.2.6",
+      "after": "11.0.4"
+    },
+    "node_modules/nanoid": {
+      "before": "3.3.19",
+      "after": "3.3.20"
+    },
+    "node_modules/path-scurry": {
+      "before": "2.0.2",
+      "after": "3.0.0"
+    },
+    "node_modules/path-scurry/node_modules/lru-cache": {
+      "before": "11.5.2",
+      "after": "11.5.3"
+    },
+    "node_modules/postcss": {
+      "before": "8.5.23",
+      "after": "8.5.32"
+    },
+    "node_modules/postcss-selector-parser": {
+      "before": "7.1.4",
+      "after": "7.1.7"
+    },
+    "node_modules/source-map-js": {
+      "before": "1.2.1",
+      "after": "1.2.2"
+    },
+    "node_modules/tinyrainbow": {
+      "before": "3.1.1",
+      "after": "3.2.0"
+    },
+    "node_modules/typescript-eslint": {
+      "before": "8.63.0",
+      "after": "8.72.1"
+    },
+    "node_modules/undici": {
+      "before": "7.30.0",
+      "after": "7.30.1"
+    },
+    "node_modules/vite": {
+      "before": "6.4.3",
+      "after": "6.4.5"
+    },
+    "node_modules/vitest": {
+      "before": "4.1.11",
+      "after": "4.1.12"
+    },
+    "node_modules/vue": {
+      "before": "3.5.13",
+      "after": "3.5.44"
+    },
+    "node_modules/zod": {
+      "before": "4.4.3",
+      "after": "4.6.7"
+    }
+  },
+  "new_packages": {
+    "node_modules/@cacheable/memory": "2.2.0",
+    "node_modules/@cacheable/utils": "2.5.0",
+    "node_modules/@isaacs/nonrecursive-glob-match": "1.0.3",
+    "node_modules/@keyv/bigmap": "1.3.1",
+    "node_modules/@keyv/serialize": "1.1.1",
+    "node_modules/@vue/compiler-core/node_modules/entities": "7.0.1",
+    "node_modules/cacheable": "2.5.0",
+    "node_modules/hashery": "1.5.1",
+    "node_modules/hookified": "1.15.1",
+    "node_modules/qified": "0.10.1",
+    "node_modules/qified/node_modules/hookified": "2.2.0"
+  },
+  "local_validation": {
+    "builder_unit_tests": 286,
+    "workbench_frontend_tests": 66,
+    "python_integration_tests": 10,
+    "builder_typecheck_and_build": "passed",
+    "workbench_build": "passed",
+    "npm_ls_all": "passed",
+    "builder_lint": "51 identical diagnostics on old and updated dependency locks: 43 errors, 8 warnings, confined to existing patched source/bridge and upstream Vue warnings",
+    "browser": "local launch blocked by workspace socket policy; enforced by new GitHub workflow"
+  },
+  "remaining_python_advisories": [
+    {
+      "name": "diskcache",
+      "version": "5.6.3",
+      "vulns": [
+        {
+          "id": "PYSEC-2026-2447",
+          "fix_versions": [],
+          "aliases": [
+            "GHSA-w8v5-vhqr-4h9v",
+            "CVE-2025-69872"
+          ],
+          "description": "DiskCache (python-diskcache) through 5.6.3 uses Python pickle for serialization by default. An attacker with write access to the cache directory can achieve arbitrary code execution when a victim application reads from the cache."
+        },
+        {
+          "id": "PYSEC-2026-2447",
+          "fix_versions": [],
+          "aliases": [
+            "GHSA-w8v5-vhqr-4h9v",
+            "CVE-2025-69872"
+          ],
+          "description": "DiskCache (python-diskcache) through 5.6.3 uses Python pickle for serialization by default. An attacker with write access to the cache directory can achieve arbitrary code execution when a victim application reads from the cache."
+        }
+      ]
+    }
+  ]
+}

@@ -1,14 +1,14 @@
 # Frontend checks
 
-Use Node 22.22.2+ or 24.15+ (supported even-numbered release) (matching the application's prerequisites) and install the locked
-dependencies with `npm ci` from this directory.
+Use a supported even-numbered Node release, 22.22.2+ or 24.15+, and install the
+locked dependencies with `npm ci` from this directory.
 
 - `npm test`: run the Vitest suite once; this is picked up by the existing Code
   quality workflow's required `typecheck test build` configuration.
 - `npm run test:watch`: rerun tests while developing.
 - `npm run typecheck`: check the production TypeScript sources without emitting.
 - `npm run build`: run TypeScript's build check and Vite's production build,
-  including resolution and bundling of the actual stylesheets.
+  including stylesheet resolution and bundling.
 
 The suite uses React Testing Library with jsdom and authored API responses. It
 checks accessible controls, customer/environment switching, late-response

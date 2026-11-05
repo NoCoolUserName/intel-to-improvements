@@ -1,18 +1,18 @@
 # Intel to Improvements
 
-A runnable local security workbench connecting threat intelligence to customer relevance, hunting, human-led validation and evidence-scoped improvements. It brings together CVE intelligence, non-CVE application findings, accountable remediation, an exposure overview and CI/CD pipeline assurance. Each workspace preserves its source evidence and distinguishes reported claims from reviewed or verified outcomes.
+A local security workbench for analyzing threat intelligence, assessing its relevance, planning hunts, and tracking remediation. It includes CVE intelligence, application findings, exposure summaries, and CI/CD pipeline checks. Each workspace preserves source evidence and records whether an outcome has been reported, reviewed, or verified.
 
-The deliverable is local software, not a hosted service. It requires no credentials, Docker, SIEM or MISP server for the demonstration. Run the commands below from the repository root.
+The workbench runs locally. It requires no credentials, Docker, SIEM or MISP server for the demonstration. Run the commands below from the repository root.
 
 ## Navigate the workbench
 
-Threat-Informed Defense organizes **Understand → Assess → Validate → Improve → Measure → Repeat**. The sidebar groups **Overview**, **Intelligence**, **Exposures & Improvements**, **Validation**, **Assurance & Quality**, and **Workspace**. **Cases & Analysis** is the renamed case view. **Improvement Actions** surfaces the existing scoped ledger and links back to the original case, AppSec finding or CVE action workflow. Related-case controls connect analysis, hunts, validation and existing actions without creating new records.
+The workspaces follow **Understand → Assess → Validate → Improve → Measure → Repeat**. The sidebar groups **Overview**, **Intelligence**, **Exposures & Improvements**, **Validation**, **Assurance & Quality**, and **Workspace**. **Cases & Analysis** holds cases and assessments. **Improvement Actions** shows the action ledger and links back to the original case, AppSec finding or CVE action workflow. Related-case controls connect analysis, hunts, validation and existing actions without creating new records.
 
-CTEM aligns through scoping, discovery, prioritization, validation and mobilization capabilities across these workspaces. Navigation remains direct; Coverage and Exposure Overview retain their separate definitions, and pipeline configuration/execution and analytical evaluation retain their own evidence boundaries. See [navigation, relationships and limitations](docs/WORKBENCH_NAVIGATION.md).
+The workspaces cover CTEM scoping, discovery, prioritization, validation, and mobilization. Coverage and Exposure Overview use separate definitions; pipeline configuration, pipeline execution, and analytical evaluation are assessed separately. See [navigation, relationships and limitations](docs/WORKBENCH_NAVIGATION.md).
 
 ## Visual tour
 
-The main pieces are **workspaces**: each supports a distinct analyst or governance task while sharing customer/environment scope, evidence storage and history. These are actual screenshots of the running application using fictional demo environments. CTI views use the attributed, limited ActiveMQ report replay; asset, AppSec, leadership and pipeline examples are synthetic. No screenshot represents independently verified enterprise security or remediation. Click an image for full resolution.
+Each **workspace** supports an analyst or governance task and shares customer/environment scope, evidence storage, and history. The screenshots below show the running application with fictional demo environments. CTI views use the attributed, limited ActiveMQ report replay; asset, AppSec, leadership and pipeline examples are synthetic. No screenshot represents independently verified enterprise security or remediation. Click an image for full resolution.
 
 | Intelligence analysis | Threat hunting |
 | --- | --- |
@@ -34,7 +34,7 @@ The main pieces are **workspaces**: each supports a distinct analyst or governan
 | [![Pipeline configuration observations separated from supplied successful and skipped execution evidence](docs/images/pipeline-assurance.png)](docs/images/pipeline-assurance.png) | [![Portable intelligence package with STIX, MISP, plans and validation results](docs/images/intelligence-exports.png)](docs/images/intelligence-exports.png) |
 | Manually imported Actions YAML, conservative checks, immutable history and optional supplied run/job evidence. [Pipeline demo](docs/PIPELINE_ASSURANCE.md#three-to-five-minute-offline-demonstration) | Portable STIX/MISP, hunt and validation plans, Sigma assessment and provenance. [Export workflow](#commands) |
 
-**Evidence before assurance:** reported ≠ reviewed ≠ assigned ≠ implemented ≠ verified. For pipelines, configured ≠ executed ≠ effective. Coverage, action history and verification remain separate; no universal risk score or “secure application” badge is generated.
+Evidence states are separate: reported ≠ reviewed ≠ assigned ≠ implemented ≠ verified. For pipelines, configured ≠ executed ≠ effective. Coverage, action history and verification remain separate; no universal risk score or “secure application” badge is generated.
 
 ## Start
 
@@ -107,7 +107,7 @@ Copy `.env.example` to `.env` only when enabling optional integrations. Set `OPE
 ./scripts/iti ingest /absolute/path/to/unseen-report.txt --kind path --mode live
 ```
 
-General live extraction is **NOT VERIFIED** in this build session; the actual selected-report attempt is saved as a failed job because API key/model configuration was absent.
+General live extraction remains **NOT VERIFIED**. The selected-report attempt is saved as a failed job because no API key/model was configured.
 
 ## Customer Profiles and relevance
 
@@ -119,7 +119,7 @@ Policy `relevance-1`: evidenced shared technology → High even across sectors; 
 
 ## Existing Gmail plugin workflow
 
-The owner confirms the existing plugin is configured and tested. That is distinct from this new handoff’s live acceptance status. The application deliberately uses portable files, not a runtime mailbox connection.
+Gmail import uses JSON handoff files from a conversation with the connected Gmail plugin. The application has no direct mailbox connection. The plugin’s configured status does not verify this handoff workflow end to end.
 
 1. Select customer/environment. Open **Add Intelligence → Gmail**. Enter query, optional known label, dates and maximum messages (1–25).
 2. **Prepare Gmail Request**, then **Copy request**. This stores an immutable request and context in SQLite.
@@ -137,7 +137,7 @@ CLI equivalent:
 ./scripts/iti gmail-import ~/Downloads/gmail-handoff.json --mode offline
 ```
 
-A request generated during this session is in `runtime/gmail-request.txt`; `runtime/gmail-request.json` contains its ID. Live retrieval is pending operator-selected scope; no mailbox messages were retrieved during the build. Synthetic handoff workflow completed separately. To generate a synthetic file for an existing request:
+The request command writes `runtime/gmail-request.txt` and stores its ID in `runtime/gmail-request.json`. Live retrieval has not been verified; only the synthetic handoff workflow has completed. To generate a synthetic file for an existing request:
 
 ```sh
 ./scripts/iti gmail-sample REQUEST_ID --output runtime/synthetic-handoff.json
@@ -161,7 +161,7 @@ Stable identity is scoped to customer, destination and logical report. Upsert pr
 
 ## Validation and scope
 
-See `VALIDATION.md`, `validation/evaluation.html`, `REQUIREMENTS_TESTS.md`, `ARCHITECTURE.md`, and `DEMO.md`. The actual evaluation includes successful cases and a held-out unsupported cloud behavior. No live SIEM, ransomware, exploit, credential theft or red-team tool is executed. The one supported query target is documented in `docs/SPLUNK.md`.
+See `VALIDATION.md`, `validation/evaluation.html`, `REQUIREMENTS_TESTS.md`, `ARCHITECTURE.md`, and `DEMO.md`. The evaluation includes successful cases and a held-out unsupported cloud behavior. No live SIEM, ransomware, exploit, credential theft or red-team tool is executed. The one supported query target is documented in `docs/SPLUNK.md`.
 
 Phase 4 local regression validation: **278 backend tests and 54 frontend tests passed**, together with TypeScript checks, the production build and the repository's applicable lint/security checks. Real local Chromium acceptance exercised configuration and execution preview/confirmation, original-byte/hash downloads, mismatch rejection, immutable revisions, customer switching and mobile/theme behavior. The screenshots above were captured from the running production frontend. These checks validate workbench behavior, not the security of a supplied repository.
 
@@ -180,7 +180,7 @@ Review staged content first; `.gitignore` excludes all full reports, live handof
 
 ## Reported Attack Flow
 
-The Purple Team page includes the actual locally served MITRE Attack Flow Builder above the human validation scenarios. Generate an updated package to add **attack-flow.json** and its evidence/provenance sidecar. Historical packages remain unchanged. The existing ActiveMQ case is honestly unordered: its saved sequence numbers do not prove relationships.
+The Purple Team page includes a locally served MITRE Attack Flow Builder above the human validation scenarios. Generate an updated package to add **attack-flow.json** and its evidence/provenance sidecar. Historical packages remain unchanged. The ActiveMQ case has no established event order: its saved sequence numbers do not prove relationships.
 
 Fresh bootstrap builds the viewer. For an existing install, run `./scripts/build-attack-flow` and `npm --prefix web run build`, then restart `./scripts/run` and refresh the page. No extra running service, internet access after setup, or AI credential is needed to view a flow. The **Open in Builder** link opens a separate editable local draft; it never overwrites or approves the immutable package. See [integration setup, pin, semantics and smoke test](integrations/attack-flow/README.md).
 
@@ -230,7 +230,7 @@ Choose **Load synthetic leadership demo** to explore an isolated fictional Junip
 
 Open **Pipeline Assurance** to inspect manually supplied GitHub Actions YAML. Enter operator-provided repository/ref and optional application/commit context, choose files, preview the deterministic observations and explicitly confirm. Snapshot history preserves original bytes, SHA-256 hashes, frozen customer/environment context and the assessment rule version. No scanner, GitHub credential, network integration or additional service is needed.
 
-The bounded checks cover declared permissions, action pinning, checkout credential handling, sensitive triggers/event interpolation, recognized security/test steps and failure-continuation configuration. External reusable workflows—including `NoCoolUserName/code-quality`—remain referenced but uninspected; downstream controls are **Unknown**, not falsely marked absent. Branch-protection enforcement and control effectiveness remain unknown.
+The bounded checks cover declared permissions, action pinning, checkout credential handling, sensitive triggers/event interpolation, recognized security/test steps and failure-continuation configuration. External reusable workflows—including `NoCoolUserName/code-quality`—remain referenced but uninspected; downstream controls are marked **Unknown**. Branch-protection enforcement and control effectiveness remain unknown.
 
 Optionally attach supplied run/job JSON to an exact repository/workflow/ref/commit snapshot. Unique named controls can show **Reported successful**, **Reported failed**, **Reported skipped**, **Reported cancelled**, **Incomplete**, or **Unknown / no evidence**. A workflow success does not establish that every scanner ran. Uploaded metadata is never described as independently authenticated.
 
