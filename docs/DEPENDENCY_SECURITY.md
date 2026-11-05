@@ -32,7 +32,9 @@ In the installed pySigma source, cache construction belongs to its on-demand
 MITRE ATT&CK/D3FEND downloaders. This workbench uses its bundled catalogs.
 `tests/test_dependency_safety.py` runs a real local replay, Sigma conversion and
 package export while rejecting every attempt to construct a `diskcache.Cache`.
-This establishes non-use for that tested workflow, not a fix for the library or
+It also converts every bundled Sigma rule with cache construction blocked, so a
+new rule or converter change cannot quietly add cache use to the covered path.
+This establishes non-use for those tested workflows, not a fix for the library or
 a guarantee about every possible future code path. Do not enable those remote
 catalog/cache loaders without reviewing this advisory and the cache-directory
 trust boundary again. The advisory is not dismissed or excluded from audits.
