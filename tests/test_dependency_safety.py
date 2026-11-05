@@ -1,4 +1,21 @@
 import diskcache
+from iti import detection
+
+
+def test_every_bundled_sigma_conversion_avoids_diskcache(monkeypatch):
+    """A new bundled rule must not silently introduce the unsafe cache path."""
+    def reject_cache(*args, **kwargs):
+        raise AssertionError("Bundled Sigma conversion must not open diskcache")
+
+    monkeypatch.setattr(diskcache.Cache, "__init__", reject_cache)
+    rows = detection.catalog()
+    assert rows
+    for _, raw, _ in rows:
+        detection.convert(raw, {
+            "Image": "process_path",
+            "CommandLine": "command_line",
+            "OriginalFileName": "original_name",
+        })
 
 
 def test_local_sigma_workflow_does_not_open_diskcache(service, monkeypatch):
