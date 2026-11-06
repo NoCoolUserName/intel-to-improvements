@@ -1,6 +1,7 @@
 /* Palettes adapted for an evidence workbench. Original CSS stays intact. */
 :root[data-theme="golden-ledger"] {
   color-scheme: light;
+  --sidebar-color-scheme: light;
   --page: #f7f5ef; --surface: #fffefa; --surface-soft: #f3f0e6;
   --surface-hover: #fff1b3; --border: #d9d4c3; --border-hover: #9b8434;
   --text: #292d27; --muted: #565b50; --accent: #f5c518; --accent-hover: #e4b612;
@@ -95,6 +96,13 @@
 .topbar-actions { display: flex; align-items: center; gap: 20px; }
 .sidebar .theme-control { margin: 12px 12px 4px; color: #b9ccca; font-size: 9px; letter-spacing: 1.3px; }
 .theme-control select { width: 100%; min-width: 0; font-size: 11px; letter-spacing: 0; margin-top: 4px; padding: 7px 25px 7px 9px; }
+:root .sidebar .theme-control select,
+:root .sidebar .theme-control option {
+  background: var(--sidebar, #172e33);
+  color: var(--sidebar-text, #dbe7e4);
+  border-color: var(--sidebar-border, #365055);
+  color-scheme: var(--sidebar-color-scheme, dark);
+}
 @media (max-width: 1250px) { .context-meta { display: none; } }
 @media (max-width: 950px) {
   .topbar { height: auto; flex-wrap: wrap; gap: 12px; }
