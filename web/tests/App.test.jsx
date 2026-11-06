@@ -79,7 +79,22 @@ async function mount() {
 
 it('keeps the chosen theme across customer changes and a remount', async () => {
   const {user, unmount} = await mount();
-  await user.selectOptions(screen.getByRole('combobox', {name: 'Color theme'}), 'dropzone');
+  const theme = screen.getByRole('combobox', {name: 'Color theme'});
+  const navigation = screen.getByRole('navigation', {name: 'Workbench navigation'});
+  expect(navigation.nextElementSibling).toBe(theme.closest('label'));
+  expect(theme.closest('.sidebar')).not.toBeNull();
+  expect(within(screen.getByRole('banner')).queryByRole('combobox', {name: 'Color theme'})).toBeNull();
+  expect(within(theme).getAllByRole('option').map(option => option.textContent)).toEqual([
+    'Original · Forest', 'Ocean', 'Midnight', 'Golden Ledger',
+  ]);
+  screen.getByRole('button', {name: 'Customer Profiles'}).focus();
+  await user.tab();
+  expect(document.activeElement).toBe(theme);
+  for (const value of ['sailpoint', 'golden-ledger', 'original', 'dropzone']) {
+    await user.selectOptions(theme, value);
+    expect(document.documentElement.dataset.theme).toBe(value);
+    expect(localStorage.getItem('iti.appearance.theme')).toBe(value);
+  }
   await user.selectOptions(screen.getByRole('combobox', {name: 'Active customer'}), 'fictional-cloud');
   await waitFor(() => expect(screen.getByRole('combobox', {name: 'Working case'}).value).toBe('cloud-case'));
   expect(screen.getByRole('combobox', {name: 'Active environment'}).value).toBe('mac-cloud');

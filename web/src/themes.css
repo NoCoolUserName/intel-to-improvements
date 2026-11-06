@@ -50,7 +50,7 @@
   & .sidebar { background: var(--sidebar); color: var(--sidebar-text); }
   & .brand strong { color: var(--text-on-sidebar, #fff); }
   & .brand-mark { background: var(--mark-bg); color: var(--mark-text); }
-  & .workspace-label, & .sidebar-footer small { color: var(--sidebar-muted); }
+  & .workspace-label, & .sidebar-footer small, & .sidebar .theme-control { color: var(--sidebar-muted); }
   & .sidebar nav button { color: var(--sidebar-text); background: transparent; }
   & .sidebar nav button:hover { background: var(--sidebar-hover); }
   & .sidebar nav button.active { background: var(--sidebar-active); color: #fff; box-shadow: inset 3px 0 var(--highlight); }
@@ -93,17 +93,16 @@
   & select:focus-visible, & textarea:focus-visible { outline-color: var(--focus); }
 }
 .topbar-actions { display: flex; align-items: center; gap: 20px; }
-.theme-control { margin: 0; flex-shrink: 0; font-size: 9px; letter-spacing: 1.3px; }
-.theme-control select { width: 185px; font-size: 11px; letter-spacing: 0; margin-top: 4px; padding: 7px 25px 7px 9px; }
+.sidebar .theme-control { margin: 12px 12px 4px; color: #b9ccca; font-size: 9px; letter-spacing: 1.3px; }
+.theme-control select { width: 100%; min-width: 0; font-size: 11px; letter-spacing: 0; margin-top: 4px; padding: 7px 25px 7px 9px; }
 @media (max-width: 1250px) { .context-meta { display: none; } }
 @media (max-width: 950px) {
   .topbar { height: auto; flex-wrap: wrap; gap: 12px; }
   .topbar-actions { margin-left: auto; }
 }
 @media (max-width: 760px) {
-  .topbar-actions { width: 100%; margin-left: 0; }
-  .theme-control { display: flex; align-items: center; gap: 12px; }
-  .theme-control select { margin-top: 0; }
+  .sidebar .sidebar-workspaces { overflow: visible; flex: none; }
+  .sidebar .theme-control { margin: 12px 0 0; max-width: 240px; }
 }
 .casebar .test-case-control { min-width: 0; flex: 0 0 auto; font-size: 11px; letter-spacing: 0; }
 
