@@ -1,0 +1,15 @@
+{
+  "retrieved_at": "2026-11-07T10:37:18Z",
+  "representation": "Selected text lines and concise paraphrases transcribed from web-rendered pages; hashes are of stored UTF-8 strings, never of original publisher pages",
+  "sources": [
+    {"id":"S1","url":"https://github.com/google/brotli/releases/tag/v1.2.1","published_at":"2026-10-21","excerpt":"CVE-2026-111497: out-of-bounds write permits remote code execution"},
+    {"id":"S2","url":"https://nvd.nist.gov/vuln/detail/CVE-2026-111497","retrieval_status":"No readable page lines returned; no NVD score imported"},
+    {"id":"S3","url":"https://nodejs.org/en/blog/vulnerability/october-2026-security-releases","published_at":"2026-10-21","excerpt":"An attacker who can supply Brotli data that an application decompresses with `node:zlib` can corrupt process memory"},
+    {"id":"S4","url":"https://nodejs.org/en/blog/release/v24.22.1","published_at":"2026-10-21","excerpt":"(CVE-2026-111497) deps: brotli: cherry-pick 0ed4268a4401abcb44720963"},
+    {"id":"S5","url":"https://github.com/dotnet/runtime/security/advisories/GHSA-p3jp-9v83-76w9","published_at":"2026-10-25","excerpt":"If you have deployed self-contained applications, rebuild and redeploy those applications with the updated runtime."},
+    {"id":"S6","url":"https://access.redhat.com/security/cve/cve-2026-111497","excerpt":"When an application decompresses untrusted Brotli data, this can lead to memory disclosure, denial of service, or potentially arbitrary code execution."},
+    {"id":"S7","url":"https://securitylabs.datadoghq.com/articles/node2shell-cve-2026-111497-nodejs-brotli-decoder/","published_at":"2026-10-29","excerpt":"A service is exposed when it decompresses Brotli data that an attacker controls"},
+    {"id":"S8","url":"https://research.splunk.com/stories/node2shell/","published_at":"2026-10-28","excerpt":"Review relevant web, application, and endpoint telemetry together."},
+    {"id":"S9","url":"https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json","retrieval_status":"Direct retrieval returned HTTP 403; no direct KEV snapshot or federal date imported"}
+  ]
+}

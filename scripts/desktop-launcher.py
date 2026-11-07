@@ -14,7 +14,8 @@ import webbrowser
 ROOT = Path(__file__).resolve().parent.parent
 URL = 'http://127.0.0.1:8000'
 sys.path.insert(0, str(ROOT))
-from iti.build_identity import BUILD_ID, CHECKOUT_ID, LAUNCHER_PROTOCOL
+# The launcher resolves the checkout before importing its build identity.
+from iti.build_identity import BUILD_ID, CHECKOUT_ID, LAUNCHER_PROTOCOL  # noqa: E402
 
 def health():
     try:

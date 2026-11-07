@@ -1,0 +1,74 @@
+{
+  "schema_version": "1",
+  "label": "Deterministic synthetic replay; no SIEM query or exploit run",
+  "event_time": "2026-11-06T16:00:00Z",
+  "events": [
+    {
+      "id": "inbound-investigate",
+      "case": "positive investigation signal",
+      "asset_id": "client-api",
+      "request": {
+        "content_encoding": "br",
+        "status": 500,
+        "decoder_error": true,
+        "request_id": "synthetic-r1"
+      },
+      "process": {
+        "pid": 120,
+        "boot_id": "boot-1",
+        "start": "2026-11-06T14:00:00Z",
+        "image_change": true
+      },
+      "interpretation": "Corroboration required; not CVE attribution"
+    },
+    {
+      "id": "outbound-investigate",
+      "case": "positive investigation signal",
+      "asset_id": "research-fetcher",
+      "response": {
+        "content_encoding": "br",
+        "decoder_error": true,
+        "source": "feeds.example.invalid"
+      },
+      "interpretation": "Inbound filter does not cover this path"
+    },
+    {
+      "id": "ordinary-brotli",
+      "case": "negative control",
+      "request": {
+        "content_encoding": "br",
+        "status": 200
+      },
+      "interpretation": "Ordinary Brotli is not exploitation"
+    },
+    {
+      "id": "benign-truncated",
+      "case": "negative control",
+      "request": {
+        "content_encoding": "br",
+        "status": 400,
+        "decoder_error": true
+      },
+      "interpretation": "Error alone is not exploitation"
+    },
+    {
+      "id": "legitimate-exec",
+      "case": "negative control",
+      "process": {
+        "pid": 120,
+        "boot_id": "boot-2",
+        "start": "2026-11-07T08:00:00Z",
+        "image_change": true,
+        "approved_change": "maintenance"
+      },
+      "interpretation": "Different boot and authorized action; PID reuse is possible"
+    },
+    {
+      "id": "missing-telemetry",
+      "case": "inconclusive",
+      "asset_id": "research-fetcher",
+      "process": null,
+      "interpretation": "No process or response coverage proof; compromise remains unknown"
+    }
+  ]
+}

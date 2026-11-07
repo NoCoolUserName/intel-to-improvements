@@ -1,0 +1,18 @@
+{
+  "label": "Authored synthetic artifact/runtime review; no build, deployment or scan was run",
+  "reviewed_event_time": "2026-11-06T17:00:00Z",
+  "client-api": {
+    "baseline_running_version": "Node.js 24.22.0",
+    "candidate_image_version": "Node.js 24.22.1",
+    "candidate_release_check": "passed in authored replay",
+    "deployed_candidate": false,
+    "interpretation": "Successful synthetic technical check of a candidate artifact and evidence gate; operational remediation remains open"
+  },
+  "advisor-package": {
+    "host_shared_runtime": "8.0.33",
+    "deployed_self_contained_bundle": "8.0.32",
+    "rebuild_completed": false,
+    "retest": "failed",
+    "interpretation": "Host update does not change the deployed self-contained application; rebuild and redeploy are required"
+  }
+}

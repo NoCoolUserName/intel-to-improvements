@@ -137,7 +137,8 @@ class CustomerProfile(Model):
     @field_validator('sector')
     @classmethod
     def sector_valid(cls,v):
-        if v not in SECTORS: raise ValueError('Unknown sector identifier')
+        if v not in SECTORS:
+            raise ValueError('Unknown sector identifier')
         return v
 
 class Context(Model):
@@ -281,14 +282,19 @@ class TestRun(Model):
     @field_validator('executed_at','exercise_event_at','control_deployed_at')
     @classmethod
     def aware(cls,v):
-        if v is not None and datetime.fromisoformat(v.replace('Z','+00:00')).tzinfo is None: raise ValueError('Timezone-aware timestamp required')
+        if v is not None and datetime.fromisoformat(v.replace('Z','+00:00')).tzinfo is None:
+            raise ValueError('Timezone-aware timestamp required')
         return v
     @model_validator(mode='after')
     def proof(self):
-        if not self.evidence: raise ValueError('Evidence reference required')
-        if self.method=='synthetic log match' and self.dimension!='detection': raise ValueError('Synthetic match only evaluates detection fixture semantics')
-        if self.dimension=='prevention' and self.result=='passed' and (self.method!='observed prevention' or not self.attempted_action or not self.control_outcome): raise ValueError('Prevention requires attempted action and observed enforcing control outcome')
-        if self.dimension.startswith('soc_') and not self.exercise_event_at: raise ValueError('SOC timing requires exercise event/alert timestamp')
+        if not self.evidence:
+            raise ValueError('Evidence reference required')
+        if self.method=='synthetic log match' and self.dimension!='detection':
+            raise ValueError('Synthetic match only evaluates detection fixture semantics')
+        if self.dimension=='prevention' and self.result=='passed' and (self.method!='observed prevention' or not self.attempted_action or not self.control_outcome):
+            raise ValueError('Prevention requires attempted action and observed enforcing control outcome')
+        if self.dimension.startswith('soc_') and not self.exercise_event_at:
+            raise ValueError('SOC timing requires exercise event/alert timestamp')
         return self
 
 class ImprovementAction(Model):

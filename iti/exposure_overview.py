@@ -52,7 +52,9 @@ class Snapshot:
             if count > LIMIT or size > 64*1024*1024:
                 raise ValueError('Overview limit: 5000 scoped records / 64 MiB; totals unavailable, not truncated')
             for r in c.execute("SELECT kind,id,CASE WHEN kind='vulnerability_mention' THEN json_set(json_remove(data,'$.source'),'$.synthetic',coalesce(json_extract(data,'$.source.metadata.fixture'),0)) ELSE data END AS data FROM records WHERE " + where + ' ORDER BY created_at,id', args):
-                row = json.loads(r['data']); self.rows[r['kind']].append(row); self.by_id[r['kind'],r['id']] = row
+                row = json.loads(r['data'])
+                self.rows[r['kind']].append(row)
+                self.by_id[r['kind'],r['id']] = row
             keys = {r['logical_id']+':operational' for r in self.rows['vulnerability_exposure']}
             if keys:
                 for clock in c.execute("SELECT id,data FROM records WHERE kind='confirmed_exposure' AND id IN (" + ','.join('?' for _ in keys) + ')', tuple(keys)):
@@ -61,21 +63,26 @@ class Snapshot:
         for kind, rows in self.rows.items():
             for row in rows:
                 logical = row.get('logical_id') or row.get('appsec_logical_id') or row.get('vulnerability_asset_id')
-                if logical: self.groups[kind][logical].append(row)
+                if logical:
+                    self.groups[kind][logical].append(row)
 
         # Only latest exposure retests need attachment integrity checks. Bound the I/O
         # before existing governance verification opens any supporting bytes.
         evidence_bytes = 0
         for tests in self.groups['test'].values():
             test = tests[-1]
-            if not (test.get('appsec_logical_id') or test.get('vulnerability_asset_id')): continue
+            if not (test.get('appsec_logical_id') or test.get('vulnerability_asset_id')):
+                continue
             ids = (test.get('measurement') or {}).get('evidence_ids', []) if test.get('appsec_logical_id') else [e['reference'].split(':',1)[1] for e in test['evidence'] if e['reference'].startswith('vulnerability-evidence:')]
             for id in ids:
                 evidence = self.maybe('appsec_evidence', id) or self.maybe('application_source', id) or self.maybe('vulnerability_evidence', id)
-                if not evidence: continue
+                if not evidence:
+                    continue
                 path = self.root / 'blobs' / evidence['sha256']
-                try: evidence_bytes += path.stat().st_size
-                except OSError: pass  # Existing verification marks missing evidence stale.
+                try:
+                    evidence_bytes += path.stat().st_size
+                except OSError:
+                    pass  # Existing verification marks missing evidence stale.
         if evidence_bytes > EVIDENCE_LIMIT:
             raise ValueError('Overview evidence limit: 64 MiB of current retest attachments; totals unavailable, not truncated')
 
@@ -96,7 +103,8 @@ class Subject:
     def get(self, kind, id): return self.snapshot.get(kind,id)
     def maybe(self, kind, id): return self.snapshot.maybe(kind,id)
     def all(self, kind):
-        if kind in ('application_batch', 'improvement'): return self.snapshot.all(kind)
+        if kind in ('application_batch', 'improvement'):
+            return self.snapshot.all(kind)
         rows = self.snapshot.groups[kind][self.logical]
         # Current outcome is the latest recorded test; old tests cannot restore success.
         return rows[-1:] if kind == 'test' else rows
@@ -127,13 +135,15 @@ def overview(store, customer, environment):
             try:
                 delta = (today-datetime.strptime(date, '%Y-%m-%d').date()).days
                 row['overdue_days'] = delta if delta > 0 else 0
-            except ValueError: pass
+            except ValueError:
+                pass
         rows.append(row)
     for logical, occurrences in snapshot.groups['application_finding'].items():
         f = max(occurrences, key=lambda r:(r['imported_at'],r['id']))
         subject = Subject(snapshot, logical)
         deps = appsec.dependencies(subject, f)
-        reviews = subject.all('appsec_review'); review = reviews[-1] if reviews else None
+        reviews = subject.all('appsec_review')
+        review = reviews[-1] if reviews else None
         disposition = review['disposition'] if review and review['dependencies']==deps else 'Needs review'
         action = appsec.action_for(subject, f)
         outcome = appsec.verification(subject, f, action, as_of=at)
@@ -153,23 +163,28 @@ def overview(store, customer, environment):
                    occurrence_count=len(occurrences), outstanding=not resolved and disposition not in ('Not applicable','False positive (reviewed determination)',appsec.DUPLICATE),
                    last_retest_at=test['executed_at'] if test else None, review_id=review['id'] if review else None,
                    test_id=test['id'] if test else None, stale_reasons=test['stale_reasons'] if test else [])
-        if test: row['retest_age_days'] = days(test['executed_at'],at)
+        if test:
+            row['retest_age_days'] = days(test['executed_at'],at)
         if resolved:
             start = min((r['imported_at'] for r in occurrences), key=lambda s:timestamp(s) or datetime.max.replace(tzinfo=timezone.utc))
             end = test['recorded_at']
             if timestamp(start) and timestamp(end) and timestamp(end)>=timestamp(start):
                 row.update(timing_seconds=(timestamp(end)-timestamp(start)).total_seconds(), timing_cohort='Synthetic AppSec' if synthetic else 'Supplied AppSec')
         rows.append(row)
-        requests = subject.all('appsec_exception_request'); decisions = subject.all('appsec_exception_decision')
+        requests = subject.all('appsec_exception_request')
+        decisions = subject.all('appsec_exception_decision')
         statuses = []
         for request in requests:
             history = [r for r in decisions if r['request_id']==request['id']]
             decision = history[-1] if history else None
             status = decision['decision'] if decision else 'unapproved request'
             expires = timestamp(request['review_by'])
-            if expires and expires<=timestamp(at): status='expired'
-            elif request['dependencies']!=deps or (decision and decision['dependencies']!=deps): status='stale; renewed decision required'
-            elif status=='approved': status='active operator-recorded acceptance; finding remains'
+            if expires and expires<=timestamp(at):
+                status='expired'
+            elif request['dependencies']!=deps or (decision and decision['dependencies']!=deps):
+                status='stale; renewed decision required'
+            elif status=='approved':
+                status='active operator-recorded acceptance; finding remains'
             statuses.append(status)
             ex = base('exception:'+request['id'], 'AppSec', 'exception', f['rule_id'] or 'Unknown rule', f['synthetic'], row['reference'], [request['id']] + [d['id'] for d in history])
             ex.update(status=status, exception_status=status, review_by=request['review_by'],
@@ -179,9 +194,11 @@ def overview(store, customer, environment):
         if action:
             a = row | {'id':'action:'+action['id'], 'entity':'action', 'target_date':action.get('remediation',{}).get('target_date'), 'exposure_id':row['id'], 'source_ids':row['source_ids']+[action['id']]}
             work(a, action, resolved)
-            if action['status']=='closed' and not resolved: a['status']='Reopen/review required; prior closure is historical'
+            if action['status']=='closed' and not resolved:
+                a['status']='Reopen/review required; prior closure is historical'
     current_assets = {}
-    for asset in snapshot.all('vulnerability_exposure'): current_assets[asset['logical_id']] = asset
+    for asset in snapshot.all('vulnerability_exposure'):
+        current_assets[asset['logical_id']] = asset
     for logical, asset in current_assets.items():
         subject = Subject(snapshot, logical)
         stale = not vi.same_version(asset['context'],ctx) or days(asset['observed_at'],at) is None or (timestamp(at)-timestamp(asset['observed_at'])).total_seconds()>30*86400
@@ -194,7 +211,8 @@ def overview(store, customer, environment):
                 saved = snapshot.maybe('vulnerability_evidence',ref[1]) if len(ref)==2 and ref[0]=='vulnerability-evidence' else None
                 try:
                     evidence_ok = evidence_ok and bool(saved and saved['kind']==evidence['kind'] and saved['sha256']==evidence['sha256'] and digest((snapshot.root/'blobs'/saved['sha256']).read_bytes())==saved['sha256'])
-                except OSError: evidence_ok = False
+                except OSError:
+                    evidence_ok = False
         synthetic = asset['evidence_kind']=='synthetic fixture' or bool(test and any(e['kind']=='synthetic fixture replay' for e in test['evidence']))
         verified = outcome['status']=='verified remediation' and not stale and not synthetic and asset['applicability']=='confirmed affected' and evidence_ok
         verification = ('Stale evidence' if test and (not test['fresh'] or stale or not evidence_ok) else
@@ -219,7 +237,8 @@ def overview(store, customer, environment):
             if test and test['improvement_id']!=action['id']:
                 a.update(verification='Pending / evidence belongs to another action',test_id=None,last_retest_at=None,retest_age_days=None)
     mentions = defaultdict(list)
-    for m in snapshot.all('vulnerability_mention'): mentions[m['cve']].append(m)
+    for m in snapshot.all('vulnerability_mention'):
+        mentions[m['cve']].append(m)
     for cve, records in mentions.items():
         row = base('mention:'+cve,'Infrastructure','mention',cve,all(m.get('synthetic') for m in records),{'cve':cve},[m['id'] for m in records])
         row.update(status='CVE source mention; applicability not established',outstanding=False)
@@ -227,7 +246,8 @@ def overview(store, customer, environment):
     linked = {r.get('action_id') for r in rows}
     for action in snapshot.all('improvement'):
         origin=action.get('origin') or {}
-        if action['id'] in linked or origin.get('kind') not in ('application_finding','vulnerability_decision'): continue
+        if action['id'] in linked or origin.get('kind') not in ('application_finding','vulnerability_decision'):
+            continue
         row=base('action:'+action['id'],'AppSec' if origin['kind']=='application_finding' else 'Infrastructure','action','Origin unavailable',False,{},[action['id']])
         row['verification']='Unknown; origin unavailable'
         work(row,action,False)

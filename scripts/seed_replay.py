@@ -1,5 +1,6 @@
 from pathlib import Path
-import json,hashlib
+import json
+import hashlib
 root=Path(__file__).resolve().parents[1]
 entries=[('activemq','two intrusions','The report describes exploitation of vulnerable ActiveMQ on Windows.',1),('certutil','CertUtil downloaded','CertUtil downloaded a payload.',2),('java_shell','Java was the parent','Java parentage accompanied command execution.',2),('lsass','LSASS memory','Processes accessed LSASS memory.',3),('remote_service','Remote services launched','Remote services launched payloads on other Windows hosts.',4),('powershell','Obfuscated PowerShell','Obfuscated PowerShell appeared during remote-service activity.',4),('anydesk','AnyDesk was installed','AnyDesk installed an automatically starting service.',5),('rdp','RDP sessions carried','RDP sessions carried ransomware execution.',6)]
 h=hashlib.sha256((root/'fixtures/activemq-derived.md').read_bytes()).hexdigest()

@@ -1,6 +1,5 @@
 from datetime import datetime,timezone,timedelta
-from .models import TestRun,ImprovementAction
-from .store import uid,now,digest,canonical
+from .store import uid,now
 FRESHNESS_DAYS=30
 
 def dt(s):return datetime.fromisoformat(s.replace('Z','+00:00'))
@@ -9,34 +8,49 @@ def seconds(start,end):return max(0,(dt(end)-dt(start)).total_seconds()) if star
 def dependency(assessment,behavior_id):
     return {'source_revision':assessment['source']['revision_id'],'extraction_id':assessment['extraction']['id'],'customer_version':assessment['context']['customer_version'],'environment_version':assessment['context']['environment_version'],'rules':{r['id']:r['source']['sha256'] for r in assessment['candidates'] if r['behavior_id']==behavior_id}}
 def scope_key(assessment):
-    c=assessment['context'];return ':'.join([c['customer_id'],c['environment_id'],assessment['source']['id']])
+    c=assessment['context']
+    return ':'.join([c['customer_id'],c['environment_id'],assessment['source']['id']])
 
 def record_test(store,assessment,test):
     if assessment.get('application_finding'):
         from . import appsec
         return appsec.record_test(store,assessment,test)
-    if any(e.kind=='supplied evidence' for e in test.evidence):raise ValueError('Supplied evidence is restricted to AppSec review, not CTI/CVE verification')
+    if any(e.kind=='supplied evidence' for e in test.evidence):
+        raise ValueError('Supplied evidence is restricted to AppSec review, not CTI/CVE verification')
     from . import vulnerabilities
     vulnerability=assessment.get('vulnerability')
     dependencies=vulnerabilities.validate_test(store,assessment,test) if vulnerability else dependency(assessment,test.behavior_id)
     ids={b['id'] for b in assessment['extraction']['behaviors']}
-    if not vulnerability and (test.vulnerability_assessment_id or test.behavior_id not in ids or test.dimension in ('remediation','mitigation') or test.method in ('reliable rescan','version/configuration evidence','targeted human-led test')):raise ValueError('Behavior does not belong to assessment or unsupported dimension')
-    if test.environment_version!=assessment['context']['environment_version']:raise ValueError('Environment version mismatch')
-    if dt(test.executed_at)>datetime.now(timezone.utc)+timedelta(minutes=5):raise ValueError('Execution time cannot be in the future')
-    if test.dimension.startswith('soc_') and dt(test.executed_at)<dt(test.exercise_event_at):raise ValueError('SOC outcome cannot precede exercise event')
-    if test.method in ('observed SIEM alert','observed prevention') and not any(e.kind in ('live system','lab execution') for e in test.evidence):raise ValueError('Observed outcome requires live-system or lab execution evidence; assertion alone is an attestation')
-    if test.method=='synthetic log match' and any(e.kind!='synthetic fixture replay' for e in test.evidence):raise ValueError('Synthetic method requires synthetic evidence labeling')
-    if test.method=='lab emulation' and not any(e.kind=='lab execution' for e in test.evidence):raise ValueError('Lab method requires lab evidence')
+    if not vulnerability and (test.vulnerability_assessment_id or test.behavior_id not in ids or test.dimension in ('remediation','mitigation') or test.method in ('reliable rescan','version/configuration evidence','targeted human-led test')):
+        raise ValueError('Behavior does not belong to assessment or unsupported dimension')
+    if test.environment_version!=assessment['context']['environment_version']:
+        raise ValueError('Environment version mismatch')
+    if dt(test.executed_at)>datetime.now(timezone.utc)+timedelta(minutes=5):
+        raise ValueError('Execution time cannot be in the future')
+    if test.dimension.startswith('soc_') and dt(test.executed_at)<dt(test.exercise_event_at):
+        raise ValueError('SOC outcome cannot precede exercise event')
+    if test.method in ('observed SIEM alert','observed prevention') and not any(e.kind in ('live system','lab execution') for e in test.evidence):
+        raise ValueError('Observed outcome requires live-system or lab execution evidence; assertion alone is an attestation')
+    if test.method=='synthetic log match' and any(e.kind!='synthetic fixture replay' for e in test.evidence):
+        raise ValueError('Synthetic method requires synthetic evidence labeling')
+    if test.method=='lab emulation' and not any(e.kind=='lab execution' for e in test.evidence):
+        raise ValueError('Lab method requires lab evidence')
     if test.improvement_id:
         action=store.get('improvement',test.improvement_id)
-        if action['scope']!=scope_key(assessment) or action['behavior_id']!=test.behavior_id:raise ValueError('Retest improvement scope mismatch')
+        if action['scope']!=scope_key(assessment) or action['behavior_id']!=test.behavior_id:
+            raise ValueError('Retest improvement scope mismatch')
     matched=next((r for r in assessment.get('candidates',[]) if r['id']==test.control_id),None)
-    if matched and test.method!='analyst attestation' and test.control_version!=matched['source']['sha256']:raise ValueError('Rule version differs from assessed candidate; reassess the changed rule before recording verification')
-    test.id=store.identity('test:'+uid('test',scope_key(assessment),now(),test.model_dump_json()));test.recorded_at=now()
+    if matched and test.method!='analyst attestation' and test.control_version!=matched['source']['sha256']:
+        raise ValueError('Rule version differs from assessed candidate; reassess the changed rule before recording verification')
+    test.id=store.identity('test:'+uid('test',scope_key(assessment),now(),test.model_dump_json()))
+    test.recorded_at=now()
     record=test.model_dump()|{'context':assessment['context'],'document_id':assessment['source']['id'],'assessment_id':assessment['id'],'dependencies':dependencies,'confirmed_at':now()}
-    if vulnerability:record['vulnerability_asset_id']=vulnerability['asset']['logical_id']
-    store.put('test',test.id,record,immutable=True);store.event('test_executed',scope_key(assessment),record)
-    if test.baseline:store.event('baseline_assessed',scope_key(assessment),{'test_id':test.id,'confirmed_at':record['confirmed_at'],'original_execution_time':test.executed_at})
+    if vulnerability:
+        record['vulnerability_asset_id']=vulnerability['asset']['logical_id']
+    store.put('test',test.id,record,immutable=True)
+    store.event('test_executed',scope_key(assessment),record)
+    if test.baseline:
+        store.event('baseline_assessed',scope_key(assessment),{'test_id':test.id,'confirmed_at':record['confirmed_at'],'original_execution_time':test.executed_at})
     return record
 
 def improve(store,assessment,action,candidate_ref=None):
@@ -51,40 +65,59 @@ def _improve(store,assessment,action,candidate_ref):
     from . import defenses,vulnerabilities
     vulnerability=assessment.get('vulnerability')
     if vulnerability:
-        if any(not str(getattr(action,k)).strip() for k in ('owner','rationale','proposed_change','retest')):raise ValueError('Owner, rationale, implementation and retest plan are required')
-        if not action.remediation or not all(action.remediation.get(k) for k in ('review_date','residual_uncertainty','permanent_fix','source_references')):raise ValueError('Vulnerability action requires review date, uncertainty, permanent fix and source references')
+        if any(not str(getattr(action,k)).strip() for k in ('owner','rationale','proposed_change','retest')):
+            raise ValueError('Owner, rationale, implementation and retest plan are required')
+        if not action.remediation or not all(action.remediation.get(k) for k in ('review_date','residual_uncertainty','permanent_fix','source_references')):
+            raise ValueError('Vulnerability action requires review date, uncertainty, permanent fix and source references')
         datetime.strptime(action.remediation['review_date'],'%Y-%m-%d')
-        if action.behavior_id is not None or action.vulnerability_assessment_id!=assessment['id'] or candidate_ref:raise ValueError('Vulnerability action must reference its reviewed decision, not an invented behavior')
-    elif action.vulnerability_assessment_id or action.behavior_id not in {b['id'] for b in assessment['extraction']['behaviors']}:raise ValueError('Unknown behavior')
-    context=assessment['context'];origin_assessment=assessment['id']
+        if action.behavior_id is not None or action.vulnerability_assessment_id!=assessment['id'] or candidate_ref:
+            raise ValueError('Vulnerability action must reference its reviewed decision, not an invented behavior')
+    elif action.vulnerability_assessment_id or action.behavior_id not in {b['id'] for b in assessment['extraction']['behaviors']}:
+        raise ValueError('Unknown behavior')
+    context=assessment['context']
+    origin_assessment=assessment['id']
     if action.id:
         old=store.get('improvement',action.id)
-        if old['scope']!=scope_key(assessment):raise ValueError('Improvement customer/environment mismatch')
-        if candidate_ref:raise ValueError('Existing action cannot acquire a new candidate origin')
-        if old.get('origin') and (old['origin']['assessment_id']!=assessment['id'] or old['behavior_id']!=action.behavior_id):raise ValueError('Frozen defense action assessment/behavior mismatch')
-        if action.origin is not None and action.origin!=old.get('origin'):raise ValueError('Improvement origin cannot be altered')
-        action.origin=old.get('origin');context=old['context'];origin_assessment=old.get('assessment_id',assessment['id'])
+        if old['scope']!=scope_key(assessment):
+            raise ValueError('Improvement customer/environment mismatch')
+        if candidate_ref:
+            raise ValueError('Existing action cannot acquire a new candidate origin')
+        if old.get('origin') and (old['origin']['assessment_id']!=assessment['id'] or old['behavior_id']!=action.behavior_id):
+            raise ValueError('Frozen defense action assessment/behavior mismatch')
+        if action.origin is not None and action.origin!=old.get('origin'):
+            raise ValueError('Improvement origin cannot be altered')
+        action.origin=old.get('origin')
+        context=old['context']
+        origin_assessment=old.get('assessment_id',assessment['id'])
         action.opened_at=old['opened_at']
         action.deployed_at=old.get('deployed_at') or action.deployed_at
     else:
-        if action.origin is not None:raise ValueError('Client-supplied origin is not trusted; select a stored candidate')
+        if action.origin is not None:
+            raise ValueError('Client-supplied origin is not trusted; select a stored candidate')
         if vulnerability:
             action.origin=vulnerabilities.action_origin(store,assessment)
             action.id=uid('improvement',action.origin['review_id'],action.origin['asset_logical_id'])
             prior=store.maybe('improvement',action.id)
-            if prior:return prior
-            if action.status!='open' or action.deployed_at:raise ValueError('New vulnerability action must start open and undeployed')
+            if prior:
+                return prior
+            if action.status!='open' or action.deployed_at:
+                raise ValueError('New vulnerability action must start open and undeployed')
         elif candidate_ref:
             action.origin=defenses.resolve_origin(store,assessment,action.behavior_id,candidate_ref)
             action.id=uid('improvement',assessment['id'],context['customer_id'],context['environment_id'],action.behavior_id,action.origin['d3fend_id'])
             prior=store.maybe('improvement',action.id)
-            if prior:return prior
-            if action.status!='open' or action.deployed_at:raise ValueError('New candidate improvement must start open and undeployed')
-        else:action.id=store.identity('improvement:'+scope_key(assessment)+':'+now())
+            if prior:
+                return prior
+            if action.status!='open' or action.deployed_at:
+                raise ValueError('New candidate improvement must start open and undeployed')
+        else:
+            action.id=store.identity('improvement:'+scope_key(assessment)+':'+now())
         action.opened_at=now()
-    if action.status=='deployed' and not action.deployed_at:action.deployed_at=now()
+    if action.status=='deployed' and not action.deployed_at:
+        action.deployed_at=now()
     row=action.model_dump()|{'context':context,'scope':scope_key(assessment),'assessment_id':origin_assessment}
-    store.put('improvement',action.id,row);store.event('improvement_'+action.status.replace(' ','_'),scope_key(assessment),row)
+    store.put('improvement',action.id,row)
+    store.event('improvement_'+action.status.replace(' ','_'),scope_key(assessment),row)
     return row
 
 def view(store,assessment):
@@ -93,30 +126,48 @@ def view(store,assessment):
     # persisted assessment, including when a CLI caller supplies a package.
     if assessment.get('assessment_id'):
         assessment=store.get('assessment',assessment['assessment_id'])
-    scope=scope_key(assessment);c=assessment['context'];rows=copy.deepcopy(assessment['coverage'])
+    scope=scope_key(assessment)
+    c=assessment['context']
+    rows=copy.deepcopy(assessment['coverage'])
     tests=[t for t in store.all('test') if t['document_id']==assessment['source']['id'] and t['context']['customer_id']==c['customer_id'] and t['context']['environment_id']==c['environment_id']]
-    current=store.get('customer',c['customer_id']);env=next((e for e in current['environments'] if e['id']==c['environment_id']),None)
+    current=store.get('customer',c['customer_id'])
+    env=next((e for e in current['environments'] if e['id']==c['environment_id']),None)
     receipt=store.get('customer_receipt',uid('receipt',c['customer_id'],assessment['source']['id']))['at']
     ingestion=store.get('source_ingestion',assessment['source']['id'])['at']
-    verified_detection=None;verified_prevention=None
+    verified_detection=None
+    verified_prevention=None
     for t in tests:
         reasons=[]
-        if t['dependencies']!=dependency(assessment,t['behavior_id']):reasons.append('Source/extraction/profile/rule dependency changed')
-        if current['version']!=c['customer_version'] or not env or env['version']!=c['environment_version']:reasons.append('Current customer/environment has a newer version')
-        if datetime.now(timezone.utc)-dt(t['executed_at'])>timedelta(days=FRESHNESS_DAYS):reasons.append('Evidence older than 30-day freshness policy')
-        t['stale']=bool(reasons);t['stale_reasons']=reasons
+        if t['dependencies']!=dependency(assessment,t['behavior_id']):
+            reasons.append('Source/extraction/profile/rule dependency changed')
+        if current['version']!=c['customer_version'] or not env or env['version']!=c['environment_version']:
+            reasons.append('Current customer/environment has a newer version')
+        if datetime.now(timezone.utc)-dt(t['executed_at'])>timedelta(days=FRESHNESS_DAYS):
+            reasons.append('Evidence older than 30-day freshness policy')
+        t['stale']=bool(reasons)
+        t['stale_reasons']=reasons
         row=next((r for r in rows if r['behavior_id']==t['behavior_id']),None)
-        if not row:continue
-        if t['method']=='synthetic log match':row['synthetic_result']='stale' if reasons else t['result'];continue
-        if t['method']=='analyst attestation':row.setdefault('attestations',[]).append(t['id']);continue
+        if not row:
+            continue
+        if t['method']=='synthetic log match':
+            row['synthetic_result']='stale' if reasons else t['result']
+            continue
+        if t['method']=='analyst attestation':
+            row.setdefault('attestations',[]).append(t['id'])
+            continue
         dim={'telemetry':'telemetry_readiness','detection':'detection_test','prevention':'prevention_test','soc_acknowledged':'soc_response','soc_response':'soc_response','deployment':'deployment'}[t['dimension']]
-        label='stale' if reasons else t['result'];evidence_scope='live' if any(e['kind']=='live system' for e in t['evidence']) else 'lab'
+        label='stale' if reasons else t['result']
+        evidence_scope='live' if any(e['kind']=='live system' for e in t['evidence']) else 'lab'
         row[dim]=label+' ('+evidence_scope+')'
         if not reasons and t['result']=='passed':
-            if t['baseline'] and t['control_deployed_at'] and dt(t['control_deployed_at'])<=dt(receipt):row['coverage_classification']='existing coverage confirmed after receipt'
-            elif t['improvement_id'] and t['control_deployed_at'] and dt(t['control_deployed_at'])>=dt(receipt):row['coverage_classification']='coverage changed after gap; variant verified'
-            if t['dimension']=='detection' and evidence_scope=='live':verified_detection=t['confirmed_at'] if verified_detection is None else min(verified_detection,t['confirmed_at'])
-            if t['dimension']=='prevention' and evidence_scope=='live':verified_prevention=t['confirmed_at'] if verified_prevention is None else min(verified_prevention,t['confirmed_at'])
+            if t['baseline'] and t['control_deployed_at'] and dt(t['control_deployed_at'])<=dt(receipt):
+                row['coverage_classification']='existing coverage confirmed after receipt'
+            elif t['improvement_id'] and t['control_deployed_at'] and dt(t['control_deployed_at'])>=dt(receipt):
+                row['coverage_classification']='coverage changed after gap; variant verified'
+            if t['dimension']=='detection' and evidence_scope=='live':
+                verified_detection=t['confirmed_at'] if verified_detection is None else min(verified_detection,t['confirmed_at'])
+            if t['dimension']=='prevention' and evidence_scope=='live':
+                verified_prevention=t['confirmed_at'] if verified_prevention is None else min(verified_prevention,t['confirmed_at'])
     counts={k:sum(r['applicability']==k for r in rows) for k in ['applicable','unknown','not applicable']}
     counts.update({'failed':sum('failed' in r['detection_test'] or r['synthetic_result']=='failed' for r in rows),'untested':sum(r['detection_test']=='not tested' for r in rows),'stale':sum('stale' in r['detection_test'] or r['synthetic_result']=='stale' for r in rows),'live_detection_passed':sum(r['detection_test']=='passed (live)' and r['applicability']=='applicable' for r in rows)})
     packages=[p for p in store.all('package') if p['source']['id']==assessment['source']['id'] and p['context']['customer_id']==c['customer_id'] and p['context']['environment_id']==c['environment_id']]

@@ -13,9 +13,13 @@ s=Service(Store(ROOT/'runtime/attack-flow-smoke'))
 job=s.submit('fictional-bank','windows-ad','offline','path',str(ROOT/'fixtures/attack-flow-sequence.md'),background=False)
 assert job['state']=='complete',job
 original=s.store.get('assessment',job['data']['assessment_id'])
-source=SourceDocument.model_validate(original['source']);ex=Extraction.model_validate(original['extraction'])
-lookup={b.key:b for b in ex.behaviors};span=next(x for x in source.spans if 'After the CertUtil download' in x.text)
-ex.id=uid('extraction',source.revision_id,'authored-sequence-1');ex.mode='analyst-curated';ex.provider='developer-curated browser fixture; not owner reviewed'
+source=SourceDocument.model_validate(original['source'])
+ex=Extraction.model_validate(original['extraction'])
+lookup={b.key:b for b in ex.behaviors}
+span=next(x for x in source.spans if 'After the CertUtil download' in x.text)
+ex.id=uid('extraction',source.revision_id,'authored-sequence-1')
+ex.mode='analyst-curated'
+ex.provider='developer-curated browser fixture; not owner reviewed'
 ex.relationships=[EntityRelationship(id=uid('relationship',ex.id,'precedes'),source_ref=lookup['certutil'].id,target_ref=lookup['remote_service'].id,relationship='precedes',text='The authored source places the CertUtil download before the remote service action.',evidence=[span.id],confidence_rationale='Explicit After wording in the independently authored fixture; temporal, not causal.')]
 s.store.put('extraction',ex.id,ex.model_dump(),immutable=True)
 a=s.assess(source,ex,Context.model_validate(original['context']))

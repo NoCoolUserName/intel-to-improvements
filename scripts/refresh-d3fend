@@ -72,7 +72,8 @@ def main():
         'domain': 'enterprise-attack', 'ordering': 'D3FEND ID ascending; no suitability ranking'}
     data = {'schema_version':'1.0','provenance':provenance,'supported_ids':supported,'mappings':mappings,'techniques':techniques}
     content = (json.dumps(data,ensure_ascii=False,sort_keys=True,indent=2)+'\n').encode()
-    out = ROOT/'catalogs/d3fend';out.mkdir(exist_ok=True)
+    out = ROOT/'catalogs/d3fend'
+    out.mkdir(exist_ok=True)
     (out/'catalog.json').write_bytes(content)
     (out/'pin.json').write_text(json.dumps({'sha256':hashlib.sha256(content).hexdigest(),'revision':pin['revision'],
         'transformation_version':VERSION,'techniques':len(techniques),'mapped_attack_ids':len(mappings)},indent=2)+'\n')
