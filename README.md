@@ -60,7 +60,7 @@ To refresh an existing Mac installation after pulling the repository, run `./scr
 
 ## Appearance
 
-Use the **Appearance** dropdown in the top bar on any page: **Original · Forest** keeps the existing design, **Ocean** uses navy/blue on light surfaces, and **Midnight** uses charcoal/violet/teal. Your choice is remembered in this browser and applies to tables, forms, drawers, and status labels. It is independent of customer selection. See [theme sources and accessibility checks](docs/THEMES.md).
+Use the **Appearance** dropdown directly beneath **Customer Profiles** in the sidebar on any page. Choose from four themes: **Original · Forest** keeps the existing design, **Ocean** uses navy/blue on light surfaces, **Midnight** uses charcoal/violet/teal, and **Golden Ledger** uses yellow navigation and actions, warm white surfaces, charcoal text, green details and serif display headings. Your choice is remembered in this browser and applies to tables, forms, drawers, and status labels. It is independent of customer selection. See [theme sources and accessibility checks](docs/THEMES.md).
 
 ## Commands
 
