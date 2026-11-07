@@ -1,6 +1,7 @@
 /* Palettes adapted for an evidence workbench. Original CSS stays intact. */
 :root[data-theme="golden-ledger"] {
   color-scheme: light;
+  --sidebar-color-scheme: light;
   --page: #f7f5ef; --surface: #fffefa; --surface-soft: #f3f0e6;
   --surface-hover: #fff1b3; --border: #d9d4c3; --border-hover: #9b8434;
   --text: #292d27; --muted: #565b50; --accent: #f5c518; --accent-hover: #e4b612;
@@ -50,7 +51,7 @@
   & .sidebar { background: var(--sidebar); color: var(--sidebar-text); }
   & .brand strong { color: var(--text-on-sidebar, #fff); }
   & .brand-mark { background: var(--mark-bg); color: var(--mark-text); }
-  & .workspace-label, & .sidebar-footer small { color: var(--sidebar-muted); }
+  & .workspace-label, & .sidebar-footer small, & .sidebar .theme-control { color: var(--sidebar-muted); }
   & .sidebar nav button { color: var(--sidebar-text); background: transparent; }
   & .sidebar nav button:hover { background: var(--sidebar-hover); }
   & .sidebar nav button.active { background: var(--sidebar-active); color: #fff; box-shadow: inset 3px 0 var(--highlight); }
@@ -93,17 +94,23 @@
   & select:focus-visible, & textarea:focus-visible { outline-color: var(--focus); }
 }
 .topbar-actions { display: flex; align-items: center; gap: 20px; }
-.theme-control { margin: 0; flex-shrink: 0; font-size: 9px; letter-spacing: 1.3px; }
-.theme-control select { width: 185px; font-size: 11px; letter-spacing: 0; margin-top: 4px; padding: 7px 25px 7px 9px; }
+.sidebar .theme-control { margin: 12px 12px 4px; color: #b9ccca; font-size: 9px; letter-spacing: 1.3px; }
+.theme-control select { width: 100%; min-width: 0; font-size: 11px; letter-spacing: 0; margin-top: 4px; padding: 7px 25px 7px 9px; }
+:root .sidebar .theme-control select,
+:root .sidebar .theme-control option {
+  background: var(--sidebar, #172e33);
+  color: var(--sidebar-text, #dbe7e4);
+  border-color: var(--sidebar-border, #365055);
+  color-scheme: var(--sidebar-color-scheme, dark);
+}
 @media (max-width: 1250px) { .context-meta { display: none; } }
 @media (max-width: 950px) {
   .topbar { height: auto; flex-wrap: wrap; gap: 12px; }
   .topbar-actions { margin-left: auto; }
 }
 @media (max-width: 760px) {
-  .topbar-actions { width: 100%; margin-left: 0; }
-  .theme-control { display: flex; align-items: center; gap: 12px; }
-  .theme-control select { margin-top: 0; }
+  .sidebar .sidebar-workspaces { overflow: visible; flex: none; }
+  .sidebar .theme-control { margin: 12px 0 0; max-width: 240px; }
 }
 .casebar .test-case-control { min-width: 0; flex: 0 0 auto; font-size: 11px; letter-spacing: 0; }
 

@@ -1,6 +1,6 @@
 # Workbench themes
 
-The **Appearance** dropdown in the main top bar offers:
+The **Appearance** dropdown directly beneath **Customer Profiles** in the sidebar offers:
 
 - **Original · Forest**: the original layout and palette, selected by default.
 - **Ocean**: light surfaces, navy navigation, blue actions and cyan highlights.
