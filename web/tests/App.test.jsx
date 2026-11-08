@@ -57,13 +57,14 @@ function respond(input) {
     case '/api/improvements/cloud-action': return !bank?json(actionRow(false)):json({detail:'Not found in this scope'},404);
     case '/api/assessments': return json(bank ? [bankCase] : [cloudCase]);
     case '/api/packages': return json(bank ? [bankPackage] : []);
-    case '/api/jobs': case '/api/overrides': return json([]);
+    case '/api/jobs': case '/api/overrides': case '/api/gmail/imports': return json([]);
     case '/api/ledger/bank-case': case '/api/ledger/cloud-case':
       return json({counts: {}, metrics: {}, improvements: [], tests: [], history: []});
     default: throw new Error(`Unexpected API request: ${url.pathname}`);
   }
 }
 beforeEach(() => {
+  vi.stubGlobal('ResizeObserver',class {observe(){} disconnect(){}});
   localStorage.clear();
   history.replaceState(null,'','/');
   document.head.innerHTML = '<meta name="theme-color" content="#152d31">';
@@ -299,7 +300,7 @@ it('opens an existing scoped action in its original case workflow and continues 
   await user.click(within(drawer).getByRole('button',{name:'Close drawer'}));
   await user.click(screen.getByRole('button',{name:'Open case hunts'}));
   expect(screen.getByRole('heading',{name:'Hunts',exact:true})).toBeTruthy();
-  expect(screen.getByRole('combobox',{name:'Working case'}).value).toBe('bank-case');
+  expect(within(screen.getByRole('group',{name:'Selected hunts case'})).getByText('Bank investigation')).toBeTruthy();
 });
 
 it('restores direct nested action links in their explicit scope without fetching the previous customer ledger',async()=>{
@@ -424,4 +425,31 @@ it('opens a saved package without generation and keeps generation explicit in ex
  await user.click(screen.getByRole('button',{name:'Open existing package'}));
  expect(screen.queryByText('Package generated and export validation recorded.')).toBeNull();
  expect(vi.mocked(fetch).mock.calls.filter(([url])=>String(url).endsWith('/generate'))).toHaveLength(1);
+});
+
+it.each([['hunts','Hunts','Selected hunts case'],['purple-team','Purple Team','Selected purple team case']])('keeps %s case context read-only and preserves scope through Change case',async(slug,label,group)=>{
+ history.replaceState(null,'',`/#/${slug}?customer=fictional-bank&environment=windows-ad&assessment=bank-case`);
+ const user=userEvent.setup();render(<App/>);
+ const context=await screen.findByRole('group',{name:group});
+ await within(context).findByText('Bank investigation');
+ expect(screen.queryByRole('combobox',{name:'Working case'})).toBeNull();
+ expect(within(document.querySelector('.page-heading')).queryByRole('button',{name:'Add intelligence',exact:true})).toBeNull();
+ const change=within(context).getByRole('link',{name:'Change case'});
+ expect(change.getAttribute('href')).toContain('assessment=bank-case');expect(change.getAttribute('href')).toContain('environment=windows-ad');
+ await user.click(change);
+ await screen.findByRole('heading',{name:'Cases & Analysis',exact:true});
+ expect(screen.getByRole('combobox',{name:'Working case'}).value).toBe('bank-case');
+ expect(location.hash).toContain('environment=windows-ad');expect(location.hash).toContain('customer=fictional-bank');
+});
+
+it('keeps the page-header intake shortcut only on Add Intelligence',async()=>{
+ const {user}=await mount();
+ const heading=()=>within(document.querySelector('.page-heading'));
+ expect(heading().queryByRole('button',{name:'Add intelligence',exact:true})).toBeNull();
+ const nav=within(screen.getByRole('navigation',{name:'Workbench navigation'}));
+ await user.click(nav.getByRole('button',{name:'Add Intelligence',exact:true}));
+ expect(heading().getByRole('button',{name:'Add intelligence',exact:true})).toBeTruthy();
+ await user.click(nav.getByRole('button',{name:'Cases & Analysis',exact:true}));
+ expect(heading().queryByRole('button',{name:'Add intelligence',exact:true})).toBeNull();
+ expect(nav.getByRole('button',{name:'Add Intelligence',exact:true})).toBeTruthy();
 });
