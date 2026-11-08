@@ -72,7 +72,7 @@ afterEach(() => {cleanup(); vi.unstubAllGlobals(); vi.restoreAllMocks();});
 async function mount() {
   const user = userEvent.setup();
   const view = render(<App/>);
-  await screen.findByRole('option', {name: 'Fictional Cloud'});
+  await screen.findByRole('option', {name: 'Mac Cloud'});
   await waitFor(() => expect(screen.getByRole('combobox', {name: 'Working case'}).value).toBe('bank-case'));
   return {user, ...view};
 }
@@ -95,9 +95,9 @@ it('keeps the chosen theme across customer changes and a remount', async () => {
     expect(document.documentElement.dataset.theme).toBe(value);
     expect(localStorage.getItem('iti.appearance.theme')).toBe(value);
   }
-  await user.selectOptions(screen.getByRole('combobox', {name: 'Active customer'}), 'fictional-cloud');
+  await user.selectOptions(screen.getByRole('combobox', {name: 'Active environment'}), 'fictional-cloud:mac-cloud');
   await waitFor(() => expect(screen.getByRole('combobox', {name: 'Working case'}).value).toBe('cloud-case'));
-  expect(screen.getByRole('combobox', {name: 'Active environment'}).value).toBe('mac-cloud');
+  expect(screen.getByRole('combobox', {name: 'Active environment'}).value).toBe('fictional-cloud:mac-cloud');
   expect(document.documentElement.dataset.theme).toBe('dropzone');
   expect(screen.getByRole('combobox', {name: 'Color theme'}).value).toBe('dropzone');
   unmount(); render(<App/>);
@@ -121,7 +121,7 @@ it('scopes STIX, MISP and ZIP links and clears them when switching customers', a
     const link = screen.getByRole('link', {name: label});
     expect(link.getAttribute('href')).toBe(`/api/artifacts/bank-package/${name}?customer_id=fictional-bank&environment_id=windows-ad`);
   }
-  await user.selectOptions(screen.getByRole('combobox', {name: 'Active customer'}), 'fictional-cloud');
+  await user.selectOptions(screen.getByRole('combobox', {name: 'Active environment'}), 'fictional-cloud:mac-cloud');
   await screen.findByText('Generate a package to validate and download exports.');
   expect(screen.queryByRole('link', {name: 'Download ZIP'})).toBeNull();
 });
@@ -152,8 +152,8 @@ it('ignores a late investigation response for the previous customer', async () =
     return respond(input);
   });
   const user = userEvent.setup(); render(<App/>);
-  await screen.findByRole('option', {name: 'Fictional Cloud'});
-  await user.selectOptions(screen.getByRole('combobox', {name: 'Active customer'}), 'fictional-cloud');
+  await screen.findByRole('option', {name: 'Mac Cloud'});
+  await user.selectOptions(screen.getByRole('combobox', {name: 'Active environment'}), 'fictional-cloud:mac-cloud');
   await waitFor(() => expect(screen.getByRole('combobox', {name: 'Working case'}).value).toBe('cloud-case'));
   await act(async () => {releaseBank();});
   expect(screen.getByRole('combobox', {name: 'Working case'}).value).toBe('cloud-case');
@@ -235,7 +235,7 @@ it('closes a candidate form on customer change and ignores the previous catalog 
   withDefenses();const {user}=await mount();
   await user.click(screen.getByRole('button',{name:'Bank investigation behavior'}));
   await user.click(await screen.findByRole('button',{name:'Create improvement for D3-APCA'}));
-  await user.selectOptions(screen.getByRole('combobox',{name:'Active customer'}),'fictional-cloud');
+  await user.selectOptions(screen.getByRole('combobox',{name:'Active environment'}),'fictional-cloud:mac-cloud');
   await screen.findByRole('button',{name:'Cloud investigation behavior'});
   expect(screen.queryByRole('button',{name:'Record improvement'})).toBeNull();
   expect(screen.queryByText('D3-APCA')).toBeNull();
@@ -244,7 +244,7 @@ it('does not render a delayed catalog result after customer switching',async()=>
   let release;
   fetch.mockImplementation(async input=>String(input).includes('/bank-case/defenses')?new Promise(resolve=>{release=()=>resolve(json(defenseFixture()));}):respond(input));
   const {user}=await mount();await waitFor(()=>expect(release).toBeTypeOf('function'));
-  await user.selectOptions(screen.getByRole('combobox',{name:'Active customer'}),'fictional-cloud');
+  await user.selectOptions(screen.getByRole('combobox',{name:'Active environment'}),'fictional-cloud:mac-cloud');
   await user.click(await screen.findByRole('button',{name:'Cloud investigation behavior'}));
   await act(async()=>release());
   expect(screen.queryByRole('button',{name:'Create improvement for D3-APCA'})).toBeNull();
@@ -267,7 +267,7 @@ it('integrates Application Findings with selected scope without requiring a CTI 
   await user.click(screen.getByRole('button', {name:'Application Findings',exact:true}));
   await screen.findByText('No application findings in this scope.');
   expect(screen.queryByRole('combobox',{name:'Working case'})).toBeNull();
-  await user.selectOptions(screen.getByRole('combobox',{name:'Active customer'}),'fictional-cloud');
+  await user.selectOptions(screen.getByRole('combobox',{name:'Active environment'}),'fictional-cloud:mac-cloud');
   await waitFor(()=>expect(vi.mocked(fetch).mock.calls.some(([url])=>String(url)==='/api/application-findings?customer_id=fictional-cloud&environment_id=mac-cloud')).toBe(true));
 });
 
@@ -282,7 +282,7 @@ it('opens an existing scoped action in its original case workflow and continues 
   const drawer=screen.getByRole('complementary',{name:'Evidence and detail drawer'});
   expect(within(drawer).getByText('Improve Bank defense')).toBeTruthy();
   expect(within(drawer).getByRole('button',{name:'Edit improvement'})).toBeTruthy();
-  expect(screen.getByRole('combobox',{name:'Active customer'}).value).toBe('fictional-bank');
+  expect(screen.getByRole('combobox',{name:'Active environment'}).value).toBe('fictional-bank:windows-ad');
   await user.click(within(drawer).getByRole('button',{name:'Close drawer'}));
   await user.click(screen.getByRole('button',{name:'Open case hunts'}));
   expect(screen.getByRole('heading',{name:'Hunts',exact:true})).toBeTruthy();
@@ -292,8 +292,8 @@ it('opens an existing scoped action in its original case workflow and continues 
 it('restores direct nested action links in their explicit scope without fetching the previous customer ledger',async()=>{
   history.replaceState(null,'','/#/improvement-actions/cloud-action?customer=fictional-cloud&environment=mac-cloud');
   render(<App/>);await screen.findByRole('heading',{name:'Improvement action',exact:true});
-  expect(screen.getByRole('combobox',{name:'Active customer'}).value).toBe('fictional-cloud');
-  expect(screen.getByRole('combobox',{name:'Active environment'}).value).toBe('mac-cloud');
+  expect(screen.getByRole('combobox',{name:'Active environment'}).value).toBe('fictional-cloud:mac-cloud');
+  expect(screen.getByRole('combobox',{name:'Active environment'}).value).toBe('fictional-cloud:mac-cloud');
   expect(screen.getByRole('button',{name:'Improvement Actions',exact:true}).getAttribute('aria-current')).toBe('page');
   const calls=fetch.mock.calls.filter(([input])=>String(input).startsWith('/api/improvements'));
   expect(calls.every(([input])=>String(input).includes('customer_id=fictional-cloud&environment_id=mac-cloud'))).toBe(true);
@@ -304,4 +304,25 @@ it('keeps the renamed parent workspace active for direct and nested legacy case 
   history.replaceState(null,'','/#/case-overview/revision-a?customer=fictional-bank&environment=windows-ad');
   render(<App/>);await screen.findByRole('heading',{name:'Cases & Analysis',exact:true});
   expect(within(screen.getByRole('navigation',{name:'Workbench navigation'})).getByRole('button',{name:'Cases & Analysis',exact:true}).getAttribute('aria-current')).toBe('page');
+});
+
+it('saves a fictional company independently of the sector choice',async()=>{
+  let company={name:'Northstar Bank',sector:'finance'};
+  const calls=[];
+  vi.stubGlobal('fetch',vi.fn(async(input,options)=>{
+    if(String(input)==='/api/company-profile'){
+      company=JSON.parse(options.body);calls.push(company);return json(company);
+    }
+    if(String(input)==='/api/bootstrap')return json({...bootstrap,company,company_customer_ids:[company.name==='Cedar Cloud'?'fictional-cloud':'fictional-bank']});
+    return respond(input);
+  }));
+  const user=userEvent.setup();render(<App/>);
+  await waitFor(()=>expect(screen.getByRole('combobox',{name:'Working case'}).value).toBe('bank-case'));
+  await user.click(screen.getByRole('button',{name:'Customer Profiles',exact:true}));
+  await user.selectOptions(screen.getByRole('combobox',{name:'Fictional Company'}),'Cedar Cloud');
+  await user.selectOptions(screen.getByRole('combobox',{name:'Primary sector'}),'finance');
+  await user.click(screen.getByRole('button',{name:'Save company profile'}));
+  await waitFor(()=>expect(calls).toEqual([{name:'Cedar Cloud',sector:'finance'}]));
+  await waitFor(()=>expect(screen.getByRole('combobox',{name:'Active environment'}).value).toBe('fictional-cloud:mac-cloud'));
+  expect(screen.queryByRole('combobox',{name:'Active customer'})).toBeNull();
 });

@@ -224,7 +224,7 @@ npm --prefix web run build
 
 ## Exposure Overview
 
-The **Exposure Overview** dashboard shows saved cases, outstanding exposures and corrective work across all customers and environments. It refreshes every ten seconds while visible and when you return to the tab. Filter by customer, search case titles, or open a case, findings, infrastructure or actions in its original scope.
+The **Exposure Overview** dashboard shows saved cases, outstanding exposures and corrective work for the fictional company selected in Customer Profiles. It refreshes every ten seconds while visible and when you return to the tab. Filter by environment, search case titles, or open a case, findings, infrastructure or actions in its original scope.
 
 Case counts use the latest assessment per source and environment. Exposure totals retain the existing evidence qualification rules; open action totals use recorded status. Synthetic examples are labeled. Historical assessment revisions do not inflate case totals. See [dashboard definitions](docs/EXPOSURE_MANAGEMENT_DASHBOARD.md).
 

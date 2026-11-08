@@ -32,7 +32,9 @@ Use a fresh **new** directory for a new initial-state rehearsal; do not erase an
 
 ## Script for the meeting with Steve
 
-**Start on Exposure Overview (30 seconds).** “Steve, I want to show how I can take an advisory through to accountable work and evidence. This dashboard brings together all saved cases. I can see outstanding exposure, open actions and work waiting for retest. These are demonstration records, not a claim about your estate.”
+**Before the meeting:** open Customer Profiles, select **Harborlight Capital**, choose the sector and save. This brings the PHP2Shell and Brotli environments into the company dashboard.
+
+**Start on Exposure Overview (30 seconds).** “Steve, I want to show how I can take an advisory through to accountable work and evidence. This dashboard brings together the selected company’s saved cases. I can see outstanding exposure, open actions and work waiting for retest. These are demonstration records, not a claim about your estate.”
 
 **Open the Brotli case from the case list (45 seconds).** “I can trace this case back to its source material. I keep the published vulnerability information separate from the fictional assets and analyst assumptions used in this demonstration.”
 

@@ -1,6 +1,6 @@
 # Exposure Overview
 
-Exposure Overview is a system dashboard across all saved cases and customer environments. It shows four headline totals, open work by customer, items needing attention, a searchable case list and environment summaries. The dashboard filter defaults to **All customers**. Case and environment links open the existing workflow in its saved scope.
+Exposure Overview shows records associated with the fictional company selected in Customer Profiles. It shows four headline totals, Open work by environment, items needing attention, a searchable case list and environment summaries. The environment filter defaults to **All environments** for that company. Case and environment links open the existing workflow in its saved scope.
 
 Updates run every ten seconds while visible and on tab focus. Failed updates retain the last successful snapshot with a visible warning and automatic retry. There is no manual refresh or demo-loading box.
 
@@ -75,8 +75,8 @@ Reopened, stale, unresolved, missing/invalid milestone and incompatible-cohort r
 
 ## Dashboard walkthrough
 
-1. Open **Exposure Overview**. Confirm that the page says **All customers** and lists saved cases from different environments.
-2. Select a dashboard customer or search a case title. Open a case to inspect its saved assessment; return to the overview to see the full portfolio.
+1. Open **Exposure Overview**. Confirm that the page names the selected fictional company and lists its associated environments.
+2. Select an environment or search a case title. Open a case to inspect its saved assessment; return to the overview to see the full portfolio.
 3. Use the environment table to open findings, infrastructure or actions in that environment.
 4. Record a change in the existing workflow and return to the dashboard. It reloads on entry and then updates automatically.
 
@@ -105,3 +105,7 @@ Vulnerability Intelligence and Exposure Overview share a compact priority summar
 The overview also shows current AppSec/infrastructure evidence qualifications and case validation results using the existing ledger freshness rules. Case results retain their outcome dimension and live, lab, synthetic or attestation provenance. Failed and stale outcomes appear first. These subjects are not additional exposure counts. Links open the original case or finding in its customer/environment.
 
 An absent result is displayed as **No recorded validation**, with the existing owner retest plan and rationale where available. The current data model does not distinguish planned, blocked, or deliberately declined execution; the dashboard does not infer those decisions from silence or fabricate synthetic test results. For this demo, explain a blocker or decision not to test in the existing action rationale/retest plan. Those explanations do not establish successful validation. Existing synthetic passes, failures and inconclusive results remain labeled.
+
+## Fictional company selection
+
+In **Customer Profiles**, choose Juniper Software, Harborlight Capital, Northstar Bank or Cedar Cloud from **Fictional Company**, then choose **Primary sector** and save. The identity and sector are persisted together. Company choice selects the existing associated demo environments: Juniper includes its software, AppSec and leadership examples; Harborlight includes PHP2Shell and Brotli. The overview filters all case, action, priority and validation projections to that company. Its Open work chart groups by environment. The overview has no top customer/environment strip. Sector selection describes the demonstration; existing assessment snapshots retain their recorded context and are not silently reassessed.

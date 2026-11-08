@@ -25,3 +25,24 @@ def context(store,customer_id,environment_id):
     if not e:
         raise ValueError('Environment does not belong to selected customer')
     return Context(customer_id=c.id,customer_version=c.version,environment_id=e.id,environment_version=e.version,destination=c.misp_destination,customer_snapshot=c,environment_snapshot=e)
+
+
+COMPANY_NAMES = ('Juniper Software', 'Harborlight Capital', 'Northstar Bank', 'Cedar Cloud')
+
+
+def company(store):
+    return store.maybe('company_profile', 'workspace') or {'name': 'Northstar Bank', 'sector': 'financial-services'}
+
+
+def save_company(store, value):
+    from .models import SECTORS
+    if value.get('name') not in COMPANY_NAMES or value.get('sector') not in SECTORS:
+        raise ValueError('Choose a fictional company and an available sector')
+    saved = {'name': value['name'], 'sector': value['sector']}
+    store.put('company_profile', 'workspace', saved)
+    return saved
+
+
+def company_customer_ids(store):
+    name = company(store)['name']
+    return [c['id'] for c in store.all('customer') if c['name'].startswith(name)]

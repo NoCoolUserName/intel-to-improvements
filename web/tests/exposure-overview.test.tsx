@@ -11,7 +11,7 @@ it('shows system totals and cases, with no manual refresh or demo-loading box',a
  const fetcher=vi.fn(async()=>response(data));vi.stubGlobal('fetch',fetcher);render(<ExposureOverview onOpen={vi.fn()}/>);
  await screen.findByText('Brotli case');
  expect(fetcher.mock.calls[0][0]).toBe('/api/exposure-overview/portfolio');
- expect(screen.getByText('All customers · 2 environments')).toBeTruthy();
+ expect(screen.getByText('Fictional Company · 2 environments')).toBeTruthy();
  expect(screen.getByText('Synthetic example')).toBeTruthy();
  expect(screen.queryByRole('button',{name:/refresh|load synthetic/i})).toBeNull();
  expect(screen.queryByText('Exposure and accountable work')).toBeNull();
@@ -21,8 +21,8 @@ it('filters customers, searches cases and opens the correct scoped destination',
  await user.click(await screen.findByRole('button',{name:'Brotli case'}));
  expect(onOpen).toHaveBeenLastCalledWith('Case overview',{customer:'a',environment:'env',assessment:'case-a'});
  await user.type(screen.getByRole('searchbox',{name:'Find a case'}),'missing');expect(screen.queryByText('Brotli case')).toBeNull();
- await user.selectOptions(screen.getByRole('combobox',{name:'Dashboard customer'}),'b');
- const row=screen.getAllByRole('row').find(r=>r.textContent?.includes('Customer B'))!;
+ await user.selectOptions(screen.getByRole('combobox',{name:'Dashboard environment'}),'b:env');
+ const row=screen.getAllByRole('row').find(r=>r.textContent?.includes('Production'))!;
  await user.click(within(row).getByRole('button',{name:'Actions'}));expect(onOpen).toHaveBeenLastCalledWith('Improvement Actions',{customer:'b',environment:'env'});
 });
 it('updates automatically and retains the last snapshot if an update fails',async()=>{

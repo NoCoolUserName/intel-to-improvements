@@ -5,6 +5,8 @@ from .store import now
 
 
 def dashboard(store):
+    from .profiles import company
+    company_profile = company(store)
     customers = store.all('customer')
     assessments = store.all('assessment')
     actions = store.all('improvement')
@@ -95,8 +97,16 @@ def dashboard(store):
         if outcome:
             row.update(validation=outcome['outcome'], validation_current=True)
     validation.sort(key=lambda r: (0 if 'failed' in r['outcome'].lower() else 1 if 'stale' in r['outcome'].lower() or 'inconclusive' in r['outcome'].lower() else 2 if not r['recorded'] else 3, r['label']))
-    return dict(priorities=priorities, validation=validation, as_of=now(), scopes=list(scopes.values()), cases=sorted(cases, key=lambda c: c['updated_at'] or '', reverse=True),
-                revision_count=len(assessments), policy='One case per source and environment; latest assessment revision. Open action counts use recorded status. Exposure counts use the existing evidence review rules. Synthetic records are included and labeled.')
+    from .profiles import company_customer_ids
+    allowed = set(company_customer_ids(store))
+    scopes = {key: value for key, value in scopes.items() if key[0] in allowed}
+    cases = [r for r in cases if r['customer_id'] in allowed]
+    priorities = [r for r in priorities if r['customer_id'] in allowed]
+    validation = [r for r in validation if r['customer_id'] in allowed]
+    for scope in scopes.values():
+        scope['customer_name'] = company_profile['name']
+    return dict(company=company_profile, priorities=priorities, validation=validation, as_of=now(), scopes=list(scopes.values()), cases=sorted(cases, key=lambda c: c['updated_at'] or '', reverse=True),
+                revision_count=sum(a['context']['customer_id'] in allowed for a in assessments), policy='One case per source and environment; latest assessment revision. Open action counts use recorded status. Exposure counts use the existing evidence review rules. Synthetic records are included and labeled.')
 
 
 def priority_rows(decisions, reviews):

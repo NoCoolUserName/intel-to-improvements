@@ -114,7 +114,10 @@ def create_app(service=None):
                   'Prior-compromise investigation remains separate and inconclusive without sufficient retained telemetry.']
         return PlainTextResponse('\n'.join(lines)+'\n',media_type='text/markdown',headers={'Content-Disposition':'attachment; filename="brotli-scenario-summary.md"'})
     @app.get('/api/bootstrap')
-    def bootstrap():return {'customers':svc.store.all('customer'),'sectors':SECTORS,'templates':[profiles.WINDOWS.model_dump(),profiles.MAC.model_dump()],'cases':[{'id':'activemq-derived','title':'ActiveMQ → LockBit','description':'Limited attributed DFIR Report case · exact-content replay'},{'id':'no-ioc','title':'Zero IOCs','description':'Authored healthcare / shared technology case'},{'id':'insufficient','title':'Insufficient intelligence','description':'Authored nontechnical source; no justified emulation'},{'id':'held-out','title':'Held-out change case','description':'Authored negation / benign indicators fixture'}],'capabilities':readiness(svc.store)}
+    def bootstrap():return {'company':profiles.company(svc.store),'company_names':profiles.COMPANY_NAMES,'company_customer_ids':profiles.company_customer_ids(svc.store),'customers':svc.store.all('customer'),'sectors':SECTORS,'templates':[profiles.WINDOWS.model_dump(),profiles.MAC.model_dump()],'cases':[{'id':'activemq-derived','title':'ActiveMQ → LockBit','description':'Limited attributed DFIR Report case · exact-content replay'},{'id':'no-ioc','title':'Zero IOCs','description':'Authored healthcare / shared technology case'},{'id':'insufficient','title':'Insufficient intelligence','description':'Authored nontechnical source; no justified emulation'},{'id':'held-out','title':'Held-out change case','description':'Authored negation / benign indicators fixture'}],'capabilities':readiness(svc.store)}
+    @app.post('/api/company-profile')
+    def save_company(value:dict):
+        return profiles.save_company(svc.store,value)
     @app.post('/api/customers')
     def save_customer(c:CustomerProfile):
         saved=profiles.save(svc.store,c)

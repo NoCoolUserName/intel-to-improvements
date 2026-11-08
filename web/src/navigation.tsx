@@ -14,7 +14,7 @@ type WorkspaceItem={id:string;label:string;slug:string;icon:typeof Layers};
 export const WORKSPACES = NAV_GROUPS.flatMap<WorkspaceItem>(group=>[...group.items]);
 export function workspaceLabel(id:string){return WORKSPACES.find(item=>item.id===id)?.label||id}
 export const DESCRIPTIONS:Record<string,string>={
-  'Exposure Overview':'Track cases, exposure and corrective work across all customers and environments.',
+  'Exposure Overview':'Track cases, exposure and corrective work across the company’s cases and environments.',
   'Coverage':'Inspect intelligence assessment coverage, telemetry gaps and independent timing.',
   'Add Intelligence':'Bring in selected sources to understand adversary behavior and customer relevance.',
   'Case overview':'Trace source evidence, relevance and proposed behaviors into investigation and action.',
@@ -26,7 +26,7 @@ export const DESCRIPTIONS:Record<string,string>={
   'Purple team':'Plan human-led validation and preserve what each test actually establishes.',
   'Pipeline Assurance':'Inspect supplied configuration and execution; effectiveness remains a separate question.',
   'Evaluation':'Inspect the workbench’s analytical reliability and capability evidence.',
-  'Customer profiles':'Define customer priorities, environment scope, technologies and declared controls.',
+  'Customer profiles':'Choose the fictional company and sector for the demonstration.',
 };
 export type NavigationTarget={customer?:string;environment?:string;record?:string;assessment?:string};
 export function parseWorkspaceHash(hash:string){

@@ -30,7 +30,7 @@ afterEach(()=>{cleanup();vi.unstubAllGlobals();location.hash=''});
 it('does not fetch an old case after changing the customer selector',async()=>{
   const user=userEvent.setup();render(<App/>);
   await waitFor(()=>expect(requests.some(url=>url.includes('/api/ledger/brotli-assessment?customer_id=brotli'))).toBe(true));
-  await user.selectOptions(screen.getByRole('combobox',{name:'Active customer'}),'leadership');
+  await user.selectOptions(screen.getByRole('combobox',{name:'Active environment'}),'leadership:lab');
   await screen.findByText('Overview scope: leadership/lab');
   expect(requests.some(url=>url.includes('/api/ledger/brotli-assessment?customer_id=leadership'))).toBe(false);
   expect(screen.queryByRole('alert')).toBeNull();
@@ -55,7 +55,7 @@ it('ignores a late ledger error from the previous customer',async()=>{
     :originalFetch(input)));
   const user=userEvent.setup();render(<App/>);
   await waitFor(()=>expect(rejectLedger).toBeDefined());
-  await user.selectOptions(screen.getByRole('combobox',{name:'Active customer'}),'leadership');
+  await user.selectOptions(screen.getByRole('combobox',{name:'Active environment'}),'leadership:lab');
   await screen.findByText('Overview scope: leadership/lab');
   await act(async()=>{rejectLedger(new Error('Not found in selected customer/environment'))});
   expect(screen.queryByRole('alert')).toBeNull();
@@ -64,10 +64,10 @@ it('ignores a late ledger error from the previous customer',async()=>{
 
 it('keeps one of each demo card through repeated intake navigation and customer changes',async()=>{
   const user=userEvent.setup();render(<App/>);
-  await screen.findByRole('combobox',{name:'Active customer'});
+  await screen.findByRole('combobox',{name:'Active environment'});
   for(const customer of ['leadership','brotli','leadership','brotli']){
     await user.click(within(screen.getByRole('navigation',{name:'Workbench navigation'})).getByRole('button',{name:'Add Intelligence',exact:true}));
-    await user.selectOptions(screen.getByRole('combobox',{name:'Active customer'}),customer);
+    await user.selectOptions(screen.getByRole('combobox',{name:'Active environment'}),customer+':'+(customer==='brotli'?'estate':'lab'));
     expect(screen.getAllByRole('region',{name:'PHP2Shell working case'})).toHaveLength(1);
     expect(screen.getAllByRole('region',{name:'Brotli exposure working case'})).toHaveLength(1);
     await user.click(screen.getByRole('button',{name:'Pipeline Assurance',exact:true}));
