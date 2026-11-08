@@ -368,7 +368,8 @@ it('opens a working-case count as an open-only action list and preserves it whil
   }));
   const {user}=await mount();
   await user.click(screen.getByRole('button',{name:'Exposure Overview',exact:true}));
-  await user.click(await screen.findByRole('button',{name:/Bank investigation.*1 open actions/}));
+  await user.click(await screen.findByRole('button',{name:'Open Working Cases'}));
+  await user.click(screen.getByRole('button',{name:/Bank investigation.*1 open actions/}));
   await screen.findByText('Showing 1 open action.');expect(location.hash).toContain('work=open');
   expect(screen.queryByText('Closed fixture change')).toBeNull();
   await user.click(screen.getByRole('button',{name:'Inspect action bank-action'}));
