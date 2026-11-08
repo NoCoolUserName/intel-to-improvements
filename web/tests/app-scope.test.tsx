@@ -1,6 +1,6 @@
 import React from 'react';
 import {afterEach,beforeEach,expect,it,vi} from 'vitest';
-import {act,cleanup,render,screen,waitFor} from '@testing-library/react';
+import {act,cleanup,render,screen,waitFor,within} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../src/App';
 
@@ -11,7 +11,7 @@ const assessment={id:'brotli-assessment',context:{customer_id:'brotli',environme
 const boot={customers:[
   {id:'brotli',name:'Brotli customer',sector:'test',version:1,environments:[{id:'estate',name:'Brotli estate',version:1}]},
   {id:'leadership',name:'Leadership demo',sector:'test',version:1,environments:[{id:'lab',name:'Leadership lab',version:1}]},
-],sectors:{test:'Test'}};
+],sectors:{test:'Test'},cases:[]};
 const response=(value:unknown)=>new Response(JSON.stringify(value),{status:200});
 let requests:string[];
 beforeEach(()=>{
@@ -59,4 +59,19 @@ it('ignores a late ledger error from the previous customer',async()=>{
   await screen.findByText('Overview scope: leadership/lab');
   await act(async()=>{rejectLedger(new Error('Not found in selected customer/environment'))});
   expect(screen.queryByRole('alert')).toBeNull();
+});
+
+
+it('keeps one of each demo card through repeated intake navigation and customer changes',async()=>{
+  const user=userEvent.setup();render(<App/>);
+  await screen.findByRole('combobox',{name:'Active customer'});
+  for(const customer of ['leadership','brotli','leadership','brotli']){
+    await user.click(within(screen.getByRole('navigation',{name:'Workbench navigation'})).getByRole('button',{name:'Add Intelligence',exact:true}));
+    await user.selectOptions(screen.getByRole('combobox',{name:'Active customer'}),customer);
+    expect(screen.getAllByRole('region',{name:'PHP2Shell working case'})).toHaveLength(1);
+    expect(screen.getAllByRole('region',{name:'Brotli exposure working case'})).toHaveLength(1);
+    await user.click(screen.getByRole('button',{name:'Pipeline Assurance',exact:true}));
+    expect(screen.queryByRole('region',{name:'PHP2Shell working case'})).toBeNull();
+    expect(screen.queryByRole('region',{name:'Brotli exposure working case'})).toBeNull();
+  }
 });
