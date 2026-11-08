@@ -1,45 +1,40 @@
 import React from 'react';
 import {afterEach,expect,it,vi} from 'vitest';
-import {render,screen,cleanup,waitFor} from '@testing-library/react';
+import {act,render,screen,cleanup,waitFor,within} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ExposureOverview from '../src/ExposureOverview';
-const row={id:'app:1',entity:'exposure',origin:'AppSec',label:'<script>alert(1)</script>',owner:'Unassigned',status:'Needs review',verification:'Pending / no qualifying evidence',environment_id:'e',synthetic:true,source_ids:['immutable-source'],reference:{finding_id:'f'},age_days:null,overdue_days:null};
-const action={...row,id:'action:1',entity:'action',label:'Owned action',owner:'Engineering',status:'open',overdue_days:2,age_days:8};
-const data={context:{customer_id:'c',environment_id:'e'},as_of:'2026-10-26T00:00:00Z',synthetic_present:true,caveat:'Local records only',evidence_policy:'Qualified supplied evidence only',raw_appsec_occurrences:3,rows:[row,action],metrics:[{id:'appsec',label:'Current logical AppSec findings',value:1,record_ids:[row.id],population_count:1,population:'exposure',definition:'Latest logical occurrence; historical imports excluded',exclusions:'Historical rows excluded'}],timing:[{cohort:'Operational infrastructure',sample_count:0,median_seconds:null,record_ids:[],definition:'Only qualifying outcomes',unavailable_reason:'No eligible current resolved records'}]};
+const scope={customer_id:'a',environment_id:'env',customer_name:'Customer A',environment_name:'Production',cases:1,open_actions:2,unassigned_actions:1,retest_actions:1,outstanding:3,overdue:1,needs_review:2,appsec:2,affected:1,error:null};
+const data={as_of:'2026-11-08T20:00:00Z',scopes:[scope,{...scope,customer_id:'b',customer_name:'Customer B',cases:0,open_actions:0}],cases:[{id:'case-a',customer_id:'a',environment_id:'env',title:'Brotli case',relevance:'High',updated_at:'2026-11-07T20:00:00Z',synthetic:true,open_actions:2}],revision_count:4,policy:'Latest revision per source and environment.'};
 const response=(v:unknown,status=200)=>new Response(JSON.stringify(v),{status});
-afterEach(()=>{cleanup();vi.unstubAllGlobals()});
-function mount(extra:any={}){const onInspect=vi.fn(),onDemo=vi.fn();return {...render(<ExposureOverview customer="c" environment="e" onInspect={onInspect} onDemo={onDemo} {...extra}/>),onInspect,onDemo}}
-it('loads scoped backend data, reconciles metric drilldown and exposes definitions safely',async()=>{
- const fetcher=vi.fn(async()=>response(data));vi.stubGlobal('fetch',fetcher);const user=userEvent.setup();const {container,onInspect}=mount();
- expect(screen.getByRole('status').textContent).toContain('Loading');
- await user.click(await screen.findByRole('button',{name:'Current logical AppSec findings: 1'}));
- expect(fetcher.mock.calls[0][0]).toContain('customer_id=c&environment_id=e');
- expect(screen.getByRole('status').textContent).toContain('1 matching records');
- await user.click(screen.getByText('Definition: Current logical AppSec findings'));
- expect(screen.getByText(/Latest logical occurrence/)).toBeTruthy();
- expect(screen.getByText(/Not available/)).toBeTruthy();expect(container.querySelector('script,img')).toBeNull();
- await user.click(screen.getByRole('button',{name:'Inspect '+row.label}));expect(onInspect).toHaveBeenCalledWith(row);
+afterEach(()=>{cleanup();vi.unstubAllGlobals();vi.useRealTimers()});
+it('shows system totals and cases, with no manual refresh or demo-loading box',async()=>{
+ const fetcher=vi.fn(async()=>response(data));vi.stubGlobal('fetch',fetcher);render(<ExposureOverview onOpen={vi.fn()}/>);
+ await screen.findByText('Brotli case');
+ expect(fetcher.mock.calls[0][0]).toBe('/api/exposure-overview/portfolio');
+ expect(screen.getByText('All customers · 2 environments')).toBeTruthy();
+ expect(screen.getByText('Synthetic example')).toBeTruthy();
+ expect(screen.queryByRole('button',{name:/refresh|load synthetic/i})).toBeNull();
+ expect(screen.queryByText('Exposure and accountable work')).toBeNull();
 });
-it('filters ownership, overdue and classification; keyboard controls remain usable',async()=>{
- vi.stubGlobal('fetch',vi.fn(async()=>response(data)));const user=userEvent.setup();mount();await screen.findByText(/2 matching records/);
- await user.selectOptions(screen.getByLabelText('Owner / team'),'Engineering');expect(screen.getByRole('status').textContent).toContain('1 matching records');
- await user.click(screen.getByLabelText('Overdue actions only'));expect(screen.getByRole('status').textContent).toContain('1 matching records');
- await user.selectOptions(screen.getByLabelText('Data classification'),'other');expect(screen.getByRole('status').textContent).toContain('0 matching records');
- screen.getByLabelText('Data classification').focus();await user.tab();expect(document.activeElement).toBe(screen.getByLabelText('Sort records'));
+it('filters customers, searches cases and opens the correct scoped destination',async()=>{
+ vi.stubGlobal('fetch',vi.fn(async()=>response(data)));const onOpen=vi.fn();render(<ExposureOverview onOpen={onOpen}/>);const user=userEvent.setup();
+ await user.click(await screen.findByRole('button',{name:'Brotli case'}));
+ expect(onOpen).toHaveBeenLastCalledWith('Case overview',{customer:'a',environment:'env',assessment:'case-a'});
+ await user.type(screen.getByRole('searchbox',{name:'Find a case'}),'missing');expect(screen.queryByText('Brotli case')).toBeNull();
+ await user.selectOptions(screen.getByRole('combobox',{name:'Dashboard customer'}),'b');
+ const row=screen.getAllByRole('row').find(r=>r.textContent?.includes('Customer B'))!;
+ await user.click(within(row).getByRole('button',{name:'Actions'}));expect(onOpen).toHaveBeenLastCalledWith('Improvement Actions',{customer:'b',environment:'env'});
 });
-it('handles errors, retry and an empty population without invented timing',async()=>{
- const fetcher=vi.fn().mockResolvedValueOnce(response({detail:'Overview unavailable'},422)).mockResolvedValue(response({...data,rows:[],raw_appsec_occurrences:0,metrics:[{...data.metrics[0],value:0,record_ids:[],population_count:0}]}));vi.stubGlobal('fetch',fetcher);const user=userEvent.setup();mount();
- expect((await screen.findByRole('alert')).textContent).toContain('Overview unavailable');await user.click(screen.getByRole('button',{name:'Retry overview'}));
- await screen.findByText('No registered exposure, source mention or remediation records in this scope.');expect(screen.getByText(/Not available/)).toBeTruthy();
+it('updates automatically and retains the last snapshot if an update fails',async()=>{
+ vi.useFakeTimers();const fetcher=vi.fn().mockResolvedValueOnce(response(data)).mockResolvedValueOnce(response({detail:'Temporarily unavailable'},503)).mockResolvedValue(response({...data,cases:[{...data.cases[0],title:'Updated case'}]}));vi.stubGlobal('fetch',fetcher);
+ render(<ExposureOverview onOpen={vi.fn()}/>);await act(async()=>{});
+ expect(screen.getByText('Brotli case')).toBeTruthy();
+ await act(async()=>{await vi.advanceTimersByTimeAsync(10000)});
+ expect(screen.getByRole('alert').textContent).toContain('Showing the last successful snapshot');expect(screen.getByText('Brotli case')).toBeTruthy();
+ await act(async()=>{await vi.advanceTimersByTimeAsync(10000)});
+ expect(screen.getByText('Updated case')).toBeTruthy();expect(screen.queryByRole('alert')).toBeNull();
 });
-it('discards late responses after switching scope',async()=>{
- let resolve!:(r:Response)=>void;vi.stubGlobal('fetch',vi.fn().mockImplementationOnce(()=>new Promise(r=>{resolve=r})).mockResolvedValue(response({...data,rows:[],metrics:[{...data.metrics[0],value:0,record_ids:[]}]})));
- const props={onInspect:vi.fn(),onDemo:vi.fn()};const view=render(<ExposureOverview customer="c" environment="e" {...props}/>);
- view.rerender(<ExposureOverview customer="other" environment="e" {...props}/>);await screen.findByText(/No registered exposure/);resolve(response(data));
- await waitFor(()=>expect(screen.queryByText(row.label)).toBeNull());expect(screen.getByText(/Selected customer: other/)).toBeTruthy();
-});
-it('ignores a demo response after the customer changes',async()=>{
- let resolve!:(r:Response)=>void;vi.stubGlobal('fetch',vi.fn(async(url:string)=>url.endsWith('/demo')?new Promise<Response>(r=>{resolve=r}):response(data)));
- const props={onInspect:vi.fn(),onDemo:vi.fn()};const view=render(<ExposureOverview customer="c" environment="e" {...props}/>);const user=userEvent.setup();await user.click(screen.getByRole('button',{name:'Load synthetic leadership demo'}));
- view.rerender(<ExposureOverview customer="other" environment="e" {...props}/>);resolve(response({customer_id:'demo',environment_id:'demo'}));await waitFor(()=>expect(screen.getByText(/Selected customer: other/)).toBeTruthy());expect(props.onDemo).not.toHaveBeenCalled();
+it('shows missing exposure totals as unavailable rather than zero',async()=>{
+ vi.stubGlobal('fetch',vi.fn(async()=>response({...data,scopes:[{...scope,error:'Evidence unavailable',outstanding:null,appsec:null,affected:null}]})));
+ render(<ExposureOverview onOpen={vi.fn()}/>);await waitFor(()=>expect(screen.getByText('Unavailable')).toBeTruthy());expect(screen.getByRole('alert').textContent).toContain('Evidence unavailable');
 });

@@ -30,6 +30,22 @@ Use a fresh **new** directory for a new initial-state rehearsal; do not erase an
 | 3:20 | Guide → Pipeline Assurance → initial and revised snapshots; then Purple Team | **What evidence changes the decision?** Overall success with a skipped authored security step and an unassessed native/runtime script cannot close the finding. Require compatible build, deployed bundle identity, benign path results, telemetry sufficiency and a reviewed retest. |
 | 4:20 | Guide → Exposure Overview, Coverage, Intelligence Exports | **What can leadership report?** Owners, open commitments, failed/pending outcomes and qualified replay. Do not add CVE mentions, SARIF findings and pipeline observations into a unique-exposure count. Coverage is telemetry/test coverage, not estate patch coverage. |
 
+## Script for the meeting with Steve
+
+**Start on Exposure Overview (30 seconds).** “Steve, I want to show how I can take an advisory through to accountable work and evidence. This dashboard brings together all saved cases. I can see outstanding exposure, open actions and work waiting for retest. These are demonstration records, not a claim about your estate.”
+
+**Open the Brotli case from the case list (45 seconds).** “I can trace this case back to its source material. I keep the published vulnerability information separate from the fictional assets and analyst assumptions used in this demonstration.”
+
+**Open Vulnerability Intelligence → Assets & decisions (one minute).** “My first question is where the affected decoder is actually used. This example includes inbound application requests, outbound responses and a self-contained application bundle. I need an asset-specific decision and an owner for each relevant path.”
+
+**Open Application Findings → the advisor package finding (one minute).** “Here is why a reported patch is not enough. The host update was reported, but the deployed application still contains the older bundled runtime. The supplied technical check fails. I keep the work open until the evidence supports the intended change.”
+
+**Open Improvement Actions, then Pipeline Assurance (one minute).** “I can show the engineering owner, proposed change and required retest. A successful pipeline result also needs context: a skipped security check or an unassessed runtime script cannot prove the deployed artifact is safe. This example records supplied evidence; it does not run a deployment.”
+
+**Return to Exposure Overview (30 seconds).** “I want leadership to see what still needs a decision, who owns the next step and which outcomes have evidence. The dashboard updates automatically. For a pilot, I would start with one real case and agree the inventory, owners and evidence needed to close it.”
+
+If asked whether this proves a compromise or a successful fix: “No. This is a synthetic workflow demonstration. A real conclusion needs evidence from the relevant deployed environment, and investigating earlier activity is a separate task.”
+
 ## Practitioner route
 
 1. **Customer Profiles:** inspect role-based fictional owners, business consequence, fourteen-day *declared* retention and the inbound-only filter claim. No telemetry availability was independently confirmed.

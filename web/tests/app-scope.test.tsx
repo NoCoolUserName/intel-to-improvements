@@ -4,10 +4,8 @@ import {act,cleanup,render,screen,waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../src/App';
 
-vi.mock('../src/ExposureOverview',()=>({default:({customer,environment,onDemo}:any)=><div>
-  <span>Overview scope: {customer}/{environment}</span>
-  <button onClick={()=>onDemo({customer_id:'leadership',environment_id:'lab'})}>Switch demo scope</button>
-</div>}));
+vi.mock('../src/PipelineAssurance',()=>({default:({customer,environment}:any)=><span>Overview scope: {customer}/{environment}</span>}));
+vi.mock('../src/ExposureOverview',()=>({default:({onOpen}:any)=><button onClick={()=>onOpen('Pipeline Assurance',{customer:'leadership',environment:'lab'})}>Open dashboard environment</button>}));
 
 const assessment={id:'brotli-assessment',context:{customer_id:'brotli',environment_id:'estate'},source:{id:'brotli-source',title:'Brotli case'},extraction:{mode:'offline'},relevance:{rank:'High'}};
 const boot={customers:[
@@ -17,7 +15,7 @@ const boot={customers:[
 const response=(value:unknown)=>new Response(JSON.stringify(value),{status:200});
 let requests:string[];
 beforeEach(()=>{
-  location.hash='#/exposure-overview?customer=brotli&environment=estate';
+  location.hash='#/pipeline-assurance?customer=brotli&environment=estate';
   requests=[];
   vi.stubGlobal('fetch',vi.fn(async(input:string)=>{
     const url=String(input);requests.push(url);
@@ -38,10 +36,12 @@ it('does not fetch an old case after changing the customer selector',async()=>{
   expect(screen.queryByRole('alert')).toBeNull();
 });
 
-it('does not fetch an old case when the overview switches to another demo',async()=>{
+it('does not fetch an old case when the dashboard opens another environment',async()=>{
   const user=userEvent.setup();render(<App/>);
   await waitFor(()=>expect(requests.some(url=>url.includes('/api/ledger/brotli-assessment?customer_id=brotli'))).toBe(true));
-  await user.click(screen.getByRole('button',{name:'Switch demo scope'}));
+  await user.click(screen.getByRole('button',{name:'Exposure Overview',exact:true}));
+  expect(screen.queryByRole('combobox',{name:'Active customer'})).toBeNull();
+  await user.click(screen.getByRole('button',{name:'Open dashboard environment'}));
   await screen.findByText('Overview scope: leadership/lab');
   expect(requests.some(url=>url.includes('/api/ledger/brotli-assessment?customer_id=leadership'))).toBe(false);
   expect(screen.queryByRole('alert')).toBeNull();

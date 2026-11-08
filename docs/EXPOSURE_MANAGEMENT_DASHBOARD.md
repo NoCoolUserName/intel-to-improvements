@@ -1,12 +1,14 @@
 # Exposure Overview
 
-Phase 3 adds a read-only management view of persisted CVE observations, application findings, existing improvement actions, retests and exceptions. Open **Exposure Overview** in the existing navigation and select the customer/environment above. Refresh is explicit. Measurements cover selected local records and available evidence only; they do not measure complete enterprise inventory, exploitation, risk reduction or organizational coverage.
+Exposure Overview is a system dashboard across all saved cases and customer environments. It shows four headline totals, open work by customer, items needing attention, a searchable case list and environment summaries. The dashboard filter defaults to **All customers**. Case and environment links open the existing workflow in its saved scope.
 
-This remains a local single-operator proof-of-concept workbench. Operator names, accepting authorities and uploaded evidence are not authenticated enterprise identities or independent scanner executions.
+Updates run every ten seconds while visible and on tab focus. Failed updates retain the last successful snapshot with a visible warning and automatic retry. There is no manual refresh or demo-loading box.
 
 ## Architecture and scope
 
-`iti/exposure_overview.py` reads a consistent SQLite snapshot and indexes scoped records in memory. `GET /api/exposure-overview?customer_id=…&environment_id=…` validates the selected environment against its current customer profile. There is no global or all-environments view. Switching scopes clears the React workspace and ignores late responses, including demo responses.
+`GET /api/exposure-overview/portfolio` combines latest assessments per `(customer, environment, source)` with recorded action status and the existing scoped exposure projections. Historical revisions remain saved. Open actions use recorded status, which does not establish verified remediation. Synthetic examples are included and labeled.
+
+The scoped API `GET /api/exposure-overview?customer_id=…&environment_id=…` remains available with the definitions below. A scope whose exposure projection fails is explicitly unavailable; its exposure totals are never presented as zero. The portfolio snapshot is assembled from separate scope reads and can reflect changes made during collection.
 
 The projection never calls the mutable CVE workspace/decision generator or source synchronizer. Reading metrics creates no records, decisions, clocks, activity or cached statistics. It uses persisted source mentions only; intake not yet synchronized by Vulnerability Intelligence is not included. Original source document bodies are omitted from the mention projection. It does not parse SARIF or retrieve external evidence.
 
@@ -71,22 +73,14 @@ Timing medians use only eligible current resolved exposures and show the sample 
 
 Reopened, stale, unresolved, missing/invalid milestone and incompatible-cohort records are excluded. No eligible records means **Not available**, with a reason, not a zero-day median. Small synthetic durations demonstrate workflow mechanics only.
 
-## Reproducible leadership demonstration (3–5 minutes)
+## Dashboard walkthrough
 
-Start the normal local app with `./scripts/run` (run `npm --prefix web run build` after frontend changes). Open **Exposure Overview** and choose **Load synthetic leadership demo**. This explicit action seeds `fictional-leadership-demo / leadership-lab` through existing services. It does not alter the earlier CVE/AppSec demo customers or seed on startup. Reloading is idempotent and preserves operator edits. A conflicting reserved customer without a completed marker causes an error rather than replacement.
+1. Open **Exposure Overview**. Confirm that the page says **All customers** and lists saved cases from different environments.
+2. Select a dashboard customer or search a case title. Open a case to inspect its saved assessment; return to the overview to see the full portfolio.
+3. Use the environment table to open findings, infrastructure or actions in that environment.
+4. Record a change in the existing workflow and return to the dashboard. It reloads on entry and then updates automatically.
 
-1. **0:00:** compare 11 persisted AppSec occurrences with 10 logical findings. The last empty SARIF report does not close any finding. Compare one authored confirmed infrastructure observation, one unassessed asset and a separate source-only CVE mention.
-2. **0:45:** click **Actions past recorded target**. Five outstanding actions have targets two days before demo creation. Inspect owner, action priority, unknown scanner severity and the recorded dates. Targets are commitments, not assumed SLAs.
-3. **1:30:** expand verification/exception metrics. Inspect the pending fix claim, failed and inconclusive retests, one synthetic evidence-reviewed outcome and one stale historical closure. Operational infrastructure remediation remains zero.
-4. **2:15:** compare active, expired and unapproved exceptions. Click each metric to see its underlying request; inspect the original finding and Phase 2 history. Acceptance leaves exposure unresolved.
-5. **3:00:** inspect the stale finding to see the prior closed action requiring renewed review. Return to the overview; inspect the confirmed infrastructure row to open its CVE workspace. Unreviewed and unassigned findings remain visible with unknown metadata.
-6. **4:00:** reload, switch appearance and customer. Other customer scopes do not show the leadership dataset. Choose Refresh to recompute current expiry/freshness.
-
-All demo observations, owners, judgments and evidence are authored synthetic examples. The source-only CVE text is also explicitly fictional. Dates are deterministic offsets from the saved demo creation time; actual expiry and 30-day freshness continue to apply. To reproduce initial counts after editing/aging, use a fresh isolated data directory rather than overwriting normal user data:
-
-```sh
-ITI_DATA_DIR=/tmp/iti-leadership-demo .venv/bin/python -m uvicorn iti.api:create_app --factory --host 127.0.0.1 --port 8000
-```
+The existing synthetic leadership fixture and scoped API remain available for backend qualification tests. Loading the fixture is no longer a dashboard action.
 
 ## Validation and limitations
 

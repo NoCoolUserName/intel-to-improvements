@@ -224,9 +224,9 @@ npm --prefix web run build
 
 ## Exposure Overview
 
-The **Exposure Overview** leadership workspace summarizes selected customer/environment records: reported findings, reviewed applicability, ownership, overdue commitments, exceptions and qualified verification. Every metric has a definition and a drill-down to its underlying records. Historical occurrences do not inflate current AppSec findings; source-only CVE mentions remain distinct from asset exposure.
+The **Exposure Overview** dashboard shows saved cases, outstanding exposures and corrective work across all customers and environments. It refreshes every ten seconds while visible and when you return to the tab. Filter by customer, search case titles, or open a case, findings, infrastructure or actions in its original scope.
 
-Choose **Load synthetic leadership demo** to explore an isolated fictional Juniper scope with open work, pending/failed/inconclusive retests, current and stale evidence, and active/expired/unapproved exceptions. Synthetic or supplied-evidence review does not become independently verified operational remediation. Timing is shown only for eligible records and is not a claim of enterprise risk reduction. See [metric definitions and three-minute demonstration](docs/EXPOSURE_MANAGEMENT_DASHBOARD.md).
+Case counts use the latest assessment per source and environment. Exposure totals retain the existing evidence qualification rules; open action totals use recorded status. Synthetic examples are labeled. Historical assessment revisions do not inflate case totals. See [dashboard definitions](docs/EXPOSURE_MANAGEMENT_DASHBOARD.md).
 
 ## Pipeline Assurance
 

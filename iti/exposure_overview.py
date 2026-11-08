@@ -288,6 +288,11 @@ def overview(store, customer, environment):
 
 
 def register(app, service):
+    @app.get('/api/exposure-overview/portfolio')
+    def portfolio():
+        from .portfolio import dashboard
+        return dashboard(service.store)
+
     @app.get('/api/exposure-overview')
     def read(customer_id: str, environment_id: str):
         return overview(service.store,customer_id,environment_id)
