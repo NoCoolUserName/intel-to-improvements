@@ -75,11 +75,11 @@ it('expands outstanding records and opens each record in its scoped source works
  expect(onOpen).toHaveBeenLastCalledWith('Vulnerability Intelligence',{customer:'a',environment:'env',record:'CVE-2026-11149'});
 
 });
-it('opens a numbered, filtered remediation list from the Open actions card',async()=>{
+it('opens a numbered, filtered remediation list from the Open remediation actions card',async()=>{
  const action={id:'open-1',customer_id:'a',environment_id:'env',status:'open',proposed_change:'Update gateway',related_title:'Brotli',stage:'Awaiting implementation',next_owner:'Engineering',implementation_owner:'Engineering',remediation_coordinator:'Coordinator',verification_reviewer:'Reviewer'};
  vi.stubGlobal('fetch',vi.fn(async()=>response({...data,action_tracking:[action,{...action,id:'closed-1',status:'closed',proposed_change:'Closed work'}]})));
  render(<ExposureOverview onOpen={vi.fn()}/>);
- const toggle=await screen.findByRole('button',{name:'Open actions'});
+ const toggle=await screen.findByRole('button',{name:'Open remediation actions'});
  expect(toggle.getAttribute('aria-pressed')).toBe('false');
  await userEvent.click(toggle);
  const steps=screen.getByRole('region',{name:'Remediation next steps'});
