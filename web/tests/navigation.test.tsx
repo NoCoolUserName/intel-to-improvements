@@ -26,3 +26,7 @@ it('resolves direct, nested and legacy labels while retaining explicit scope',()
   expect(parseWorkspaceHash('#/%E0%A4%A').workspace).toBe('Coverage');
   expect(parseWorkspaceHash('#/unknown').workspace).toBe('Coverage');
 });
+it('retains the open-action filter on direct and nested action links',()=>{
+ const hash=workspaceHash('Improvement Actions',{customer:'a',environment:'e',record:'action-1',work:'open'});
+ expect(parseWorkspaceHash(hash)).toMatchObject({workspace:'Improvement Actions',customer:'a',environment:'e',record:'action-1',work:'open'});
+});

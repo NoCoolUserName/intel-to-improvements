@@ -28,19 +28,20 @@ export const DESCRIPTIONS:Record<string,string>={
   'Evaluation':'Inspect the workbench’s analytical reliability and capability evidence.',
   'Customer profiles':'Choose the fictional company and sector for the demonstration.',
 };
-export type NavigationTarget={customer?:string;environment?:string;record?:string;assessment?:string};
+export type NavigationTarget={work?:'open';customer?:string;environment?:string;record?:string;assessment?:string};
 export function parseWorkspaceHash(hash:string){
   const [path,query='']=hash.replace(/^#\/?/,'').split('?');
   const segments=path.split('/');let slug='';let record:string|undefined;
   try{slug=decodeURIComponent(segments[0]);record=segments[1]?decodeURIComponent(segments[1]):undefined}catch{/* Malformed links fall back to Coverage. */}
   const item=WORKSPACES.find(item=>item.slug===slug||item.id===slug||(item.id==='Case overview'&&slug==='case-overview'));
   const params=new URLSearchParams(query);
-  return {workspace:item?.id||'Coverage',record:['Improvement Actions','Vulnerability Intelligence','Application Findings'].includes(item?.id||'')?record:undefined,
+  return {...(item?.id==='Improvement Actions'&&params.get('work')==='open'?{work:'open' as const}:{}),workspace:item?.id||'Coverage',record:['Improvement Actions','Vulnerability Intelligence','Application Findings'].includes(item?.id||'')?record:undefined,
     customer:params.get('customer')||undefined,environment:params.get('environment')||undefined,assessment:params.get('assessment')||undefined};
 }
 export function workspaceHash(id:string,target:NavigationTarget={}){
   const item=WORKSPACES.find(item=>item.id===id);if(!item)return '#/coverage';
   const params=new URLSearchParams();for(const key of ['customer','environment','assessment'] as const)if(target[key])params.set(key,target[key]!);
+  if(id==='Improvement Actions'&&target.work==='open')params.set('work','open');
   return '#/'+item.slug+(target.record&&['Improvement Actions','Vulnerability Intelligence','Application Findings'].includes(id)?'/'+encodeURIComponent(target.record):'')+(params.size?'?'+params:'');
 }
 export function useWorkspaceNavigation(){

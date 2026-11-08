@@ -357,3 +357,23 @@ it('shows the company’s Brotli working case from another environment and switc
   expect(location.hash).toContain('environment=mac-cloud');expect(location.hash).toContain('assessment=cloud-case');
   expect(vi.mocked(fetch).mock.calls.some(([url])=>String(url).includes('/api/ledger/bank-case?customer_id=fictional-cloud'))).toBe(false);
 });
+
+it('opens a working-case count as an open-only action list and preserves it while inspecting',async()=>{
+  const open=actionRow(true),closed={...actionRow(true),id:'closed-action',status:'closed',proposed_change:'Closed fixture change'};
+  vi.stubGlobal('fetch',vi.fn(async input=>{
+    const url=new URL(String(input),'http://localhost');
+    if(url.pathname==='/api/exposure-overview/portfolio')return json({as_of:'2026-11-08T00:00:00Z',cases:[{id:bankCase.id,title:bankCase.source.title,customer_id:'fictional-bank',environment_id:'windows-ad'}],scopes:[{customer_id:'fictional-bank',environment_id:'windows-ad',environment_name:'Windows AD',cases:1,open_actions:1}],revision_count:1,policy:'Fixture'});
+    if(url.pathname==='/api/improvements')return json({rows:[open,closed]});
+    return respond(input);
+  }));
+  const {user}=await mount();
+  await user.click(screen.getByRole('button',{name:'Exposure Overview',exact:true}));
+  await user.click(await screen.findByRole('button',{name:/Bank investigation.*1 open actions/}));
+  await screen.findByText('Showing 1 open action.');expect(location.hash).toContain('work=open');
+  expect(screen.queryByText('Closed fixture change')).toBeNull();
+  await user.click(screen.getByRole('button',{name:'Inspect action bank-action'}));
+  await screen.findByRole('button',{name:'Open originating workflow'});expect(location.hash).toContain('work=open');
+  await user.click(screen.getByRole('button',{name:'Close action details'}));expect(location.hash).toContain('work=open');
+  await user.click(screen.getByRole('button',{name:'Show all scoped actions'}));
+  await screen.findByText('Closed fixture change');expect(location.hash).not.toContain('work=open');
+});

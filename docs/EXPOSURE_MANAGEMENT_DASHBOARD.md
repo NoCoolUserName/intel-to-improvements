@@ -119,3 +119,9 @@ Actions keep the existing implementation owner (`owner` in saved records), plus 
 Blocked or not-planned validation requires a responsible person and reason. A recorded evidence review requires its supplier, evidence reference, actual reviewer, supported conclusion and remaining uncertainty. This is review metadata; it does not create a test pass. Existing freshness, integrity, dependency and provenance rules still determine qualified outcomes. Supplied/synthetic AppSec reviews retain their evidence qualification and are not called independently verified operational remediation.
 
 The Working case selector includes assessed sources across the selected company’s environments. Selecting Brotli from Harborlight’s other demo environment changes the active environment and case together.
+
+## Open Working Cases and validation attention
+
+**Open Working Cases** identifies case-associated environments with outstanding actions. Selecting a row opens Improvement Actions in that environment with an explicit open-only filter; the list excludes recorded closed actions, matching the chart count. Inspecting and closing action details retains the filter. Show all scoped actions clears it. Clicking a case row does not change the overview environment filter.
+
+The three headline totals are Working cases, Outstanding exposures and Open actions. **Awaiting validation** appears in Needs attention and counts actions whose current next step is Awaiting evidence or Awaiting verification review. Blocked and deliberately unplanned validation are counted separately. These are pending-work states, not overdue determinations.

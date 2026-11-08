@@ -1,19 +1,20 @@
 import React,{useEffect,useState} from 'react';
 import ImprovementDetails from './ImprovementDetails';
 type Obj=Record<string,any>;
-type Props={customer:string;environment:string;actionId?:string;assessmentId?:string;onInspect:(id?:string)=>void;onManage:(row:Obj)=>void;onClearFilter:()=>void};
+type Props={openOnly?:boolean;customer:string;environment:string;actionId?:string;assessmentId?:string;onInspect:(id?:string)=>void;onManage:(row:Obj)=>void;onClearFilter:()=>void};
 export default function ImprovementActions(props:Props){return <Workspace key={props.customer+':'+props.environment} {...props}/>}
-function Workspace({customer,environment,actionId,assessmentId,onInspect,onManage,onClearFilter}:Props){
+function Workspace({customer,environment,actionId,assessmentId,openOnly,onInspect,onManage,onClearFilter}:Props){
   const [data,setData]=useState<Obj>(),[detail,setDetail]=useState<Obj>(),[error,setError]=useState(''),[detailError,setDetailError]=useState(''),[revision,setRevision]=useState(0);
   const [owner,setOwner]=useState(''),[status,setStatus]=useState('');
   const query='?'+new URLSearchParams({customer_id:customer,environment_id:environment});
   async function request(path:string){const r=await fetch('/api/improvements'+path+query);const d=await r.json();if(!r.ok)throw Error(typeof d.detail==='string'?d.detail:'Improvement records unavailable');return d}
   useEffect(()=>{let alive=true;setError('');request('').then(d=>{if(alive)setData(d)}).catch(e=>{if(alive)setError(String(e))});return()=>{alive=false}},[revision]);
   useEffect(()=>{let alive=true;setDetail(undefined);setDetailError('');if(actionId)request('/'+encodeURIComponent(actionId)).then(d=>{if(alive)setDetail(d)}).catch(e=>{if(alive)setDetailError(String(e))});return()=>{alive=false}},[actionId,revision]);
-  const rows=(data?.rows||[]).filter((row:Obj)=>(!assessmentId||row.reference?.assessment_id===assessmentId)&&(!owner||row.owner===owner)&&(!status||row.status===status));
+  const rows=(data?.rows||[]).filter((row:Obj)=>(!openOnly||row.status!=='closed')&&(!assessmentId||row.reference?.assessment_id===assessmentId)&&(!owner||row.owner===owner)&&(!status||row.status===status));
   return <section aria-label="Existing improvement ledger">
     <div className="panel padded"><h2>Accountable corrective work</h2><p>{data?.qualification||'Existing actions within the selected customer and environment. Edit and retest through their originating workflows.'}</p>
       <p className="fine">Customer: {customer} · Environment: {environment}</p><button onClick={()=>setRevision(r=>r+1)}>Refresh actions</button>
+      {openOnly&&<p>Showing {rows.length} open {rows.length===1?'action':'actions'}. <button onClick={onClearFilter}>Show all scoped actions</button></p>}
       {assessmentId&&<p>Showing actions linked to the selected case assessment. <button onClick={onClearFilter}>Show all scoped actions</button></p>}
       {data&&<div className="row"><label>Implementation owner<select aria-label="Implementation owner" value={owner} onChange={e=>setOwner(e.target.value)}><option value="">All owners</option>{[...new Set<string>(data.rows.map((r:Obj)=>r.owner))].map(v=><option key={v}>{v}</option>)}</select></label><label>Work status<select aria-label="Work status" value={status} onChange={e=>setStatus(e.target.value)}><option value="">All statuses</option>{[...new Set<string>(data.rows.map((r:Obj)=>r.status))].map(v=><option key={v}>{v}</option>)}</select></label></div>}
     </div>

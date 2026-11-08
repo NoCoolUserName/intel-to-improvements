@@ -46,3 +46,20 @@ it('links priority and validation subjects to their original scopes',async()=>{
  await user.click(screen.getByRole('button',{name:'Inspect evidence and plan'}));expect(onOpen).toHaveBeenLastCalledWith('Vulnerability Intelligence',{customer:'a',environment:'env',assessment:undefined,record:row.cve});
  await user.selectOptions(screen.getByRole('combobox',{name:'Validation view'}),'recorded');expect(screen.queryByText('Advisor validation')).toBeNull();
 });
+it('opens the actions behind a working-case count without changing the environment filter',async()=>{
+ vi.stubGlobal('fetch',vi.fn(async()=>response(data)));const onOpen=vi.fn(),onEnvironmentChange=vi.fn();render(<ExposureOverview onOpen={onOpen} onEnvironmentChange={onEnvironmentChange}/>);
+ await screen.findByRole('heading',{name:'Open Working Cases'});
+ await userEvent.click(screen.getByRole('button',{name:/Brotli case.*2 open actions/}));
+ expect(onOpen).toHaveBeenCalledWith('Improvement Actions',{customer:'a',environment:'env',work:'open'});
+ expect(onEnvironmentChange).not.toHaveBeenCalled();expect((screen.getByRole('combobox',{name:'Dashboard environment'}) as HTMLSelectElement).value).toBe('');
+});
+it('puts pending validation in Needs attention and keeps blockers and declined validation distinct',async()=>{
+ const stages=['Awaiting evidence','Awaiting verification review','Blocked','Validation not planned','Verified outcome','Awaiting implementation'];
+ vi.stubGlobal('fetch',vi.fn(async()=>response({...data,action_tracking:stages.map((stage,i)=>({id:String(i),customer_id:'a',environment_id:'env',stage}))})));
+ render(<ExposureOverview onOpen={vi.fn()}/>);await screen.findByRole('heading',{name:'Needs attention'});
+ const box=screen.getByRole('heading',{name:'Needs attention'}).parentElement!;
+ expect(within(box).getByText(/actions awaiting validation/).textContent).toBe('2 actions awaiting validation');
+ expect(within(box).getByText(/validation blocked/).textContent).toBe('1 validation blocked');
+ expect(within(box).getByText(/validation deliberately not planned/).textContent).toBe('1 validation deliberately not planned');
+ expect(screen.queryByText('Awaiting retest')).toBeNull();
+});

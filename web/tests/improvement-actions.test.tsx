@@ -30,3 +30,11 @@ it('shows separate implementation, coordination and review responsibilities with
  render(<ImprovementActions {...props}/>);await screen.findByText('Awaiting verification review');
  expect(screen.getByText('Coordinator: Exposure manager')).toBeTruthy();expect(screen.getByText('Reviewer: Evidence reviewer')).toBeTruthy();expect(screen.getByText('Next: Evidence reviewer')).toBeTruthy();
 });
+it('shows only the open actions requested by a dashboard count',async()=>{
+ const closed={...row,id:'closed',status:'closed',proposed_change:'Closed change'};
+ vi.stubGlobal('fetch',vi.fn(async()=>new Response(JSON.stringify({rows:[row,closed]}))));
+ const onClearFilter=vi.fn();render(<ImprovementActions {...props} openOnly onClearFilter={onClearFilter}/>);
+ await screen.findByText('Showing 1 open action.');
+ expect(screen.getByText('Upgrade serving runtime')).toBeTruthy();expect(screen.queryByText('Closed change')).toBeNull();
+ await userEvent.click(screen.getByRole('button',{name:'Show all scoped actions'}));expect(onClearFilter).toHaveBeenCalled();
+});
