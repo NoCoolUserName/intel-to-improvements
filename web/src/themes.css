@@ -94,8 +94,8 @@
   & select:focus-visible, & textarea:focus-visible { outline-color: var(--focus); }
 }
 .topbar-actions { display: flex; align-items: center; gap: 20px; }
-.sidebar .theme-control { margin: 12px 12px 4px; color: #b9ccca; font-size: 9px; letter-spacing: 1.3px; }
-.theme-control select { width: 100%; min-width: 0; font-size: 11px; letter-spacing: 0; margin-top: 4px; padding: 7px 25px 7px 9px; }
+.sidebar .theme-control { margin: 12px 12px 4px; color: #b9ccca; font-size: 11px; letter-spacing: 1.3px; }
+.theme-control select { width: 100%; min-width: 0; font-size: 13px; letter-spacing: 0; margin-top: 4px; padding: 7px 25px 7px 9px; }
 :root .sidebar .theme-control select,
 :root .sidebar .theme-control option {
   background: var(--sidebar, #172e33);
@@ -112,10 +112,10 @@
   .sidebar .sidebar-workspaces { overflow: visible; flex: none; }
   .sidebar .theme-control { margin: 12px 0 0; max-width: 240px; }
 }
-.casebar .test-case-control { min-width: 0; flex: 0 0 auto; font-size: 11px; letter-spacing: 0; }
+.casebar .test-case-control { min-width: 0; flex: 0 0 auto; font-size: 13px; letter-spacing: 0; }
 
 .job-recovery { width: 100%; padding: 4px 0 12px; }
-.job-recovery p { max-width: 760px; font-size: 12px; }
+.job-recovery p { max-width: 760px; font-size: 14px; }
 
 :root[data-theme="golden-ledger"]:not([data-theme="original"]) {
   & h1, & .php2shell-intro h2 {font-family:Georgia,"Times New Roman",serif;font-weight:500;letter-spacing:-.025em;}
