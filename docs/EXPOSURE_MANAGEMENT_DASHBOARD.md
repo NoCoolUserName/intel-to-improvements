@@ -133,3 +133,5 @@ Coverage inherits the selected case and shows its title/environment as read-only
 **Open existing package** navigates to the saved package in Intelligence Exports without generating or updating it. Explicit Generate package / Generate updated package controls remain in Cases & Analysis and Intelligence Exports. Coverage inherits the case and links to exports; its open operation does not change package records.
 
 Hunts and Purple Team use the same read-only case/environment context as Coverage. Their Change case links return to Cases & Analysis with the current assessment and environment retained. The page-header Add Intelligence button appears only in Add Intelligence; sidebar intake navigation remains available throughout the app.
+
+Coverage omits the case-relevance badge. Analysis method, provider and recorded review status are available in a compact, initially collapsed **Analysis method / provenance** detail. Cases & Analysis retains relevance and its assessment context.

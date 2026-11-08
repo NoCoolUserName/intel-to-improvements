@@ -387,11 +387,18 @@ it('shows a read-only Coverage case and changes case without losing its assessme
  const context=await screen.findByRole('group',{name:'Selected coverage case'});
  await within(context).findByText('Bank investigation');
  expect(screen.queryByRole('combobox',{name:'Working case'})).toBeNull();
+ expect(screen.queryByText('High relevance')).toBeNull();
+ const provenance=screen.getByText('Analysis method / provenance').closest('details');
+ expect(provenance.open).toBe(false);
+ await user.click(within(provenance).getByText('Analysis method / provenance'));
+ expect(provenance.open).toBe(true);
+ expect(within(provenance).getByText('Saved demo analysis')).toBeTruthy();
  const link=within(context).getByRole('link',{name:'Change case'});
  expect(link.getAttribute('href')).toContain('assessment=bank-case');expect(link.getAttribute('href')).toContain('environment=windows-ad');
  await user.click(link);
  await screen.findByRole('heading',{name:'Cases & Analysis',exact:true});
  expect(screen.getByRole('combobox',{name:'Working case'}).value).toBe('bank-case');
+ expect(screen.getByText('High relevance')).toBeTruthy();
  expect(location.hash).toContain('customer=fictional-bank');expect(location.hash).toContain('environment=windows-ad');
 });
 
