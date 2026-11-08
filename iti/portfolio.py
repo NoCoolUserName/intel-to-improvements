@@ -39,7 +39,7 @@ def dashboard(store):
         linked = [a for a in grouped[key] if a.get('scope') == ':'.join((customer, environment, source))]
         metadata = assessment['source'].get('metadata', {})
         cases.append(dict(id=assessment['id'], customer_id=customer, environment_id=environment,
-                          title=assessment['source']['title'], updated_at=assessment.get('created_at'),
+                          test_case=assessment['source'].get('origin', '').startswith('authored-fixture:'), title=assessment['source']['title'], updated_at=assessment.get('created_at'),
                           relevance=assessment.get('relevance', {}).get('rank', 'Unknown'),
                           synthetic=bool(metadata.get('fixture') or metadata.get('synthetic')),
                           open_actions=sum(a['status'] != 'closed' for a in linked)))
@@ -103,10 +103,12 @@ def dashboard(store):
     cases = [r for r in cases if r['customer_id'] in allowed]
     priorities = [r for r in priorities if r['customer_id'] in allowed]
     validation = [r for r in validation if r['customer_id'] in allowed]
+    from .improvement_actions import project
+    action_rows = [project(store, a, a['context']['customer_id'], a['context']['environment_id']) for a in actions if a['context']['customer_id'] in allowed]
     for scope in scopes.values():
         scope['customer_name'] = company_profile['name']
     from .models import SECTORS
-    return dict(sector_label=SECTORS.get(company_profile['sector'], company_profile['sector']), company=company_profile, priorities=priorities, validation=validation, as_of=now(), scopes=list(scopes.values()), cases=sorted(cases, key=lambda c: c['updated_at'] or '', reverse=True),
+    return dict(action_tracking=action_rows, sector_label=SECTORS.get(company_profile['sector'], company_profile['sector']), company=company_profile, priorities=priorities, validation=validation, as_of=now(), scopes=list(scopes.values()), cases=sorted(cases, key=lambda c: c['updated_at'] or '', reverse=True),
                 revision_count=sum(a['context']['customer_id'] in allowed for a in assessments), policy='One case per source and environment; latest assessment revision. Open action counts use recorded status. Exposure counts use the existing evidence review rules. Synthetic records are included and labeled.')
 
 

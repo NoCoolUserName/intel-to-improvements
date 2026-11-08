@@ -217,11 +217,11 @@ it('opens a bounded candidate list, edits the existing form and retains the save
   await user.click(screen.getByRole('button',{name:'Show all 4'}));
   expect(screen.getByRole('button',{name:'Create improvement for D3-NTF'})).toBeTruthy();
   await user.click(screen.getByRole('button',{name:'Create improvement for D3-APCA'}));
-  expect(screen.getByRole('textbox',{name:'Owner'}).value).toBe('');
+  expect(screen.getByRole('textbox',{name:'Implementation owner'}).value).toBe('');
   expect(screen.getByRole('combobox',{name:'Behavior'}).disabled).toBe(true);
   expect(screen.getByRole('combobox',{name:'Status'}).value).toBe('open');
   expect(screen.getByRole('textbox',{name:'Rationale'}).value).toContain('span-1');
-  await user.type(screen.getByRole('textbox',{name:'Owner'}),'Lab owner');
+  await user.type(screen.getByRole('textbox',{name:'Implementation owner'}),'Lab owner');
   await user.clear(screen.getByRole('textbox',{name:'Proposed change'}));
   await user.type(screen.getByRole('textbox',{name:'Proposed change'}),'Assess lab protocol control');
   await user.clear(screen.getByRole('textbox',{name:'Retest plan'}));
@@ -269,7 +269,7 @@ it('keeps manual improvements available when the catalog is invalid',async()=>{
   expect(screen.getByRole('button',{name:'Retry catalog'})).toBeTruthy();
   await user.click(screen.getByRole('button',{name:'Close drawer'}));
   await user.click(screen.getByRole('button',{name:'Record improvement / result'}));
-  expect(screen.getByRole('textbox',{name:'Owner'})).toBeTruthy();
+  expect(screen.getByRole('textbox',{name:'Implementation owner'})).toBeTruthy();
   expect(screen.getByRole('combobox',{name:'Behavior'}).disabled).toBe(false);
 });
 
@@ -337,4 +337,23 @@ it('saves a fictional company independently of the sector choice',async()=>{
   await waitFor(()=>expect(calls).toEqual([{name:'Cedar Cloud',sector:'finance'}]));
   await waitFor(()=>expect(location.hash).toContain('environment=mac-cloud'));
   expect(screen.queryByRole('combobox',{name:'Active customer'})).toBeNull();
+});
+
+it('shows the company’s Brotli working case from another environment and switches scope with it',async()=>{
+  history.replaceState(null,'','/#/cases-and-analysis?customer=fictional-bank&environment=windows-ad');
+  const brotli={...cloudCase,source:{...cloudCase.source,title:'Brotli exposure response'}};
+  const choices=[{id:bankCase.id,title:bankCase.source.title,customer_id:'fictional-bank',environment_id:'windows-ad'},{id:brotli.id,title:brotli.source.title,customer_id:'fictional-cloud',environment_id:'mac-cloud'}];
+  vi.stubGlobal('fetch',vi.fn(async input=>{
+    const url=new URL(String(input),'http://localhost');
+    if(url.pathname==='/api/bootstrap')return json({...bootstrap,company:{name:'Harborlight Capital',sector:'finance'},company_customer_ids:['fictional-bank','fictional-cloud']});
+    if(url.pathname==='/api/exposure-overview/portfolio')return json({cases:choices});
+    if(url.pathname==='/api/assessments'&&url.searchParams.get('customer_id')==='fictional-cloud')return json([brotli]);
+    return respond(input);
+  }));
+  const user=userEvent.setup();render(<App/>);
+  await screen.findByRole('option',{name:'Brotli exposure response · Mac Cloud'});
+  await user.selectOptions(screen.getByRole('combobox',{name:'Working case'}),'cloud-case');
+  await waitFor(()=>expect(screen.getByRole('combobox',{name:'Working case'}).value).toBe('cloud-case'));
+  expect(location.hash).toContain('environment=mac-cloud');expect(location.hash).toContain('assessment=cloud-case');
+  expect(vi.mocked(fetch).mock.calls.some(([url])=>String(url).includes('/api/ledger/bank-case?customer_id=fictional-cloud'))).toBe(false);
 });

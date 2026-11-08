@@ -24,3 +24,9 @@ it('discards a late response immediately when the selected scope changes',async(
   const view=render(<ImprovementActions {...props}/>);view.rerender(<ImprovementActions {...props} customer="customer-b" environment="env-b"/>);
   resolve(new Response(JSON.stringify({rows:[row]})));await waitFor(()=>expect(screen.getByText(/No existing improvement actions match/)).toBeTruthy());expect(screen.queryByText('Upgrade serving runtime')).toBeNull();
 });
+it('shows separate implementation, coordination and review responsibilities with next-step ownership',async()=>{
+ const tracked={...row,remediation_coordinator:'Exposure manager',verification_reviewer:'Evidence reviewer',stage:'Awaiting verification review',next_owner:'Evidence reviewer',validation_responsible:'Exposure manager',validation_reason:'Evidence needs reviewer approval'};
+ vi.stubGlobal('fetch',vi.fn(async()=>new Response(JSON.stringify({rows:[tracked]}))));
+ render(<ImprovementActions {...props}/>);await screen.findByText('Awaiting verification review');
+ expect(screen.getByText('Coordinator: Exposure manager')).toBeTruthy();expect(screen.getByText('Reviewer: Evidence reviewer')).toBeTruthy();expect(screen.getByText('Next: Evidence reviewer')).toBeTruthy();
+});

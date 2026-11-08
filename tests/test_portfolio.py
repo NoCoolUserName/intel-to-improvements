@@ -14,7 +14,7 @@ def test_dashboard_groups_revisions_and_includes_every_customer(service):
     newer.update(id='newer-assessment', created_at='2099-01-01T00:00:00+00:00')
     service.store.put('assessment', newer['id'], newer)
     ctx = assessment['context']
-    action = dict(id='case-action', context=ctx, scope=':'.join((ctx['customer_id'], ctx['environment_id'], assessment['source']['id'])), status='retest requested', owner='Unassigned')
+    action = dict(id='case-action', context=ctx, scope=':'.join((ctx['customer_id'], ctx['environment_id'], assessment['source']['id'])), status='retest requested', owner='Unassigned', priority='high', proposed_change='Update the artifact', retest='Inspect the deployed artifact', rationale='Authored test action')
     service.store.put('improvement', action['id'], action)
     before = service.store.all('assessment')
     result = dashboard(service.store)

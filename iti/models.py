@@ -303,6 +303,16 @@ class ImprovementAction(Model):
     vulnerability_assessment_id: str|None=None
     remediation: dict[str,Any]|None=None
     owner: str
+    remediation_coordinator: str=Field(default='',max_length=4000)
+    verification_reviewer: str=Field(default='',max_length=4000)
+    validation_status: Literal['planned','awaiting evidence','awaiting review','reviewed','blocked','not planned']='planned'
+    validation_responsible: str=Field(default='',max_length=4000)
+    validation_reason: str=Field(default='',max_length=4000)
+    evidence_supplier: str=Field(default='',max_length=4000)
+    evidence_reference: str=Field(default='',max_length=4000)
+    evidence_reviewed_by: str=Field(default='',max_length=4000)
+    evidence_proves: str=Field(default='',max_length=4000)
+    evidence_uncertainty: str=Field(default='',max_length=4000)
     priority: str
     status: Literal['open','in progress','deployed','retest requested','closed']='open'
     rationale: str
@@ -311,6 +321,15 @@ class ImprovementAction(Model):
     deployed_at: str|None=None
     retest: str
     origin: dict[str,Any]|None=None
+
+    @model_validator(mode='after')
+    def tracking(self):
+        if self.validation_status in ('blocked','not planned') and not (self.validation_responsible.strip() and self.validation_reason.strip()):
+            raise ValueError('Blocked or unplanned validation requires a responsible person and reason')
+        if self.validation_status == 'reviewed' and not all(getattr(self,k).strip() for k in ('evidence_supplier','evidence_reference','evidence_reviewed_by','evidence_proves','evidence_uncertainty')):
+            raise ValueError('Evidence review requires supplier, reference, reviewer, supported conclusion and remaining uncertainty')
+        return self
+
 
 class GmailScope(Model):
     query: str=Field(min_length=1,max_length=1000)
