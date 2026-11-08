@@ -98,7 +98,7 @@ it('puts pending validation and blockers in Needs attention without flagging del
  vi.stubGlobal('fetch',vi.fn(async()=>response({...data,action_tracking:stages.map((stage,i)=>({id:String(i),customer_id:'a',environment_id:'env',stage}))})));
  render(<ExposureOverview onOpen={vi.fn()}/>);await screen.findByRole('heading',{name:'Needs attention'});
  const box=screen.getByRole('heading',{name:'Needs attention'}).parentElement!;
- expect(within(box).getByText(/actions awaiting validation/).textContent).toBe('2 actions awaiting validation');
+ expect(within(box).getByText(/remediation actions awaiting validation/).textContent).toBe('2 remediation actions awaiting validation');
  expect(within(box).getByText(/validation blocked/).textContent).toBe('1 validation blocked');
  expect(within(box).queryByText(/validation deliberately not planned/)).toBeNull();
  expect(screen.queryByText('Awaiting retest')).toBeNull();
@@ -117,7 +117,7 @@ it('drills into each attention category with its selected scope and source recor
  vi.stubGlobal('fetch',vi.fn(async()=>response({...data,action_tracking,review_records})));
  const onOpen=vi.fn();render(<ExposureOverview environmentValue="a:env" onOpen={onOpen}/>);
  const attention=(await screen.findByRole('heading',{name:'Needs attention'})).parentElement!;
- for(const [label,change] of [['Actions awaiting validation','Collect evidence'],['Validation blocked','Unblock validation'],['Open actions without an owner','Assign engineer'],['Actions past their due date','Overdue change']]){
+ for(const [label,change] of [['Remediation actions awaiting validation','Collect evidence'],['Validation blocked','Unblock validation'],['Open actions without an owner','Assign engineer'],['Actions past their due date','Overdue change']]){
   await userEvent.click(within(attention).getByRole('button',{name:label}));
   const steps=screen.getByRole('region',{name:'Remediation next steps'});
   expect(within(steps).getAllByRole('row')).toHaveLength(2);
