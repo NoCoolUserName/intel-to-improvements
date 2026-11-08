@@ -23,3 +23,5 @@
 :root .exposure-overview .dashboard-attention button.attention-count[aria-pressed="true"]{background:var(--surface-hover,#eef5f3);color:var(--text,#23474b);border-color:var(--border-hover,#97b4b0)}
 
 .dashboard-attention-row{display:grid;grid-template-columns:minmax(0,1fr);align-items:start}.dashboard-attention-row.has-review{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}@media(max-width:850px){.dashboard-attention-row.has-review{grid-template-columns:minmax(0,1fr)}}
+
+.dashboard-exposures,.dashboard-next-steps{animation:dashboard-panel-in 333ms ease both}@keyframes dashboard-panel-in{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
