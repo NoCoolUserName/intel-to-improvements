@@ -30,3 +30,36 @@ def test_dashboard_groups_revisions_and_includes_every_customer(service):
     response = client.get('/api/exposure-overview/portfolio')
     assert response.status_code == 200
     assert len(response.json()['cases']) == 2
+
+
+def test_priority_summary_preserves_reviewed_override_and_missing_severity():
+    from iti.portfolio import priority_rows
+    decision = dict(id='d1', series_id='series', context={'customer_id':'a','environment_id':'e'}, cve='CVE-2026-0001',
+                    response='Expedite remediation/mitigation', reason_codes=[{'explanation':'Affected and reachable'}],
+                    credible_exploitation=True, asset={'asset_id':'app','logical_id':'asset','evidence_kind':'synthetic fixture'},
+                    verification={'status':'not tested'}, created_at='2026-11-08T00:00:00Z')
+    review = dict(decision_id='d1', response='Investigate applicability/exposure', reason='Confirm deployed artifact first')
+    row = priority_rows([decision], [review])[0]
+    assert row['response'] == review['response'] and row['proposed_response'] == decision['response']
+    assert row['reviewed'] and row['rationale'] == review['reason']
+    assert row['severity'] == 'Severity not available' and row['validation'] == 'not tested'
+    assert row['synthetic']
+    newer = decision | {'id':'d2'}
+    row = priority_rows([decision,newer], [review])[0]
+    assert row['id'] == 'd2' and not row['reviewed']
+
+
+def test_dashboard_validation_is_readonly_and_does_not_invent_execution(service):
+    from iti import exposure_demo
+    exposure_demo.load(service)
+    with service.store.connect() as c:
+        before = [tuple(r) for r in c.execute('SELECT * FROM records ORDER BY kind,id')]
+        activity = c.execute('SELECT count(*) FROM activity').fetchone()[0]
+    result = dashboard(service.store)
+    assert result['priorities'] == []  # Reading the dashboard must not generate decisions.
+    assert any(r['outcome'] == 'No recorded validation' and not r['recorded'] for r in result['validation'])
+    assert any(r['outcome'] == 'Retest failed' and r['synthetic'] for r in result['validation'])
+    assert all(r['outcome'] for r in result['validation'])
+    with service.store.connect() as c:
+        assert before == [tuple(r) for r in c.execute('SELECT * FROM records ORDER BY kind,id')]
+        assert activity == c.execute('SELECT count(*) FROM activity').fetchone()[0]

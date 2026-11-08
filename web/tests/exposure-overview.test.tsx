@@ -38,3 +38,11 @@ it('shows missing exposure totals as unavailable rather than zero',async()=>{
  vi.stubGlobal('fetch',vi.fn(async()=>response({...data,scopes:[{...scope,error:'Evidence unavailable',outstanding:null,appsec:null,affected:null}]})));
  render(<ExposureOverview onOpen={vi.fn()}/>);await waitFor(()=>expect(screen.getByText('Unavailable')).toBeTruthy());expect(screen.getByRole('alert').textContent).toContain('Evidence unavailable');
 });
+it('links priority and validation subjects to their original scopes',async()=>{
+ const row={id:'decision',customer_id:'a',environment_id:'env',cve:'CVE-2026-0001',asset:'advisor',response:'Expedite remediation/mitigation',proposed_response:'Expedite remediation/mitigation',reviewed:false,validation:'not tested',rationale:'Affected asset',severity:'Unknown',exploitation:'Reported',applicability:'confirmed affected',reachability:'confirmed',owner:'Engineering'};
+ vi.stubGlobal('fetch',vi.fn(async()=>response({...data,priorities:[row],validation:[{id:'infra:1',customer_id:'a',environment_id:'env',label:'Advisor validation',outcome:'No recorded validation',recorded:false,synthetic:true,owner:'Engineering',origin:'Infrastructure',reference:{cve:row.cve},plans:[]}]})));
+ const onOpen=vi.fn();render(<ExposureOverview onOpen={onOpen}/>);const user=userEvent.setup();
+ await user.click(await screen.findByRole('button',{name:'CVE-2026-0001 · advisor'}));expect(onOpen).toHaveBeenLastCalledWith('Vulnerability Intelligence',{customer:'a',environment:'env',record:row.cve});
+ await user.click(screen.getByRole('button',{name:'Inspect evidence and plan'}));expect(onOpen).toHaveBeenLastCalledWith('Vulnerability Intelligence',{customer:'a',environment:'env',assessment:undefined,record:row.cve});
+ await user.selectOptions(screen.getByRole('combobox',{name:'Validation view'}),'recorded');expect(screen.queryByText('Advisor validation')).toBeNull();
+});

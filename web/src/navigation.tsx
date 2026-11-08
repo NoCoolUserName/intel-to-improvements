@@ -35,13 +35,13 @@ export function parseWorkspaceHash(hash:string){
   try{slug=decodeURIComponent(segments[0]);record=segments[1]?decodeURIComponent(segments[1]):undefined}catch{/* Malformed links fall back to Coverage. */}
   const item=WORKSPACES.find(item=>item.slug===slug||item.id===slug||(item.id==='Case overview'&&slug==='case-overview'));
   const params=new URLSearchParams(query);
-  return {workspace:item?.id||'Coverage',record:item?.id==='Improvement Actions'?record:undefined,
+  return {workspace:item?.id||'Coverage',record:['Improvement Actions','Vulnerability Intelligence','Application Findings'].includes(item?.id||'')?record:undefined,
     customer:params.get('customer')||undefined,environment:params.get('environment')||undefined,assessment:params.get('assessment')||undefined};
 }
 export function workspaceHash(id:string,target:NavigationTarget={}){
   const item=WORKSPACES.find(item=>item.id===id);if(!item)return '#/coverage';
   const params=new URLSearchParams();for(const key of ['customer','environment','assessment'] as const)if(target[key])params.set(key,target[key]!);
-  return '#/'+item.slug+(target.record&&id==='Improvement Actions'?'/'+encodeURIComponent(target.record):'')+(params.size?'?'+params:'');
+  return '#/'+item.slug+(target.record&&['Improvement Actions','Vulnerability Intelligence','Application Findings'].includes(id)?'/'+encodeURIComponent(target.record):'')+(params.size?'?'+params:'');
 }
 export function useWorkspaceNavigation(){
   const [route,setRoute]=useState(()=>parseWorkspaceHash(location.hash));
