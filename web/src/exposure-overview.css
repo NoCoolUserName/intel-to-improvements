@@ -19,3 +19,5 @@
 .dashboard-attention .attention-count{display:flex;justify-content:flex-start;gap:8px;width:100%;padding:6px 0;border:0;border-bottom:1px solid var(--border);border-radius:0;background:transparent;text-align:left;font-weight:400}.dashboard-attention .attention-count strong{font-size:22px;min-width:1.5em}.dashboard-attention .attention-count:hover{color:var(--accent,#196657);text-decoration:underline}
 
 :root .exposure-overview .dashboard-stats button.dashboard-stat-toggle[aria-expanded="true"]{background:var(--surface-hover,#eef5f3);border-color:var(--border-hover,#97b4b0)}
+
+:root .exposure-overview .dashboard-attention button.attention-count[aria-pressed="true"]{background:var(--surface-hover,#eef5f3);color:var(--text,#23474b);border-color:var(--border-hover,#97b4b0)}

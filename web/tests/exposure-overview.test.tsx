@@ -73,6 +73,7 @@ it('expands outstanding records and opens each record in its scoped source works
  expect(onOpen).toHaveBeenLastCalledWith('Application Findings',{customer:'a',environment:'env',record:'finding-1'});
  await userEvent.click(within(list).getByRole('button',{name:/CVE-2026-11149/}));
  expect(onOpen).toHaveBeenLastCalledWith('Vulnerability Intelligence',{customer:'a',environment:'env',record:'CVE-2026-11149'});
+
 });
 it('opens a numbered, filtered remediation list from the Open actions card',async()=>{
  const action={id:'open-1',customer_id:'a',environment_id:'env',status:'open',proposed_change:'Update gateway',related_title:'Brotli',stage:'Awaiting implementation',next_owner:'Engineering',implementation_owner:'Engineering',remediation_coordinator:'Coordinator',verification_reviewer:'Reviewer'};
@@ -121,6 +122,12 @@ it('drills into each attention category with its selected scope and source recor
   const steps=screen.getByRole('region',{name:'Remediation next steps'});
   expect(within(steps).getAllByRole('row')).toHaveLength(2);
   expect(within(steps).getByRole('button',{name:change})).toBeTruthy();
+  const selected=within(attention).getByRole('button',{name:label});
+  expect(selected.getAttribute('aria-pressed')).toBe('true');
+  await userEvent.click(selected);
+  expect(selected.getAttribute('aria-pressed')).toBe('false');
+  expect(within(steps).getAllByRole('row')).toHaveLength(5);
+  await userEvent.click(selected);
  }
  const steps=screen.getByRole('region',{name:'Remediation next steps'});
  await userEvent.click(within(steps).getByRole('button',{name:'Overdue change'}));
@@ -129,4 +136,10 @@ it('drills into each attention category with its selected scope and source recor
  const reviews=screen.getByRole('region',{name:'Findings and assets awaiting review'});
  await userEvent.click(within(reviews).getByRole('button',{name:/Needs applicability review/}));
  expect(onOpen).toHaveBeenLastCalledWith('Vulnerability Intelligence',{customer:'a',environment:'env',record:'CVE-2026-11149'});
+ const selected=within(attention).getByRole('button',{name:'Findings or assets awaiting review'});
+ expect(selected.getAttribute('aria-pressed')).toBe('true');
+ await userEvent.click(selected);
+ expect(selected.getAttribute('aria-pressed')).toBe('false');
+ expect(screen.queryByRole('region',{name:'Findings and assets awaiting review'})).toBeNull();
+ expect(screen.getByRole('region',{name:'Outstanding exposure records'})).toBeTruthy();
 });
