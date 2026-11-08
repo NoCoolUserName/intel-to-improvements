@@ -37,12 +37,49 @@ STOPS = [
 ]
 
 
+COORDINATOR = 'Fictional exposure-management coordinator'
+REVIEWERS = {
+    'vulnerability_decision': 'Fictional vulnerability-assurance reviewer',
+    'application_finding': 'Fictional AppSec evidence reviewer',
+    'd3fend_candidate': 'Fictional detection-validation reviewer',
+}
+
+
+def populate_roles(service):
+    """Fill missing role assignments only in actions named by the synthetic case."""
+    with appsec.transaction(service.store) as store:
+        marker = store.get('working_case_demo', VERSION)
+        relations = marker['relations']
+        ids = set(relations['asset_to_vulnerability_action'].values()) | set(relations['rule_to_appsec_action'].values())
+        if relations.get('defense_action_id'):
+            ids.add(relations['defense_action_id'])
+        changed = 0
+        for id in sorted(ids):
+            action = store.get('improvement', id)
+            if (action['context']['customer_id'], action['context']['environment_id']) != (CUSTOMER, ENVIRONMENT):
+                raise ValueError('Synthetic role assignment scope mismatch')
+            reviewer = REVIEWERS.get((action.get('origin') or {}).get('kind'), REVIEWERS['d3fend_candidate'])
+            defaults = {'owner': 'Fictional implementation engineering', 'remediation_coordinator': COORDINATOR, 'verification_reviewer': reviewer}
+            missing = {k: v for k, v in defaults.items() if not (action.get(k) or '').strip()}
+            if not missing:
+                continue
+            updated = action | missing
+            ImprovementAction.model_validate({k: v for k, v in updated.items() if k in ImprovementAction.model_fields})
+            if (action.get('origin') or {}).get('kind') == 'application_finding':
+                updated['updated_at'] = now()
+            store.put('improvement', id, updated)
+            store.event('synthetic_demo_roles_assigned', action['scope'], {'action_id': id, 'assignments': missing, 'synthetic': True})
+            changed += 1
+        return changed
+
+
 def load(service):
     """Stage via existing services, then publish records in one transaction."""
     store = service.store
     with store.lock(VERSION):
         prior = store.maybe('working_case_demo', VERSION)
         if prior:
+            populate_roles(service)
             return prior
         if store.maybe('customer', CUSTOMER):
             raise ValueError('Reserved Brotli demo customer already exists without a completed marker; refusing collision')
@@ -149,7 +186,7 @@ def build(service):
     if candidate:
         choice = candidate[0]
         defense_action = ledger.improve(store, assessment, ImprovementAction(behavior_id=behaviors[0].id,
-            owner='Fictional detection engineering', priority='high',
+            owner='Fictional detection engineering', remediation_coordinator=COORDINATOR, verification_reviewer=REVIEWERS['d3fend_candidate'], priority='high',
             rationale='Review a catalog-derived defense for the inbound path; patching remains separate',
             proposed_change=choice['prefill']['proposed_change'], retest=choice['prefill']['retest']),
             {'snapshot_id': suggestions['snapshot_id'], 'candidate_id': choice['id']})['id']
@@ -230,7 +267,7 @@ def seed_vulnerabilities(service, ctx, source, refs):
             change, owner = plans[name]
             subject = vi.subject(store, decision['id'], CUSTOMER, ENVIRONMENT)
             action = ledger.improve(store, subject, ImprovementAction(vulnerability_assessment_id=decision['id'],
-                owner=owner, priority='critical' if name == 'client-api' else 'high',
+                owner=owner, remediation_coordinator=COORDINATOR, verification_reviewer=REVIEWERS['vulnerability_decision'], priority='critical' if name == 'client-api' else 'high',
                 rationale='Accountable local commitment for ' + name + '; permanent patch and investigation remain separate',
                 proposed_change=change, retest='Preserve exact installed/running artifact and decoder configuration; compare source-supported branch fix, benign path and retained history.',
                 remediation={'review_date': (appsec.dt(now()) + timedelta(days=2)).date().isoformat(),
@@ -298,6 +335,7 @@ def seed_appsec(store):
             change = ('Require exact running Node.js/image version evidence before client API release' if rule == 'demo/brotli-runtime-evidence'
                       else 'Rebuild the self-contained .NET application with supported patched runtime; test, deploy and verify bundle identity')
             action = ledger.improve(tx, subject, ImprovementAction(owner='Fictional release engineering' if 'runtime-evidence' in rule else 'Fictional advisor application engineering',
+                remediation_coordinator=COORDINATOR, verification_reviewer=REVIEWERS['application_finding'],
                 priority='high', rationale='Complementary AppSec commitment; CVE action retains asset-level decision and verification',
                 proposed_change=change, retest='Review authored artifact manifest and benign compatibility result against exact commit and implementation reference',
                 remediation={'security_reviewer': 'Fictional AppSec reviewer', 'expected_result': 'Current artifact/version evidence'}))

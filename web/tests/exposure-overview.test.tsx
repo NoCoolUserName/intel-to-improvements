@@ -9,7 +9,7 @@ const response=(v:unknown,status=200)=>new Response(JSON.stringify(v),{status});
 afterEach(()=>{cleanup();vi.unstubAllGlobals();vi.useRealTimers()});
 it('shows system totals and cases, with no manual refresh or demo-loading box',async()=>{
  const fetcher=vi.fn(async()=>response(data));vi.stubGlobal('fetch',fetcher);render(<ExposureOverview onOpen={vi.fn()}/>);
- await screen.findByText('Brotli case');
+ await screen.findByRole('button',{name:'Brotli case',exact:true});
  expect(fetcher.mock.calls[0][0]).toBe('/api/exposure-overview/portfolio');
  expect(screen.getByText('Fictional Company · 2 environments')).toBeTruthy();
  expect(screen.getByText('Synthetic example')).toBeTruthy();
@@ -20,7 +20,7 @@ it('filters customers, searches cases and opens the correct scoped destination',
  vi.stubGlobal('fetch',vi.fn(async()=>response(data)));const onOpen=vi.fn();render(<ExposureOverview onOpen={onOpen}/>);const user=userEvent.setup();
  await user.click(await screen.findByRole('button',{name:'Brotli case'}));
  expect(onOpen).toHaveBeenLastCalledWith('Case overview',{customer:'a',environment:'env',assessment:'case-a'});
- await user.type(screen.getByRole('searchbox',{name:'Find a case'}),'missing');expect(screen.queryByText('Brotli case')).toBeNull();
+ await user.type(screen.getByRole('searchbox',{name:'Find a case'}),'missing');expect(screen.queryByRole('button',{name:'Brotli case',exact:true})).toBeNull();
  await user.selectOptions(screen.getByRole('combobox',{name:'Dashboard environment'}),'b:env');
  const row=screen.getAllByRole('row').find(r=>r.textContent?.includes('Production'))!;
  await user.click(within(row).getByRole('button',{name:'Actions'}));expect(onOpen).toHaveBeenLastCalledWith('Improvement Actions',{customer:'b',environment:'env'});
@@ -28,11 +28,11 @@ it('filters customers, searches cases and opens the correct scoped destination',
 it('updates automatically and retains the last snapshot if an update fails',async()=>{
  vi.useFakeTimers();const fetcher=vi.fn().mockResolvedValueOnce(response(data)).mockResolvedValueOnce(response({detail:'Temporarily unavailable'},503)).mockResolvedValue(response({...data,cases:[{...data.cases[0],title:'Updated case'}]}));vi.stubGlobal('fetch',fetcher);
  render(<ExposureOverview onOpen={vi.fn()}/>);await act(async()=>{});
- expect(screen.getByText('Brotli case')).toBeTruthy();
+ expect(screen.getByRole('button',{name:'Brotli case',exact:true})).toBeTruthy();
  await act(async()=>{await vi.advanceTimersByTimeAsync(10000)});
- expect(screen.getByRole('alert').textContent).toContain('Showing the last successful snapshot');expect(screen.getByText('Brotli case')).toBeTruthy();
+ expect(screen.getByRole('alert').textContent).toContain('Showing the last successful snapshot');expect(screen.getByRole('button',{name:'Brotli case',exact:true})).toBeTruthy();
  await act(async()=>{await vi.advanceTimersByTimeAsync(10000)});
- expect(screen.getByText('Updated case')).toBeTruthy();expect(screen.queryByRole('alert')).toBeNull();
+ expect(screen.getByRole('button',{name:'Updated case',exact:true})).toBeTruthy();expect(screen.queryByRole('alert')).toBeNull();
 });
 it('shows missing exposure totals as unavailable rather than zero',async()=>{
  vi.stubGlobal('fetch',vi.fn(async()=>response({...data,scopes:[{...scope,error:'Evidence unavailable',outstanding:null,appsec:null,affected:null}]})));

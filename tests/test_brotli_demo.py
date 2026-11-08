@@ -150,3 +150,31 @@ def test_api_origin_scope_and_downloads(service):
     assert client.get('/api/demos/brotli/manifest.json').json()['relations'] == result['relations']
     assert 'Synthetic' in client.get('/api/demos/brotli/summary.md').text or 'synthetic' in client.get('/api/demos/brotli/summary.md').text
     assert client.get('/api/assessments/' + result['assessment_id'], params={'customer_id': 'fictional-bank', 'environment_id': 'windows-ad'}).status_code == 404
+
+
+def test_synthetic_roles_are_assigned_and_legacy_backfill_preserves_edits(service):
+    result = demo.load(service)
+    rel = result['relations']
+    ids = set(rel['asset_to_vulnerability_action'].values()) | set(rel['rule_to_appsec_action'].values()) | {rel['defense_action_id']}
+    assert len(ids) == 8
+    for id in ids:
+        action = service.store.get('improvement', id)
+        assert action['owner'].startswith('Fictional ')
+        assert action['remediation_coordinator'] == demo.COORDINATOR
+        assert action['verification_reviewer'].startswith('Fictional ')
+    id = rel['rule_to_appsec_action']['demo/self-contained-package']
+    original = service.store.get('improvement', id)
+    legacy = original | {'owner':'Operator-assigned implementation team', 'verification_reviewer':'Operator reviewer'}
+    legacy.pop('remediation_coordinator')
+    service.store.put('improvement', id, legacy)
+    tests_before = service.store.all('test')
+    assert demo.populate_roles(service) == 1
+    updated = service.store.get('improvement', id)
+    assert updated['owner'] == legacy['owner'] and updated['verification_reviewer'] == legacy['verification_reviewer']
+    assert updated['remediation_coordinator'] == demo.COORDINATOR
+    assert updated['implementation_updated_at'] == original['implementation_updated_at']
+    assert updated['remediation'] == original['remediation'] and updated['status'] == original['status']
+    assert tests_before == service.store.all('test')
+    before = state(service.store)
+    assert demo.populate_roles(service) == 0
+    assert state(service.store) == before
