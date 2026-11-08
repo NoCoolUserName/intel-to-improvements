@@ -1,4 +1,5 @@
 import React,{useEffect,useState} from 'react';
+import {createPortal} from 'react-dom';
 import PriorityDecisions from './PriorityDecisions';
 import {ArrowUpRight,BriefcaseBusiness,ClipboardList,ShieldAlert,Users} from 'lucide-react';
 import {type NavigationTarget} from './navigation';
@@ -6,8 +7,8 @@ import './exposure-overview.css';
 type Scope={customer_id:string;environment_id:string;customer_name:string;environment_name:string;cases:number;open_actions:number;unassigned_actions:number;retest_actions:number;outstanding:number|null;overdue:number|null;needs_review:number|null;appsec:number|null;affected:number|null;error:string|null};
 type Case={id:string;customer_id:string;environment_id:string;title:string;updated_at:string;relevance:string;synthetic:boolean;open_actions:number};
 type Dashboard={sector_label?:string;company?:{name:string;sector:string};as_of:string;scopes:Scope[];cases:Case[];revision_count:number;policy:string;priorities?:Record<string,any>[];validation?:Record<string,any>[]};
-type Props={environmentValue?:string;onEnvironmentChange?:(value:string)=>void;onOpen:(workspace:string,target:NavigationTarget)=>void};
-export default function ExposureOverview({onOpen,environmentValue,onEnvironmentChange}:Props){
+type Props={contextContainer?:HTMLElement|null;environmentValue?:string;onEnvironmentChange?:(value:string)=>void;onOpen:(workspace:string,target:NavigationTarget)=>void};
+export default function ExposureOverview({onOpen,environmentValue,onEnvironmentChange,contextContainer}:Props){
  const [data,setData]=useState<Dashboard>(),[error,setError]=useState(''),[localEnvironment,setLocalEnvironment]=useState(''),[query,setQuery]=useState(''),[validationFilter,setValidationFilter]=useState('all');
  useEffect(()=>{let active=true,pending=false;const controller=new AbortController();
   async function load(){if(pending)return;pending=true;try{const response=await fetch('/api/exposure-overview/portfolio',{signal:controller.signal});const value=await response.json();if(!response.ok)throw Error(value.detail||'Dashboard unavailable');if(active){setData(value);setError('')}}catch(e){if(active)setError(String(e))}finally{pending=false}}
@@ -24,8 +25,9 @@ export default function ExposureOverview({onOpen,environmentValue,onEnvironmentC
  const validations=(data.validation||[]).filter(r=>!environment||r.customer_id+':'+r.environment_id===environment);
  const max=Math.max(1,...workloads.map(w=>w.actions));
  function open(workspace:string,s:Scope){onOpen(workspace,{customer:s.customer_id,environment:s.environment_id})}
+ const contextStrip=(<div className="dashboard-toolbar dashboard-context" role="group" aria-label="Company and environment context"><div><span className="context-caption">Fictional Company and demo</span><strong>{data.company?.name||'Fictional Company'} · {scopes.length} environments</strong><small role="status">Updates automatically · Last updated {new Date(data.as_of).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'})}</small></div><label>Environment<select aria-label="Dashboard environment" value={environment} onChange={e=>chooseEnvironment(e.target.value)}><option value="">All environments</option>{data.scopes.map(s=><option key={s.customer_id+':'+s.environment_id} value={s.customer_id+':'+s.environment_id}>{s.environment_name}</option>)}</select></label><div className="dashboard-context-sector"><span className="badge">{data.sector_label||data.company?.sector||'Sector not selected'}</span></div></div>);
  return <section className="exposure-overview" aria-label="Exposure overview">
-  <div className="dashboard-toolbar dashboard-context" role="group" aria-label="Company and environment context"><div><span className="context-caption">Fictional Company and demo</span><strong>{data.company?.name||'Fictional Company'} · {scopes.length} environments</strong><small role="status">Updates automatically · Last updated {new Date(data.as_of).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'})}</small></div><label>Environment<select aria-label="Dashboard environment" value={environment} onChange={e=>chooseEnvironment(e.target.value)}><option value="">All environments</option>{data.scopes.map(s=><option key={s.customer_id+':'+s.environment_id} value={s.customer_id+':'+s.environment_id}>{s.environment_name}</option>)}</select></label><div className="dashboard-context-sector"><span className="badge">{data.sector_label||data.company?.sector||'Sector not selected'}</span></div></div>
+  {contextContainer?createPortal(contextStrip,contextContainer):contextStrip}
   {error&&<p role="alert" className="banner error">Updates interrupted. Showing the last successful snapshot. Retrying automatically. {error}</p>}
   <div className="dashboard-stats">
    {[{label:'Working cases',value:data.cases.filter(c=>!environment||c.customer_id+':'+c.environment_id===environment).length,detail:'Latest assessment per source and environment',Icon:BriefcaseBusiness},{label:'Outstanding exposures',value:exposureTotal,detail:'Current AppSec and infrastructure records',Icon:ShieldAlert},{label:'Open actions',value:sum('open_actions'),detail:'Recorded action status remains open',Icon:ClipboardList},{label:'Awaiting retest',value:sum('retest_actions'),detail:'Fix reported or retest requested',Icon:Users}].map(({label,value,detail,Icon})=><article className="panel dashboard-stat" key={label}><div><span>{label}</span><Icon size={20}/></div><strong>{value}</strong><small>{detail}</small></article>)}

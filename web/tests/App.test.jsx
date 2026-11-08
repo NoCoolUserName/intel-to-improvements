@@ -81,7 +81,11 @@ async function selectEnvironment(user,value){
   const nav=screen.getByRole('navigation',{name:'Workbench navigation'});
   const previous=nav.querySelector('[aria-current="page"]').textContent;
   await user.click(within(nav).getByRole('button',{name:'Exposure Overview',exact:true}));
-  await user.selectOptions(await screen.findByRole('combobox',{name:'Dashboard environment'}),value);
+  const environment=await screen.findByRole('combobox',{name:'Dashboard environment'});
+  const strip=within(screen.getByRole('banner')).getByRole('group',{name:'Company and environment context'});
+  expect(strip.contains(environment)).toBe(true);
+  expect(screen.getByRole('banner').compareDocumentPosition(screen.getByRole('heading',{name:'Exposure Overview'})) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  await user.selectOptions(environment,value);
   await user.click(within(nav).getByRole('button',{name:previous,exact:true}));
   expect(screen.queryByRole('group',{name:'Company and environment context'})).toBeNull();
 }
