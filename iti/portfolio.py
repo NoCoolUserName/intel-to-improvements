@@ -45,6 +45,8 @@ def dashboard(store):
                           open_actions=sum(a['status'] != 'closed' for a in linked)))
     validation = []
     exposures = []
+    review_records = []
+    overdue_actions = set()
     for key, scope in scopes.items():
         scoped_actions = grouped[key]
         scope.update(cases=sum((c['customer_id'], c['environment_id']) == key for c in cases),
@@ -54,13 +56,20 @@ def dashboard(store):
         try:
             projection = overview(store, *key)
             metrics = {m['id']: m['value'] for m in projection['metrics']}
+            metric_records = {m['id']: set(m['record_ids']) for m in projection['metrics']}
+            review_ids = metric_records['unreviewed'] | metric_records['potential']
+            overdue_actions.update((*key, row['action_id']) for row in projection['rows']
+                                   if row['id'] in metric_records['overdue'] and row.get('action_id'))
             for row in projection['rows']:
                 if row['entity'] != 'exposure':
                     continue
+                record = dict(id=row['id'], customer_id=key[0], environment_id=key[1],
+                              label=row['label'], origin=row['origin'], status=row['status'],
+                              synthetic=row['synthetic'], reference=row['reference'])
                 if row['outstanding']:
-                    exposures.append(dict(id=row['id'], customer_id=key[0], environment_id=key[1],
-                                          label=row['label'], origin=row['origin'], status=row['status'],
-                                          synthetic=row['synthetic'], reference=row['reference']))
+                    exposures.append(record)
+                if row['id'] in review_ids:
+                    review_records.append(record)
                 linked_ids = {a['action_id'] for a in projection['rows'] if a.get('exposure_id') == row['id'] and a.get('action_id')}
                 plans = [{'owner': a['owner'], 'retest': a.get('retest', ''), 'rationale': a.get('rationale', '')} for a in scoped_actions if a['id'] in linked_ids]
                 validation.append(dict(plans=plans, id=row['id'], customer_id=key[0], environment_id=key[1],
@@ -109,12 +118,15 @@ def dashboard(store):
     priorities = [r for r in priorities if r['customer_id'] in allowed]
     validation = [r for r in validation if r['customer_id'] in allowed]
     exposures = [r for r in exposures if r['customer_id'] in allowed]
+    review_records = [r for r in review_records if r['customer_id'] in allowed]
     from .improvement_actions import project
     action_rows = [project(store, a, a['context']['customer_id'], a['context']['environment_id']) for a in actions if a['context']['customer_id'] in allowed]
+    for row in action_rows:
+        row['past_due'] = (row['customer_id'], row['environment_id'], row['id']) in overdue_actions
     for scope in scopes.values():
         scope['customer_name'] = company_profile['name']
     from .models import SECTORS
-    return dict(exposures=exposures, action_tracking=action_rows, sector_label=SECTORS.get(company_profile['sector'], company_profile['sector']), company=company_profile, priorities=priorities, validation=validation, as_of=now(), scopes=list(scopes.values()), cases=sorted(cases, key=lambda c: c['updated_at'] or '', reverse=True),
+    return dict(exposures=exposures, review_records=review_records, action_tracking=action_rows, sector_label=SECTORS.get(company_profile['sector'], company_profile['sector']), company=company_profile, priorities=priorities, validation=validation, as_of=now(), scopes=list(scopes.values()), cases=sorted(cases, key=lambda c: c['updated_at'] or '', reverse=True),
                 revision_count=sum(a['context']['customer_id'] in allowed for a in assessments), policy='One case per source and environment; latest assessment revision. Open action counts use recorded status. Exposure counts use the existing evidence review rules. Synthetic records are included and labeled.')
 
 

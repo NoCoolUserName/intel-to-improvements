@@ -88,6 +88,9 @@ it('opens a numbered, filtered remediation list from the Open actions card',asyn
  expect(within(steps).queryByText('Closed work')).toBeNull();
  await userEvent.click(within(steps).getByRole('button',{name:'Show all actions'}));
  expect(within(steps).getByRole('row',{name:/2 Closed work/})).toBeTruthy();
+ await userEvent.click(toggle);
+ expect(toggle.getAttribute('aria-expanded')).toBe('false');
+ expect(screen.queryByRole('region',{name:'Remediation next steps'})).toBeNull();
 });
 it('puts pending validation and blockers in Needs attention without flagging deliberately unplanned validation',async()=>{
  const stages=['Awaiting evidence','Awaiting verification review','Blocked','Validation not planned','Verified outcome','Awaiting implementation'];
@@ -98,4 +101,32 @@ it('puts pending validation and blockers in Needs attention without flagging del
  expect(within(box).getByText(/validation blocked/).textContent).toBe('1 validation blocked');
  expect(within(box).queryByText(/validation deliberately not planned/)).toBeNull();
  expect(screen.queryByText('Awaiting retest')).toBeNull();
+});
+
+it('drills into each attention category with its selected scope and source record',async()=>{
+ const base={customer_id:'a',environment_id:'env',status:'open',owner:'Engineering',next_owner:'Engineering'};
+ const action_tracking=[
+  {...base,id:'evidence',proposed_change:'Collect evidence',stage:'Awaiting evidence'},
+  {...base,id:'blocked',proposed_change:'Unblock validation',stage:'Blocked'},
+  {...base,id:'unassigned',proposed_change:'Assign engineer',owner:'',stage:'Awaiting implementation'},
+  {...base,id:'late',proposed_change:'Overdue change',stage:'Awaiting implementation',past_due:true},
+  {...base,id:'other-scope',customer_id:'b',proposed_change:'Other scope',stage:'Blocked'}
+ ];
+ const review_records=[{id:'review',customer_id:'a',environment_id:'env',label:'Needs applicability review',origin:'Infrastructure',status:'needs verification',synthetic:true,reference:{cve:'CVE-2026-11149'}}];
+ vi.stubGlobal('fetch',vi.fn(async()=>response({...data,action_tracking,review_records})));
+ const onOpen=vi.fn();render(<ExposureOverview environmentValue="a:env" onOpen={onOpen}/>);
+ const attention=(await screen.findByRole('heading',{name:'Needs attention'})).parentElement!;
+ for(const [label,change] of [['Actions awaiting validation','Collect evidence'],['Validation blocked','Unblock validation'],['Open actions without an owner','Assign engineer'],['Actions past their due date','Overdue change']]){
+  await userEvent.click(within(attention).getByRole('button',{name:label}));
+  const steps=screen.getByRole('region',{name:'Remediation next steps'});
+  expect(within(steps).getAllByRole('row')).toHaveLength(2);
+  expect(within(steps).getByRole('button',{name:change})).toBeTruthy();
+ }
+ const steps=screen.getByRole('region',{name:'Remediation next steps'});
+ await userEvent.click(within(steps).getByRole('button',{name:'Overdue change'}));
+ expect(onOpen).toHaveBeenLastCalledWith('Improvement Actions',{customer:'a',environment:'env',record:'late'});
+ await userEvent.click(within(attention).getByRole('button',{name:'Findings or assets awaiting review'}));
+ const reviews=screen.getByRole('region',{name:'Findings and assets awaiting review'});
+ await userEvent.click(within(reviews).getByRole('button',{name:/Needs applicability review/}));
+ expect(onOpen).toHaveBeenLastCalledWith('Vulnerability Intelligence',{customer:'a',environment:'env',record:'CVE-2026-11149'});
 });
