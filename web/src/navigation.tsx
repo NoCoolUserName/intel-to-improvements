@@ -14,7 +14,7 @@ type WorkspaceItem={id:string;label:string;slug:string;icon:typeof Layers};
 export const WORKSPACES = NAV_GROUPS.flatMap<WorkspaceItem>(group=>[...group.items]);
 export function workspaceLabel(id:string){return WORKSPACES.find(item=>item.id===id)?.label||id}
 export const DESCRIPTIONS:Record<string,string>={
-  'Exposure Overview':'Track cases, exposure and corrective work across the company’s cases and environments.',
+  'Exposure Overview':'Track cases, exposure and corrective work across the company’s network zones and segments.',
   'Coverage':'Inspect intelligence assessment coverage, telemetry gaps and independent timing.',
   'Add Intelligence':'Bring in selected sources to understand adversary behavior and customer relevance.',
   'Case overview':'Trace source evidence, relevance and proposed behaviors into investigation and action.',

@@ -44,6 +44,7 @@ def dashboard(store):
                           synthetic=bool(metadata.get('fixture') or metadata.get('synthetic')),
                           open_actions=sum(a['status'] != 'closed' for a in linked)))
     validation = []
+    exposures = []
     for key, scope in scopes.items():
         scoped_actions = grouped[key]
         scope.update(cases=sum((c['customer_id'], c['environment_id']) == key for c in cases),
@@ -56,6 +57,10 @@ def dashboard(store):
             for row in projection['rows']:
                 if row['entity'] != 'exposure':
                     continue
+                if row['outstanding']:
+                    exposures.append(dict(id=row['id'], customer_id=key[0], environment_id=key[1],
+                                          label=row['label'], origin=row['origin'], status=row['status'],
+                                          synthetic=row['synthetic'], reference=row['reference']))
                 linked_ids = {a['action_id'] for a in projection['rows'] if a.get('exposure_id') == row['id'] and a.get('action_id')}
                 plans = [{'owner': a['owner'], 'retest': a.get('retest', ''), 'rationale': a.get('rationale', '')} for a in scoped_actions if a['id'] in linked_ids]
                 validation.append(dict(plans=plans, id=row['id'], customer_id=key[0], environment_id=key[1],
@@ -103,12 +108,13 @@ def dashboard(store):
     cases = [r for r in cases if r['customer_id'] in allowed]
     priorities = [r for r in priorities if r['customer_id'] in allowed]
     validation = [r for r in validation if r['customer_id'] in allowed]
+    exposures = [r for r in exposures if r['customer_id'] in allowed]
     from .improvement_actions import project
     action_rows = [project(store, a, a['context']['customer_id'], a['context']['environment_id']) for a in actions if a['context']['customer_id'] in allowed]
     for scope in scopes.values():
         scope['customer_name'] = company_profile['name']
     from .models import SECTORS
-    return dict(action_tracking=action_rows, sector_label=SECTORS.get(company_profile['sector'], company_profile['sector']), company=company_profile, priorities=priorities, validation=validation, as_of=now(), scopes=list(scopes.values()), cases=sorted(cases, key=lambda c: c['updated_at'] or '', reverse=True),
+    return dict(exposures=exposures, action_tracking=action_rows, sector_label=SECTORS.get(company_profile['sector'], company_profile['sector']), company=company_profile, priorities=priorities, validation=validation, as_of=now(), scopes=list(scopes.values()), cases=sorted(cases, key=lambda c: c['updated_at'] or '', reverse=True),
                 revision_count=sum(a['context']['customer_id'] in allowed for a in assessments), policy='One case per source and environment; latest assessment revision. Open action counts use recorded status. Exposure counts use the existing evidence review rules. Synthetic records are included and labeled.')
 
 

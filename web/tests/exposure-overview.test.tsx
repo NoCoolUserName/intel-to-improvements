@@ -11,7 +11,8 @@ it('shows system totals and cases, with no manual refresh or demo-loading box',a
  const fetcher=vi.fn(async()=>response(data));vi.stubGlobal('fetch',fetcher);render(<ExposureOverview onOpen={vi.fn()}/>);
  await screen.findByRole('button',{name:'Brotli case',exact:true});
  expect(fetcher.mock.calls[0][0]).toBe('/api/exposure-overview/portfolio');
- expect(screen.getByText('Fictional Company · 2 environments')).toBeTruthy();
+ expect(screen.getByText('Fictional Company · 2 network zones / segments')).toBeTruthy();
+ expect(screen.getByRole('option',{name:'All network zones and segments'})).toBeTruthy();
  expect(screen.getByText('Synthetic example')).toBeTruthy();
  expect(screen.queryByRole('button',{name:/refresh|load synthetic/i})).toBeNull();
  expect(screen.queryByText('Exposure and accountable work')).toBeNull();
@@ -21,7 +22,7 @@ it('filters customers, searches cases and opens the correct scoped destination',
  await user.click(await screen.findByRole('button',{name:'Brotli case'}));
  expect(onOpen).toHaveBeenLastCalledWith('Case overview',{customer:'a',environment:'env',assessment:'case-a'});
  await user.type(screen.getByRole('searchbox',{name:'Find a case'}),'missing');expect(screen.queryByRole('button',{name:'Brotli case',exact:true})).toBeNull();
- await user.selectOptions(screen.getByRole('combobox',{name:'Dashboard environment'}),'b:env');
+ await user.selectOptions(screen.getByRole('combobox',{name:'Dashboard network zone / segment'}),'b:env');
  const row=screen.getAllByRole('row').find(r=>r.textContent?.includes('Production'))!;
  await user.click(within(row).getByRole('button',{name:'Actions'}));expect(onOpen).toHaveBeenLastCalledWith('Improvement Actions',{customer:'b',environment:'env'});
 });
@@ -55,7 +56,38 @@ it('opens the actions behind a working-case count without changing the environme
  await screen.findByRole('heading',{name:'Open Working Cases'});
  await userEvent.click(screen.getByRole('button',{name:/Brotli case.*2 open actions/}));
  expect(onOpen).toHaveBeenCalledWith('Improvement Actions',{customer:'a',environment:'env',work:'open'});
- expect(onEnvironmentChange).not.toHaveBeenCalled();expect((screen.getByRole('combobox',{name:'Dashboard environment'}) as HTMLSelectElement).value).toBe('');
+ expect(onEnvironmentChange).not.toHaveBeenCalled();expect((screen.getByRole('combobox',{name:'Dashboard network zone / segment'}) as HTMLSelectElement).value).toBe('');
+});
+it('expands outstanding records and opens each record in its scoped source workspace',async()=>{
+ const exposures=[
+  {id:'app:one',customer_id:'a',environment_id:'env',label:'APP-1',origin:'AppSec',status:'Reviewed applicable',synthetic:true,reference:{finding_id:'finding-1'}},
+  {id:'infra:one',customer_id:'a',environment_id:'env',label:'CVE-2026-11149 · gateway',origin:'Infrastructure',status:'confirmed affected',synthetic:true,reference:{cve:'CVE-2026-11149'}}
+ ];
+ vi.stubGlobal('fetch',vi.fn(async()=>response({...data,exposures})));const onOpen=vi.fn();render(<ExposureOverview onOpen={onOpen}/>);
+ const toggle=await screen.findByRole('button',{name:'Outstanding exposures'});
+ expect(toggle.getAttribute('aria-expanded')).toBe('false');expect(screen.queryByRole('region',{name:'Outstanding exposure records'})).toBeNull();
+ await userEvent.click(toggle);
+ const list=screen.getByRole('region',{name:'Outstanding exposure records'});
+ expect(toggle.getAttribute('aria-expanded')).toBe('true');
+ await userEvent.click(within(list).getByRole('button',{name:/APP-1/}));
+ expect(onOpen).toHaveBeenLastCalledWith('Application Findings',{customer:'a',environment:'env',record:'finding-1'});
+ await userEvent.click(within(list).getByRole('button',{name:/CVE-2026-11149/}));
+ expect(onOpen).toHaveBeenLastCalledWith('Vulnerability Intelligence',{customer:'a',environment:'env',record:'CVE-2026-11149'});
+});
+it('opens a numbered, filtered remediation list from the Open actions card',async()=>{
+ const action={id:'open-1',customer_id:'a',environment_id:'env',status:'open',proposed_change:'Update gateway',related_title:'Brotli',stage:'Awaiting implementation',next_owner:'Engineering',implementation_owner:'Engineering',remediation_coordinator:'Coordinator',verification_reviewer:'Reviewer'};
+ vi.stubGlobal('fetch',vi.fn(async()=>response({...data,action_tracking:[action,{...action,id:'closed-1',status:'closed',proposed_change:'Closed work'}]})));
+ render(<ExposureOverview onOpen={vi.fn()}/>);
+ const toggle=await screen.findByRole('button',{name:'Open actions'});
+ expect(toggle.getAttribute('aria-pressed')).toBe('false');
+ await userEvent.click(toggle);
+ const steps=screen.getByRole('region',{name:'Remediation next steps'});
+ expect(toggle.getAttribute('aria-pressed')).toBe('true');
+ expect(within(steps).getByText('Showing 1 open actions')).toBeTruthy();
+ expect(within(steps).getByRole('row',{name:/1 Update gateway/})).toBeTruthy();
+ expect(within(steps).queryByText('Closed work')).toBeNull();
+ await userEvent.click(within(steps).getByRole('button',{name:'Show all actions'}));
+ expect(within(steps).getByRole('row',{name:/2 Closed work/})).toBeTruthy();
 });
 it('puts pending validation and blockers in Needs attention without flagging deliberately unplanned validation',async()=>{
  const stages=['Awaiting evidence','Awaiting verification review','Blocked','Validation not planned','Verified outcome','Awaiting implementation'];

@@ -82,13 +82,13 @@ async function selectEnvironment(user,value){
   const nav=screen.getByRole('navigation',{name:'Workbench navigation'});
   const previous=nav.querySelector('[aria-current="page"]').textContent;
   await user.click(within(nav).getByRole('button',{name:'Exposure Overview',exact:true}));
-  const environment=await screen.findByRole('combobox',{name:'Dashboard environment'});
-  const strip=within(screen.getByRole('banner')).getByRole('group',{name:'Company and environment context'});
+  const environment=await screen.findByRole('combobox',{name:'Dashboard network zone / segment'});
+  const strip=within(screen.getByRole('banner')).getByRole('group',{name:'Company and network zone / segment context'});
   expect(strip.contains(environment)).toBe(true);
   expect(screen.getByRole('banner').compareDocumentPosition(screen.getByRole('heading',{name:'Exposure Overview'})) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   await user.selectOptions(environment,value);
   await user.click(within(nav).getByRole('button',{name:previous,exact:true}));
-  expect(screen.queryByRole('group',{name:'Company and environment context'})).toBeNull();
+  expect(screen.queryByRole('group',{name:'Company and network zone / segment context'})).toBeNull();
 }
 
 it('keeps the chosen theme across customer changes and a remount', async () => {
@@ -405,11 +405,11 @@ it('shows a read-only Coverage case and changes case without losing its assessme
 it('defaults Overview to all environments on reload while retaining the scoped environment for other workspaces',async()=>{
  history.replaceState(null,'','/#/exposure-overview?customer=fictional-cloud&environment=mac-cloud');
  const user=userEvent.setup();const view=render(<App/>);
- expect((await screen.findByRole('combobox',{name:'Dashboard environment'})).value).toBe('');
- await user.selectOptions(screen.getByRole('combobox',{name:'Dashboard environment'}),'fictional-cloud:mac-cloud');
- expect(screen.getByRole('combobox',{name:'Dashboard environment'}).value).toBe('fictional-cloud:mac-cloud');
+ expect((await screen.findByRole('combobox',{name:'Dashboard network zone / segment'})).value).toBe('');
+ await user.selectOptions(screen.getByRole('combobox',{name:'Dashboard network zone / segment'}),'fictional-cloud:mac-cloud');
+ expect(screen.getByRole('combobox',{name:'Dashboard network zone / segment'}).value).toBe('fictional-cloud:mac-cloud');
  view.unmount();render(<App/>);
- expect((await screen.findByRole('combobox',{name:'Dashboard environment'})).value).toBe('');
+ expect((await screen.findByRole('combobox',{name:'Dashboard network zone / segment'})).value).toBe('');
  await user.click(screen.getByRole('button',{name:'Coverage',exact:true}));
  await within(screen.getByRole('group',{name:'Selected coverage case'})).findByText('Cloud investigation');
  expect(location.hash).toContain('environment=mac-cloud');

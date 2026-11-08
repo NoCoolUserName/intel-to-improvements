@@ -62,6 +62,9 @@ def test_dashboard_validation_is_readonly_and_does_not_invent_execution(service)
     assert any(r['outcome'] == 'No recorded validation' and not r['recorded'] for r in result['validation'])
     assert any(r['outcome'] == 'Retest failed' and r['synthetic'] for r in result['validation'])
     assert all(r['outcome'] for r in result['validation'])
+    assert result['exposures']
+    assert len(result['exposures']) == sum(s['outstanding'] or 0 for s in result['scopes'])
+    assert all(r['origin'] in ('AppSec', 'Infrastructure') and r['reference'] for r in result['exposures'])
     with service.store.connect() as c:
         assert before == [tuple(r) for r in c.execute('SELECT * FROM records ORDER BY kind,id')]
         assert activity == c.execute('SELECT count(*) FROM activity').fetchone()[0]
@@ -80,6 +83,6 @@ def test_company_selection_persists_sector_and_filters_dashboard(service):
     result = dashboard(service.store)
     assert result['scopes']
     assert all(s['customer_id'] in boot['company_customer_ids'] for s in result['scopes'])
-    assert all(r['customer_id'] in boot['company_customer_ids'] for kind in ('cases','priorities','validation') for r in result[kind])
+    assert all(r['customer_id'] in boot['company_customer_ids'] for kind in ('cases','priorities','validation','exposures') for r in result[kind])
     assert all(s['customer_name'] == 'Juniper Software' for s in result['scopes'])
     assert client.post('/api/company-profile',json={'name':'Real Company','sector':'technology'}).status_code == 422
