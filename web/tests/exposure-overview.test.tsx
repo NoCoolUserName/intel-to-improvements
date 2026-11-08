@@ -82,7 +82,7 @@ it('opens a numbered, filtered remediation list from the Open remediation action
  const toggle=await screen.findByRole('button',{name:'Open remediation actions'});
  expect(toggle.getAttribute('aria-pressed')).toBe('false');
  await userEvent.click(toggle);
- const steps=screen.getByRole('region',{name:'Remediation next steps'});
+ const steps=screen.getByRole('region',{name:'Remediation Action Next Steps'});
  expect(toggle.getAttribute('aria-pressed')).toBe('true');
  expect(within(steps).getByText('Showing 1 open actions')).toBeTruthy();
  expect(within(steps).getByRole('row',{name:/1 Update gateway/})).toBeTruthy();
@@ -91,7 +91,7 @@ it('opens a numbered, filtered remediation list from the Open remediation action
  expect(within(steps).getByRole('row',{name:/2 Closed work/})).toBeTruthy();
  await userEvent.click(toggle);
  expect(toggle.getAttribute('aria-expanded')).toBe('false');
- expect(screen.queryByRole('region',{name:'Remediation next steps'})).toBeNull();
+ expect(screen.queryByRole('region',{name:'Remediation Action Next Steps'})).toBeNull();
 });
 it('puts pending validation and blockers in Needs attention without flagging deliberately unplanned validation',async()=>{
  const stages=['Awaiting evidence','Awaiting verification review','Blocked','Validation not planned','Verified outcome','Awaiting implementation'];
@@ -119,7 +119,7 @@ it('drills into each attention category with its selected scope and source recor
  const attention=(await screen.findByRole('heading',{name:'Needs attention'})).parentElement!;
  for(const [label,change] of [['Remediation actions awaiting validation','Collect evidence'],['Validation blocked','Unblock validation'],['Open actions without an owner','Assign engineer'],['Actions past their due date','Overdue change']]){
   await userEvent.click(within(attention).getByRole('button',{name:label}));
-  const steps=screen.getByRole('region',{name:'Remediation next steps'});
+  const steps=screen.getByRole('region',{name:'Remediation Action Next Steps'});
   expect(within(steps).getAllByRole('row')).toHaveLength(2);
   expect(within(steps).getByRole('button',{name:change})).toBeTruthy();
   const selected=within(attention).getByRole('button',{name:label});
@@ -129,7 +129,7 @@ it('drills into each attention category with its selected scope and source recor
   expect(within(steps).getAllByRole('row')).toHaveLength(5);
   await userEvent.click(selected);
  }
- const steps=screen.getByRole('region',{name:'Remediation next steps'});
+ const steps=screen.getByRole('region',{name:'Remediation Action Next Steps'});
  await userEvent.click(within(steps).getByRole('button',{name:'Overdue change'}));
  expect(onOpen).toHaveBeenLastCalledWith('Improvement Actions',{customer:'a',environment:'env',record:'late'});
  await userEvent.click(within(attention).getByRole('button',{name:'Findings or assets awaiting review'}));
