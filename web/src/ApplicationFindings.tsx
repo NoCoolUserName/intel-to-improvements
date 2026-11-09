@@ -44,6 +44,7 @@ function Workspace({customer, environment, workingCaseTitle, scopeName, onChange
     <h2>SARIF imports and findings</h2><p>Manually import SARIF 2.1.0 for the customer and environment selected above. Scanner reports are not independently validated vulnerabilities.</p>
     <p className="fine">No scanner execution, automated remediation or enterprise risk scoring is performed. Supplied evidence review is separate; scan completeness is unknown. Missing findings never mean fixed.</p>
     {onDemo&&<button disabled={busy} onClick={()=>action(async()=>{const response=await fetch('/api/appsec/demo',{method:'POST'});const value=await response.json();if(!response.ok)throw new Error(value.detail);if(alive.current)onDemo(value);})}>Load synthetic remediation demo</button>}
+    <div className="demo-capability"><strong>What I can demonstrate:</strong> I can trace a reported finding to its scanner rule, source location and original SARIF, then record whether it applies to this application. For an applicable finding, I can assign remediation, review supplied engineering evidence and record a separate retest outcome. A scanner report alone does not prove a fix.</div>
     {error && <div role="alert" className="banner error">{error}<button disabled={busy} onClick={() => action(load)}>Retry findings</button></div>}
     {notice && <p role="status">{notice}</p>}
     <div className="panel padded"><h2>Import SARIF</h2><form onChange={() => {setPreview(undefined); setNotice('');}} onSubmit={e => {
