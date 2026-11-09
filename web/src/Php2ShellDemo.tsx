@@ -21,7 +21,7 @@ export default function Php2ShellDemo({customer,onLoaded,onNavigate}: {customer:
     {customer===PHP2SHELL_CUSTOMER&&!demo&&!error&&<p role="status">Loading case guide…</p>}
     {demo&&customer===PHP2SHELL_CUSTOMER&&<details className="php2shell-guide"><summary>PHP2Shell case guide · all {stops.length} workspaces</summary>
       <div className="php2shell-stops">{stops.map((stop,i)=><article key={stop.workspace}>
-        <span className="php2shell-number">{String(i+1).padStart(2,'0')}</span><div><button className="text-link" onClick={()=>onNavigate(stop.workspace)}>Open {workspaceLabel(stop.workspace)}</button><p>{stop.task}</p></div>
+        <span className="php2shell-number">{String(i+1).padStart(2,'0')}</span><div><button className="text-link" onClick={()=>onNavigate(stop.workspace)}>{workspaceLabel(stop.workspace)}</button><p>{stop.task}</p></div>
       </article>)}</div>
       <div className="two-col"><div><h3>Primary sources and correction</h3><ul>{demo.sources.map(s=><li key={s.url}><a href={s.url} target="_blank" rel="noreferrer">{s.title}</a></li>)}</ul>
         <p>AttackIQ’s probe covers a particular request pattern. A blocked sample does not establish comprehensive protection; a missing signature is inconclusive. The October 23 Unit 42 exploitation update was retracted October 25.</p></div>
