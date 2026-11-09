@@ -24,7 +24,7 @@ export const DESCRIPTIONS:Record<string,string>={
   'Improvement Actions':'Follow existing corrective work, ownership and retests across the selected workspace.',
   'Hunts':'Investigate defensive assumptions using bounded questions and retained evidence.',
   'Purple team':'Plan human-led validation and preserve what each test actually establishes.',
-  'Pipeline Assurance':'Inspect supplied configuration and execution; effectiveness remains a separate question.',
+  'Pipeline Assurance':'Review release gates, security checks and evidence from the selected CI/CD pipeline.',
   'Evaluation':'Inspect the workbench’s analytical reliability and capability evidence.',
   'Customer profiles':'Choose the fictional company and sector for the demonstration.',
 };
