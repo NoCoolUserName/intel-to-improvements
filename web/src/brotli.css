@@ -5,11 +5,11 @@
 .brotli-intro>button{flex-shrink:0}
 .brotli-guide>summary{font-weight:650;cursor:pointer;padding:12px 0}
 .brotli-questions{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 18px}
-.brotli-questions span{border:1px solid var(--border,#dde4e2);border-radius:6px;padding:7px 10px;font-size:14px}
+.brotli-questions span{border:1px solid var(--border,#dde4e2);border-radius:6px;padding:7px 10px;font-size:12px}
 .brotli-stops{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0 22px}
 .brotli-stops article,.brotli-records article{border:1px solid var(--border,#dde4e2);border-radius:6px;padding:13px;background:var(--surface-soft,#f4f6f5)}
 .brotli-stops article{display:flex;align-items:flex-start;gap:10px}
-.brotli-stops p{font-size:14px;margin:5px 0 0}
+.brotli-stops p{font-size:12px;margin:5px 0 0}
 .brotli-number{font-size:13px;font-weight:700;color:var(--link,#17695d)}
 .brotli-records{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:12px 0}
 .brotli-records article{display:flex;flex-direction:column;gap:5px;min-width:0}
