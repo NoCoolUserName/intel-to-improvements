@@ -1,10 +1,10 @@
 """Human-governed application remediation. No scanner execution or operational assurance."""
 from contextlib import contextmanager
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 from . import application_findings as af, profiles, ledger
 from .appsec_models import Triage, Plan, ExceptionRequest, ExceptionDecision, Retest
-from .models import ImprovementAction, TestRun, EvidenceAttachment
+from .models import TestRun, EvidenceAttachment
 from .store import TransactionStore, uid, now, digest, canonical
 
 APPLICABLE = 'Applicable / remediation warranted'

@@ -1,0 +1,112 @@
+{
+  "version": "2.1.0",
+  "properties": {
+    "synthetic": true,
+    "description": "Authored engineering review, not executed scanner"
+  },
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Harborlight authored Brotli review",
+          "version": "1-demo",
+          "rules": [
+            {
+              "id": "demo/brotli-runtime-evidence",
+              "shortDescription": {
+                "text": "Authored Node.js 24.22.0 image inventory for CVE-2026-111497 requires deployed artifact evidence."
+              }
+            },
+            {
+              "id": "demo/self-contained-package",
+              "shortDescription": {
+                "text": "Authored .NET 8.0.32 self-contained bundle remains after host update; rebuild for CVE-2026-111497."
+              }
+            },
+            {
+              "id": "demo/outbound-control-scope",
+              "shortDescription": {
+                "text": "Authored inbound-only filter does not cover outbound Brotli response decoding for CVE-2026-111497."
+              }
+            }
+          ]
+        }
+      },
+      "versionControlProvenance": [
+        {
+          "repositoryUri": "https://code.example.invalid/harborlight/brotli-demo",
+          "revisionId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "branch": "main"
+        }
+      ],
+      "results": [
+        {
+          "ruleId": "demo/brotli-runtime-evidence",
+          "level": "warning",
+          "message": {
+            "text": "Authored Node.js 24.22.0 image inventory for CVE-2026-111497 requires deployed artifact evidence."
+          },
+          "fingerprints": {
+            "demo/v1": "client-api"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "Dockerfile"
+                },
+                "region": {
+                  "startLine": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "demo/self-contained-package",
+          "level": "warning",
+          "message": {
+            "text": "Authored .NET 8.0.32 self-contained bundle remains after host update; rebuild for CVE-2026-111497."
+          },
+          "fingerprints": {
+            "demo/v1": "advisor-package"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "deploy/advisor.runtimeconfig.json"
+                },
+                "region": {
+                  "startLine": 4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "demo/outbound-control-scope",
+          "level": "warning",
+          "message": {
+            "text": "Authored inbound-only filter does not cover outbound Brotli response decoding for CVE-2026-111497."
+          },
+          "fingerprints": {
+            "demo/v1": "research-fetcher"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/fetch.ts"
+                },
+                "region": {
+                  "startLine": 12
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

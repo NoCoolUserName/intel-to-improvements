@@ -48,6 +48,7 @@ function respond(input) {
   const bank = url.searchParams.get('customer_id') === 'fictional-bank';
   switch (url.pathname) {
     case '/api/bootstrap': return json(bootstrap);
+    case '/api/exposure-overview/portfolio': return json({as_of:'2026-11-08T00:00:00Z',cases:[],scopes:bootstrap.customers.flatMap(c=>c.environments.map(e=>({customer_id:c.id,environment_id:e.id,customer_name:c.name,environment_name:e.name,cases:0,open_actions:0}))),revision_count:0,policy:'Fixture'});
     case '/api/assessments/bank-case/defenses': case '/api/assessments/cloud-case/defenses':
       return json({state:'ready',behaviors:{}});
     case '/api/evaluation': return json({status: 'NOT RUN'});
@@ -56,13 +57,14 @@ function respond(input) {
     case '/api/improvements/cloud-action': return !bank?json(actionRow(false)):json({detail:'Not found in this scope'},404);
     case '/api/assessments': return json(bank ? [bankCase] : [cloudCase]);
     case '/api/packages': return json(bank ? [bankPackage] : []);
-    case '/api/jobs': case '/api/overrides': return json([]);
+    case '/api/jobs': case '/api/overrides': case '/api/gmail/imports': return json([]);
     case '/api/ledger/bank-case': case '/api/ledger/cloud-case':
       return json({counts: {}, metrics: {}, improvements: [], tests: [], history: []});
     default: throw new Error(`Unexpected API request: ${url.pathname}`);
   }
 }
 beforeEach(() => {
+  vi.stubGlobal('ResizeObserver',class {observe(){} disconnect(){}});
   localStorage.clear();
   history.replaceState(null,'','/');
   document.head.innerHTML = '<meta name="theme-color" content="#152d31">';
@@ -72,9 +74,21 @@ afterEach(() => {cleanup(); vi.unstubAllGlobals(); vi.restoreAllMocks();});
 async function mount() {
   const user = userEvent.setup();
   const view = render(<App/>);
-  await screen.findByRole('option', {name: 'Fictional Cloud'});
-  await waitFor(() => expect(screen.getByRole('combobox', {name: 'Working case'}).value).toBe('bank-case'));
+  await within(screen.getByRole('group',{name:'Selected coverage case'})).findByText('Bank investigation');
   return {user, ...view};
+}
+
+async function selectEnvironment(user,value){
+  const nav=screen.getByRole('navigation',{name:'Workbench navigation'});
+  const previous=nav.querySelector('[aria-current="page"]').textContent;
+  await user.click(within(nav).getByRole('button',{name:'Exposure Overview',exact:true}));
+  const environment=await screen.findByRole('combobox',{name:'Dashboard network zone / segment'});
+  const strip=within(screen.getByRole('banner')).getByRole('group',{name:'Company and network zone / segment context'});
+  expect(strip.contains(environment)).toBe(true);
+  expect(screen.getByRole('banner').compareDocumentPosition(screen.getByRole('heading',{name:'Exposure Overview'})) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  await user.selectOptions(environment,value);
+  await user.click(within(nav).getByRole('button',{name:previous,exact:true}));
+  expect(screen.queryByRole('group',{name:'Company and network zone / segment context'})).toBeNull();
 }
 
 it('keeps the chosen theme across customer changes and a remount', async () => {
@@ -83,7 +97,7 @@ it('keeps the chosen theme across customer changes and a remount', async () => {
   const navigation = screen.getByRole('navigation', {name: 'Workbench navigation'});
   expect(navigation.nextElementSibling).toBe(theme.closest('label'));
   expect(theme.closest('.sidebar')).not.toBeNull();
-  expect(within(screen.getByRole('banner')).queryByRole('combobox', {name: 'Color theme'})).toBeNull();
+  expect(screen.queryByRole('banner')).toBeNull();
   expect(within(theme).getAllByRole('option').map(option => option.textContent)).toEqual([
     'Original · Forest', 'Ocean', 'Midnight', 'Golden Ledger',
   ]);
@@ -95,9 +109,9 @@ it('keeps the chosen theme across customer changes and a remount', async () => {
     expect(document.documentElement.dataset.theme).toBe(value);
     expect(localStorage.getItem('iti.appearance.theme')).toBe(value);
   }
-  await user.selectOptions(screen.getByRole('combobox', {name: 'Active customer'}), 'fictional-cloud');
-  await waitFor(() => expect(screen.getByRole('combobox', {name: 'Working case'}).value).toBe('cloud-case'));
-  expect(screen.getByRole('combobox', {name: 'Active environment'}).value).toBe('mac-cloud');
+  await selectEnvironment(user,'fictional-cloud:mac-cloud');
+  await within(screen.getByRole('group',{name:'Selected coverage case'})).findByText('Cloud investigation');
+  expect(location.hash).toContain('environment=mac-cloud');
   expect(document.documentElement.dataset.theme).toBe('dropzone');
   expect(screen.getByRole('combobox', {name: 'Color theme'}).value).toBe('dropzone');
   unmount(); render(<App/>);
@@ -121,7 +135,7 @@ it('scopes STIX, MISP and ZIP links and clears them when switching customers', a
     const link = screen.getByRole('link', {name: label});
     expect(link.getAttribute('href')).toBe(`/api/artifacts/bank-package/${name}?customer_id=fictional-bank&environment_id=windows-ad`);
   }
-  await user.selectOptions(screen.getByRole('combobox', {name: 'Active customer'}), 'fictional-cloud');
+  await selectEnvironment(user,'fictional-cloud:mac-cloud');
   await screen.findByText('Generate a package to validate and download exports.');
   expect(screen.queryByRole('link', {name: 'Download ZIP'})).toBeNull();
 });
@@ -136,6 +150,7 @@ it('shows a failed package request and allows dismissing the error', async () =>
     return respond(input);
   });
   const {user} = await mount();
+  await user.click(screen.getByRole('button',{name:'Intelligence Exports',exact:true}));
   await user.click(screen.getByRole('button', {name: 'Generate updated package'}));
   expect((await screen.findByRole('alert')).textContent).toContain('Package validation failed');
   expect(screen.getByRole('button', {name: 'Generate updated package'}).disabled).toBe(false);
@@ -152,11 +167,10 @@ it('ignores a late investigation response for the previous customer', async () =
     return respond(input);
   });
   const user = userEvent.setup(); render(<App/>);
-  await screen.findByRole('option', {name: 'Fictional Cloud'});
-  await user.selectOptions(screen.getByRole('combobox', {name: 'Active customer'}), 'fictional-cloud');
-  await waitFor(() => expect(screen.getByRole('combobox', {name: 'Working case'}).value).toBe('cloud-case'));
+  await selectEnvironment(user,'fictional-cloud:mac-cloud');
+  await within(screen.getByRole('group',{name:'Selected coverage case'})).findByText('Cloud investigation');
   await act(async () => {releaseBank();});
-  expect(screen.getByRole('combobox', {name: 'Working case'}).value).toBe('cloud-case');
+  expect(within(screen.getByRole('group',{name:'Selected coverage case'})).getByText('Cloud investigation')).toBeTruthy();
   expect(screen.queryByRole('option', {name: /Bank investigation/})).toBeNull();
   expect(screen.queryByRole('button', {name: 'Bank investigation behavior'})).toBeNull();
 });
@@ -205,11 +219,11 @@ it('opens a bounded candidate list, edits the existing form and retains the save
   await user.click(screen.getByRole('button',{name:'Show all 4'}));
   expect(screen.getByRole('button',{name:'Create improvement for D3-NTF'})).toBeTruthy();
   await user.click(screen.getByRole('button',{name:'Create improvement for D3-APCA'}));
-  expect(screen.getByRole('textbox',{name:'Owner'}).value).toBe('');
+  expect(screen.getByRole('textbox',{name:'Implementation owner'}).value).toBe('');
   expect(screen.getByRole('combobox',{name:'Behavior'}).disabled).toBe(true);
   expect(screen.getByRole('combobox',{name:'Status'}).value).toBe('open');
   expect(screen.getByRole('textbox',{name:'Rationale'}).value).toContain('span-1');
-  await user.type(screen.getByRole('textbox',{name:'Owner'}),'Lab owner');
+  await user.type(screen.getByRole('textbox',{name:'Implementation owner'}),'Lab owner');
   await user.clear(screen.getByRole('textbox',{name:'Proposed change'}));
   await user.type(screen.getByRole('textbox',{name:'Proposed change'}),'Assess lab protocol control');
   await user.clear(screen.getByRole('textbox',{name:'Retest plan'}));
@@ -235,7 +249,7 @@ it('closes a candidate form on customer change and ignores the previous catalog 
   withDefenses();const {user}=await mount();
   await user.click(screen.getByRole('button',{name:'Bank investigation behavior'}));
   await user.click(await screen.findByRole('button',{name:'Create improvement for D3-APCA'}));
-  await user.selectOptions(screen.getByRole('combobox',{name:'Active customer'}),'fictional-cloud');
+  await selectEnvironment(user,'fictional-cloud:mac-cloud');
   await screen.findByRole('button',{name:'Cloud investigation behavior'});
   expect(screen.queryByRole('button',{name:'Record improvement'})).toBeNull();
   expect(screen.queryByText('D3-APCA')).toBeNull();
@@ -244,7 +258,7 @@ it('does not render a delayed catalog result after customer switching',async()=>
   let release;
   fetch.mockImplementation(async input=>String(input).includes('/bank-case/defenses')?new Promise(resolve=>{release=()=>resolve(json(defenseFixture()));}):respond(input));
   const {user}=await mount();await waitFor(()=>expect(release).toBeTypeOf('function'));
-  await user.selectOptions(screen.getByRole('combobox',{name:'Active customer'}),'fictional-cloud');
+  await selectEnvironment(user,'fictional-cloud:mac-cloud');
   await user.click(await screen.findByRole('button',{name:'Cloud investigation behavior'}));
   await act(async()=>release());
   expect(screen.queryByRole('button',{name:'Create improvement for D3-APCA'})).toBeNull();
@@ -257,7 +271,7 @@ it('keeps manual improvements available when the catalog is invalid',async()=>{
   expect(screen.getByRole('button',{name:'Retry catalog'})).toBeTruthy();
   await user.click(screen.getByRole('button',{name:'Close drawer'}));
   await user.click(screen.getByRole('button',{name:'Record improvement / result'}));
-  expect(screen.getByRole('textbox',{name:'Owner'})).toBeTruthy();
+  expect(screen.getByRole('textbox',{name:'Implementation owner'})).toBeTruthy();
   expect(screen.getByRole('combobox',{name:'Behavior'}).disabled).toBe(false);
 });
 
@@ -267,7 +281,7 @@ it('integrates Application Findings with selected scope without requiring a CTI 
   await user.click(screen.getByRole('button', {name:'Application Findings',exact:true}));
   await screen.findByText('No application findings in this scope.');
   expect(screen.queryByRole('combobox',{name:'Working case'})).toBeNull();
-  await user.selectOptions(screen.getByRole('combobox',{name:'Active customer'}),'fictional-cloud');
+  await selectEnvironment(user,'fictional-cloud:mac-cloud');
   await waitFor(()=>expect(vi.mocked(fetch).mock.calls.some(([url])=>String(url)==='/api/application-findings?customer_id=fictional-cloud&environment_id=mac-cloud')).toBe(true));
 });
 
@@ -282,18 +296,18 @@ it('opens an existing scoped action in its original case workflow and continues 
   const drawer=screen.getByRole('complementary',{name:'Evidence and detail drawer'});
   expect(within(drawer).getByText('Improve Bank defense')).toBeTruthy();
   expect(within(drawer).getByRole('button',{name:'Edit improvement'})).toBeTruthy();
-  expect(screen.getByRole('combobox',{name:'Active customer'}).value).toBe('fictional-bank');
+  expect(location.hash).toContain('environment=windows-ad');
   await user.click(within(drawer).getByRole('button',{name:'Close drawer'}));
   await user.click(screen.getByRole('button',{name:'Open case hunts'}));
   expect(screen.getByRole('heading',{name:'Hunts',exact:true})).toBeTruthy();
-  expect(screen.getByRole('combobox',{name:'Working case'}).value).toBe('bank-case');
+  expect(within(screen.getByRole('group',{name:'Selected hunts case'})).getByText('Bank investigation')).toBeTruthy();
 });
 
 it('restores direct nested action links in their explicit scope without fetching the previous customer ledger',async()=>{
   history.replaceState(null,'','/#/improvement-actions/cloud-action?customer=fictional-cloud&environment=mac-cloud');
   render(<App/>);await screen.findByRole('heading',{name:'Improvement action',exact:true});
-  expect(screen.getByRole('combobox',{name:'Active customer'}).value).toBe('fictional-cloud');
-  expect(screen.getByRole('combobox',{name:'Active environment'}).value).toBe('mac-cloud');
+  expect(location.hash).toContain('environment=mac-cloud');
+  expect(location.hash).toContain('environment=mac-cloud');
   expect(screen.getByRole('button',{name:'Improvement Actions',exact:true}).getAttribute('aria-current')).toBe('page');
   const calls=fetch.mock.calls.filter(([input])=>String(input).startsWith('/api/improvements'));
   expect(calls.every(([input])=>String(input).includes('customer_id=fictional-cloud&environment_id=mac-cloud'))).toBe(true);
@@ -304,4 +318,145 @@ it('keeps the renamed parent workspace active for direct and nested legacy case 
   history.replaceState(null,'','/#/case-overview/revision-a?customer=fictional-bank&environment=windows-ad');
   render(<App/>);await screen.findByRole('heading',{name:'Cases & Analysis',exact:true});
   expect(within(screen.getByRole('navigation',{name:'Workbench navigation'})).getByRole('button',{name:'Cases & Analysis',exact:true}).getAttribute('aria-current')).toBe('page');
+});
+
+it('saves a fictional company independently of the sector choice',async()=>{
+  let company={name:'Northstar Bank',sector:'finance'};
+  const calls=[];
+  vi.stubGlobal('fetch',vi.fn(async(input,options)=>{
+    if(String(input)==='/api/company-profile'){
+      company=JSON.parse(options.body);calls.push(company);return json(company);
+    }
+    if(String(input)==='/api/bootstrap')return json({...bootstrap,company,company_customer_ids:[company.name==='Cedar Cloud'?'fictional-cloud':'fictional-bank']});
+    return respond(input);
+  }));
+  const user=userEvent.setup();render(<App/>);
+  await within(screen.getByRole('group',{name:'Selected coverage case'})).findByText('Bank investigation');
+  await user.click(screen.getByRole('button',{name:'Customer Profiles',exact:true}));
+  await user.selectOptions(screen.getByRole('combobox',{name:'Fictional Company'}),'Cedar Cloud');
+  await user.selectOptions(screen.getByRole('combobox',{name:'Primary sector'}),'finance');
+  await user.click(screen.getByRole('button',{name:'Save company profile'}));
+  await waitFor(()=>expect(calls).toEqual([{name:'Cedar Cloud',sector:'finance'}]));
+  await waitFor(()=>expect(location.hash).toContain('environment=mac-cloud'));
+  expect(screen.queryByRole('combobox',{name:'Active customer'})).toBeNull();
+});
+
+it('shows the company’s Brotli working case from another environment and switches scope with it',async()=>{
+  history.replaceState(null,'','/#/cases-and-analysis?customer=fictional-bank&environment=windows-ad');
+  const brotli={...cloudCase,source:{...cloudCase.source,title:'Brotli exposure response'}};
+  const choices=[{id:bankCase.id,title:bankCase.source.title,customer_id:'fictional-bank',environment_id:'windows-ad'},{id:brotli.id,title:brotli.source.title,customer_id:'fictional-cloud',environment_id:'mac-cloud'}];
+  vi.stubGlobal('fetch',vi.fn(async input=>{
+    const url=new URL(String(input),'http://localhost');
+    if(url.pathname==='/api/bootstrap')return json({...bootstrap,company:{name:'Harborlight Capital',sector:'finance'},company_customer_ids:['fictional-bank','fictional-cloud']});
+    if(url.pathname==='/api/exposure-overview/portfolio')return json({cases:choices});
+    if(url.pathname==='/api/assessments'&&url.searchParams.get('customer_id')==='fictional-cloud')return json([brotli]);
+    return respond(input);
+  }));
+  const user=userEvent.setup();render(<App/>);
+  await screen.findByRole('option',{name:'Brotli exposure response · Mac Cloud'});
+  await user.selectOptions(screen.getByRole('combobox',{name:'Working case'}),'cloud-case');
+  await waitFor(()=>expect(screen.getByRole('combobox',{name:'Working case'}).value).toBe('cloud-case'));
+  expect(location.hash).toContain('environment=mac-cloud');expect(location.hash).toContain('assessment=cloud-case');
+  expect(vi.mocked(fetch).mock.calls.some(([url])=>String(url).includes('/api/ledger/bank-case?customer_id=fictional-cloud'))).toBe(false);
+});
+
+it('opens a working-case count as an open-only action list and preserves it while inspecting',async()=>{
+  const open=actionRow(true),closed={...actionRow(true),id:'closed-action',status:'closed',proposed_change:'Closed fixture change'};
+  vi.stubGlobal('fetch',vi.fn(async input=>{
+    const url=new URL(String(input),'http://localhost');
+    if(url.pathname==='/api/exposure-overview/portfolio')return json({as_of:'2026-11-08T00:00:00Z',cases:[{id:bankCase.id,title:bankCase.source.title,customer_id:'fictional-bank',environment_id:'windows-ad'}],scopes:[{customer_id:'fictional-bank',environment_id:'windows-ad',environment_name:'Windows AD',cases:1,open_actions:1}],revision_count:1,policy:'Fixture'});
+    if(url.pathname==='/api/improvements')return json({rows:[open,closed]});
+    return respond(input);
+  }));
+  const {user}=await mount();
+  await user.click(screen.getByRole('button',{name:'Exposure Overview',exact:true}));
+  await user.click(await screen.findByRole('button',{name:'Open Working Cases'}));
+  await user.click(screen.getByRole('button',{name:/Bank investigation.*1 open actions/}));
+  await screen.findByText('Showing 1 open action.');expect(location.hash).toContain('work=open');
+  expect(screen.queryByText('Closed fixture change')).toBeNull();
+  await user.click(screen.getByRole('button',{name:'Inspect action bank-action'}));
+  await screen.findByRole('button',{name:'Open originating workflow'});expect(location.hash).toContain('work=open');
+  await user.click(screen.getByRole('button',{name:'Close action details'}));expect(location.hash).toContain('work=open');
+  await user.click(screen.getByRole('button',{name:'Show all scoped actions'}));
+  await screen.findByText('Closed fixture change');expect(location.hash).not.toContain('work=open');
+});
+
+it('shows a read-only Coverage case and changes case without losing its assessment or environment',async()=>{
+ history.replaceState(null,'','/#/coverage?customer=fictional-bank&environment=windows-ad&assessment=bank-case');
+ const user=userEvent.setup();render(<App/>);
+ const context=await screen.findByRole('group',{name:'Selected coverage case'});
+ await within(context).findByText('Bank investigation');
+ expect(screen.queryByRole('combobox',{name:'Working case'})).toBeNull();
+ expect(screen.queryByText('High relevance')).toBeNull();
+ const provenance=screen.getByText('Analysis method / provenance').closest('details');
+ expect(provenance.open).toBe(false);
+ await user.click(within(provenance).getByText('Analysis method / provenance'));
+ expect(provenance.open).toBe(true);
+ expect(within(provenance).getByText('Saved demo analysis')).toBeTruthy();
+ const link=within(context).getByRole('link',{name:'Change case'});
+ expect(link.getAttribute('href')).toContain('assessment=bank-case');expect(link.getAttribute('href')).toContain('environment=windows-ad');
+ await user.click(link);
+ await screen.findByRole('heading',{name:'Cases & Analysis',exact:true});
+ expect(screen.getByRole('combobox',{name:'Working case'}).value).toBe('bank-case');
+ expect(screen.getByText('High relevance')).toBeTruthy();
+ expect(location.hash).toContain('customer=fictional-bank');expect(location.hash).toContain('environment=windows-ad');
+});
+
+it('defaults Overview to all environments on reload while retaining the scoped environment for other workspaces',async()=>{
+ history.replaceState(null,'','/#/exposure-overview?customer=fictional-cloud&environment=mac-cloud');
+ const user=userEvent.setup();const view=render(<App/>);
+ expect((await screen.findByRole('combobox',{name:'Dashboard network zone / segment'})).value).toBe('');
+ await user.selectOptions(screen.getByRole('combobox',{name:'Dashboard network zone / segment'}),'fictional-cloud:mac-cloud');
+ expect(screen.getByRole('combobox',{name:'Dashboard network zone / segment'}).value).toBe('fictional-cloud:mac-cloud');
+ view.unmount();render(<App/>);
+ expect((await screen.findByRole('combobox',{name:'Dashboard network zone / segment'})).value).toBe('');
+ await user.click(screen.getByRole('button',{name:'Coverage',exact:true}));
+ await within(screen.getByRole('group',{name:'Selected coverage case'})).findByText('Cloud investigation');
+ expect(location.hash).toContain('environment=mac-cloud');
+});
+
+it('opens a saved package without generation and keeps generation explicit in exports',async()=>{
+ vi.mocked(fetch).mockImplementation(async(input,options)=>String(input).endsWith('/generate')?json(bankPackage):respond(input));
+ const {user}=await mount();
+ expect(screen.queryByRole('button',{name:/^Generate (updated )?package$/})).toBeNull();
+ await user.click(screen.getByRole('button',{name:'Open existing package'}));
+ await screen.findByRole('heading',{name:'Intelligence Exports',exact:true});
+ expect(screen.getByRole('link',{name:'Download ZIP'}).getAttribute('href')).toContain('/bank-package/package.zip?customer_id=fictional-bank&environment_id=windows-ad');
+ expect(location.hash).toContain('assessment=bank-case');
+ expect(vi.mocked(fetch).mock.calls.some(([url])=>String(url).endsWith('/generate'))).toBe(false);
+ expect(screen.queryByText('Package generated and export validation recorded.')).toBeNull();
+ await user.click(screen.getByRole('button',{name:'Generate updated package'}));
+ await screen.findByText('Package generated and export validation recorded.');
+ expect(vi.mocked(fetch).mock.calls.filter(([url])=>String(url).endsWith('/generate'))).toHaveLength(1);
+ await user.click(screen.getByRole('button',{name:'Coverage',exact:true}));
+ await user.click(screen.getByRole('button',{name:'Open existing package'}));
+ expect(screen.queryByText('Package generated and export validation recorded.')).toBeNull();
+ expect(vi.mocked(fetch).mock.calls.filter(([url])=>String(url).endsWith('/generate'))).toHaveLength(1);
+});
+
+it.each([['hunts','Hunts','Selected hunts case'],['purple-team','Purple Team','Selected purple team case']])('keeps %s case context read-only and preserves scope through Change case',async(slug,label,group)=>{
+ history.replaceState(null,'',`/#/${slug}?customer=fictional-bank&environment=windows-ad&assessment=bank-case`);
+ const user=userEvent.setup();render(<App/>);
+ const context=await screen.findByRole('group',{name:group});
+ await within(context).findByText('Bank investigation');
+ expect(screen.queryByRole('combobox',{name:'Working case'})).toBeNull();
+ expect(within(document.querySelector('.page-heading')).queryByRole('button',{name:'Add intelligence',exact:true})).toBeNull();
+ const change=within(context).getByRole('link',{name:'Change case'});
+ expect(change.getAttribute('href')).toContain('assessment=bank-case');expect(change.getAttribute('href')).toContain('environment=windows-ad');
+ await user.click(change);
+ await screen.findByRole('heading',{name:'Cases & Analysis',exact:true});
+ expect(screen.getByRole('combobox',{name:'Working case'}).value).toBe('bank-case');
+ expect(location.hash).toContain('environment=windows-ad');expect(location.hash).toContain('customer=fictional-bank');
+});
+
+it('keeps the page-header intake shortcut only on Add Intelligence',async()=>{
+ const {user}=await mount();
+ const heading=()=>within(document.querySelector('.page-heading'));
+ expect(heading().queryByRole('button',{name:'Add intelligence',exact:true})).toBeNull();
+ const nav=within(screen.getByRole('navigation',{name:'Workbench navigation'}));
+ await user.click(nav.getByRole('button',{name:'Add Intelligence',exact:true}));
+ expect(heading().getByRole('button',{name:'Add intelligence',exact:true})).toBeTruthy();
+ await user.click(nav.getByRole('button',{name:'Cases & Analysis',exact:true}));
+ expect(heading().queryByRole('button',{name:'Add intelligence',exact:true})).toBeNull();
+ expect(nav.getByRole('button',{name:'Add Intelligence',exact:true})).toBeTruthy();
 });

@@ -4,7 +4,7 @@ import json
 import zipfile
 import pytest
 from fastapi.testclient import TestClient
-from iti import attack_flow, exporters, packages
+from iti import attack_flow, exporters
 from iti.api import create_app
 from iti.models import EntityRelationship
 from iti.store import digest, uid, now
@@ -30,9 +30,12 @@ def relationship(package, source, target, kind='precedes', evidence=None):
 
 
 def test_flow_sequence_evidence_direction_stability_and_frozen_provenance(service, assessed):
-    p=frozen(assessed);left=p['extraction']['behaviors'][1];right=p['extraction']['behaviors'][4]
+    p=frozen(assessed)
+    left=p['extraction']['behaviors'][1]
+    right=p['extraction']['behaviors'][4]
     relationship(p,left['id'],right['id'])
-    text,prov,status=attack_flow.export(service.store,p);bundle=json.loads(text)
+    text,prov,status=attack_flow.export(service.store,p)
+    bundle=json.loads(text)
     assert attack_flow.validate_bundle(bundle)['valid']
     actions={a['behavior_id']:a['action_id'] for a in prov['actions']}
     byid={o['id']:o for o in bundle['objects']}
@@ -48,7 +51,8 @@ def test_flow_sequence_evidence_direction_stability_and_frozen_provenance(servic
     assert prov['actions'][1]['mapping_basis']==left['mapping_basis']
     assert attack_flow.export(service.store,p)[0]==text
     # Editing current customer cannot change the frozen export.
-    customer=service.store.get('customer','fictional-bank');customer['version']+=1
+    customer=service.store.get('customer','fictional-bank')
+    customer['version']+=1
     service.store.put('customer',customer['id'],customer)
     assert attack_flow.export(service.store,p)[0]==text
     p['extraction']['relationships'][0].update(relationship='follows',source_ref=right['id'],target_ref=left['id'])
@@ -57,7 +61,8 @@ def test_flow_sequence_evidence_direction_stability_and_frozen_provenance(servic
 
 def test_unknown_order_repeated_technique_and_inapplicable_actions(service,assessed):
     p=frozen(assessed)
-    repeated=copy.deepcopy(p['extraction']['behaviors'][1]);repeated.update(id='distinct-occurrence',text='A second reported download in a separate occurrence.',sequence=999)
+    repeated=copy.deepcopy(p['extraction']['behaviors'][1])
+    repeated.update(id='distinct-occurrence',text='A second reported download in a separate occurrence.',sequence=999)
     p['extraction']['behaviors'].append(repeated)
     p['coverage']=[dict(r,applicability='not applicable') for r in p['coverage']]
     text,prov,status=attack_flow.export(service.store,p)
@@ -73,13 +78,17 @@ def test_unknown_order_repeated_technique_and_inapplicable_actions(service,asses
 
 def test_empty_unsupported_partial_and_cyclic_order(service,assessed):
     p=frozen(assessed)
-    for b in p['extraction']['behaviors']:b['kind']='analyst_inference'
+    for b in p['extraction']['behaviors']:
+        b['kind']='analyst_inference'
     text,prov,status=attack_flow.export(service.store,p)
     assert text is None and status['status']=='empty' and status['validation'] is None
     assert len(prov['omissions'])==8
-    p=frozen(assessed);p['source']['completeness']='partial';p['source']['gaps']=['missing attachment']
+    p=frozen(assessed)
+    p['source']['completeness']='partial'
+    p['source']['gaps']=['missing attachment']
     a,b=p['extraction']['behaviors'][:2]
-    relationship(p,a['id'],b['id']);relationship(p,b['id'],a['id'])
+    relationship(p,a['id'],b['id'])
+    relationship(p,b['id'],a['id'])
     text,prov,status=attack_flow.export(service.store,p)
     assert status['edges']==0 and status['source_gaps']==['missing attachment']
     assert 'missing attachment' in text and any('Cyclic' in x['reason'] for x in prov['omissions'])
@@ -88,32 +97,44 @@ def test_empty_unsupported_partial_and_cyclic_order(service,assessed):
 
 
 def test_reject_dangling_spans_refs_ids_invalid_mapping_schema(service,assessed):
-    p=frozen(assessed);a,b=p['extraction']['behaviors'][:2]
+    p=frozen(assessed)
+    a,b=p['extraction']['behaviors'][:2]
     relationship(p,a['id'],b['id'],evidence=['made-up-span'])
-    with pytest.raises(ValueError,match='evidence'):attack_flow.export(service.store,p)
-    p=frozen(assessed);text,_,_=attack_flow.export(service.store,p);valid=json.loads(text)
+    with pytest.raises(ValueError,match='evidence'):
+        attack_flow.export(service.store,p)
+    p=frozen(assessed)
+    text,_,_=attack_flow.export(service.store,p)
+    valid=json.loads(text)
     action=next(o for o in valid['objects'] if o['type']=='attack-action')
     action['effect_refs']=['attack-action--00000000-0000-4000-8000-000000000000']
-    with pytest.raises(ValueError,match='Dangling'):attack_flow.validate_bundle(valid)
-    action.pop('effect_refs');action['id']='attack-action--fabricated'
-    with pytest.raises(ValueError):attack_flow.validate_bundle(valid)
-    valid=json.loads(text);next(o for o in valid['objects'] if o['type']=='attack-flow')['start_refs']=[]
-    with pytest.raises(Exception):attack_flow.validate_bundle(valid)
+    with pytest.raises(ValueError,match='Dangling'):
+        attack_flow.validate_bundle(valid)
+    action.pop('effect_refs')
+    action['id']='attack-action--fabricated'
+    with pytest.raises(ValueError):
+        attack_flow.validate_bundle(valid)
+    valid=json.loads(text)
+    next(o for o in valid['objects'] if o['type']=='attack-flow')['start_refs']=[]
+    with pytest.raises(Exception):
+        attack_flow.validate_bundle(valid)
     p['extraction']['behaviors'][0]['technique_id']='T99999'
-    with pytest.raises(ValueError,match='not in pinned'):attack_flow.export(service.store,p)
+    with pytest.raises(ValueError,match='not in pinned'):
+        attack_flow.export(service.store,p)
 
 
 def test_package_manifest_zip_history_and_cti_misp_unchanged(service,assessed):
     # Preserve a real previous package shape without generating a fake backfilled file.
     old=copy.deepcopy(assessed)|{'id':uid('package',assessed['id'],'packages-5'),'assessment_id':assessed['id'],'artifacts':{'names':['hunt.md']}}
     service.store.put('package',old['id'],old,immutable=True)
-    p=service.generate(assessed['id'],'fictional-bank');root=service.store.root/'artifacts'/p['id']
+    p=service.generate(assessed['id'],'fictional-bank')
+    root=service.store.root/'artifacts'/p['id']
     assert p['id']!=old['id'] and service.store.get('package',old['id'])==old
     assert 'attack-flow.json' in p['artifacts']['names']
     manifest=json.loads((root/'manifest.json').read_text())
     assert manifest['artifacts']['attack-flow.json']==digest((root/'attack-flow.json').read_bytes())
     assert manifest['validation']['attack_flow']['validation']['valid']
-    with zipfile.ZipFile(root/'package.zip') as z:assert z.read('attack-flow.json')==(root/'attack-flow.json').read_bytes()
+    with zipfile.ZipFile(root/'package.zip') as z:
+        assert z.read('attack-flow.json')==(root/'attack-flow.json').read_bytes()
     assert exporters.validate_stix((root/'cti.stix21.json').read_text())['valid']
     assert exporters.validate_misp(json.loads((root/'cti.misp.json').read_text()))
     assert exporters.stix_export(service.store,p)[0]==(root/'cti.stix21.json').read_text()
@@ -136,7 +157,8 @@ def test_scoped_downloads_viewer_csp_and_empty_package(service,assessed):
             assert "frame-ancestors 'self'" in response.headers['content-security-policy']
             assert "connect-src 'self'" in response.headers['content-security-policy']
             assert '/attack-flow-builder/assets/' in response.text
-        else:assert response.status_code==503
+        else:
+            assert response.status_code==503
         assert "frame-ancestors 'none'" in c.get('/health').headers['content-security-policy']
     job=service.submit('fictional-bank','windows-ad','offline','case','insufficient',background=False)
     empty=service.generate(job['data']['assessment_id'],'fictional-bank')

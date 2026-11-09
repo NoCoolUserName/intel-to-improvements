@@ -1,0 +1,28 @@
+# SYNTHETIC inert teaching fixture; placeholder revisions. Do not execute.
+name: Harborlight Brotli release evidence
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  dependency:
+    name: Synthetic language dependency review
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@1111111111111111111111111111111111111111
+        with:
+          persist-credentials: false
+      - name: Language dependency check
+        run: npm audit --offline
+  runtime:
+    name: Synthetic embedded runtime evidence check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Embedded decoder and built artifact evidence
+        run: python synthetic_tests/check_runtime_manifest.py
+  security:
+    name: Synthetic static security check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Semgrep application review
+        run: semgrep scan --config synthetic-review.yml .
