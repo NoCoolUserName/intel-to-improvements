@@ -32,7 +32,7 @@ export default function BrotliDemo({customer,onLoaded,onNavigate}: {customer:str
     {demo&&customer===BROTLI_CUSTOMER&&<details className="brotli-guide" open><summary>Case guide · {demo.stops.length} existing workspaces</summary>
       <div className="brotli-questions">{questions.map((q,i)=><span key={q}><b>{i+1}.</b> {q}</span>)}</div>
       <div className="brotli-stops">{demo.stops.map((stop,i)=><article key={stop.workspace}><span className="brotli-number">{String(i+1).padStart(2,'0')}</span><div>
-        <button className="text-link" onClick={()=>onNavigate(stop.workspace,stop.workspace==='Case overview'?{kind:'assessment',id:demo.assessment_id}:stop.workspace==='Vulnerability Intelligence'?{kind:'cve',id:demo.cve}:undefined)}>Open {workspaceLabel(stop.workspace)}</button><p>{stop.task}</p></div></article>)}</div>
+        <button className="text-link" onClick={()=>onNavigate(stop.workspace,stop.workspace==='Case overview'?{kind:'assessment',id:demo.assessment_id}:stop.workspace==='Vulnerability Intelligence'?{kind:'cve',id:demo.cve}:undefined)}>{workspaceLabel(stop.workspace)}</button><p>{stop.task}</p></div></article>)}</div>
       <h3>Inspect the linked records</h3><p className="fine">These IDs are the stored records. Shared asset names alone do not establish a native relationship between CVE, SARIF and pipeline records.</p>
       <div className="brotli-records">{Object.entries(demo.relations.asset_to_exposure).map(([asset,id])=><article key={asset}><strong>{asset}</strong>
         <small>Exposure {id}</small><button className="text-link" onClick={()=>onNavigate('Vulnerability Intelligence',{kind:'cve',id:demo.cve})}>CVE decision {demo.relations.asset_to_decision[asset]?.slice(0,25)}…</button>
