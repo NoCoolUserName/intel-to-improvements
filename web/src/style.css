@@ -6,5 +6,5 @@
 
 .analysis-provenance{margin:8px 0 18px;font-size:12px;color:var(--muted,#566b6c)}.analysis-provenance summary{cursor:pointer}.analysis-provenance p{max-width:850px;margin:8px 0}
 
-/* Tighten the shared page eyebrow without changing its position or height. */
-.page-heading .eyebrow{word-spacing:-.12em}
+/* Reduce space above the eyebrow while keeping the remaining page layout fixed. */
+.page-heading .eyebrow{transform:translateY(-12px)}
