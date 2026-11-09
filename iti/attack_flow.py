@@ -86,7 +86,8 @@ def validate_bundle(bundle):
         for key, allowed in [('created_by_ref', {'identity'}), ('start_refs', {'attack-action'}),
                              ('effect_refs', {'attack-action'})]:
             refs = obj.get(key, [])
-            if isinstance(refs, str): refs = [refs]
+            if isinstance(refs, str):
+                refs = [refs]
             for ref in refs:
                 if ref not in by_id or by_id[ref]['type'] not in allowed:
                     raise ValueError('Dangling or wrong-type ' + key + ': ' + ref)
@@ -143,7 +144,8 @@ def export(store, package):
         refs = [{'source_name': 'iti:behavior', 'external_id': behavior.id}]
         refs += [{'source_name': 'iti:evidence-span', 'external_id': s} for s in behavior.evidence]
         description = ('HYPOTHETICAL SYNTHETIC SCENARIO; no observed intrusion asserted.\n' if scenario else '') + 'Mapping: ' + behavior.mapping_basis + '. Certainty: ' + behavior.extraction_confidence + '.'
-        if behavior.qualifier: description += '\n' + behavior.qualifier
+        if behavior.qualifier:
+            description += '\n' + behavior.qualifier
         description += '\nSource reliability: ' + behavior.source_reliability + '. Full evidence: attack-flow-provenance.json.'
         obj = dict(common, **extension, type='attack-action', id=sid(behavior.id, 'attack-action'),
                    name=behavior.text[:160], description=description, external_references=refs)
@@ -174,7 +176,8 @@ def export(store, package):
             omissions.append({'id': rel.id, 'reason': reason})
             continue
         left, right = rel.source_ref, rel.target_ref
-        if DIRECTIONS[rel.relationship]: left, right = right, left
+        if DIRECTIONS[rel.relationship]:
+            left, right = right, left
         edges.append({'relationship_id': rel.id, 'source_behavior': left, 'target_behavior': right,
                       'source_action': by_behavior[left]['id'], 'target_action': by_behavior[right]['id'],
                       'semantics': 'source-reported causation/enablement' if rel.relationship in ('causes', 'enables') else 'reported temporal order; causation not established',
@@ -183,8 +186,10 @@ def export(store, package):
     # Cyclic ordering contradicts this first, acyclic flow representation. Retain evidence; don't invent a break.
     import graphlib
     dependencies = {b: set() for b in by_behavior}
-    for edge in edges: dependencies[edge['target_behavior']].add(edge['source_behavior'])
-    try: list(graphlib.TopologicalSorter(dependencies).static_order())
+    for edge in edges:
+        dependencies[edge['target_behavior']].add(edge['source_behavior'])
+    try:
+        list(graphlib.TopologicalSorter(dependencies).static_order())
     except graphlib.CycleError:
         omissions.extend({'id': e['relationship_id'], 'reason': 'Cyclic sequence requires review; ordering edges omitted'} for e in edges)
         edges = []

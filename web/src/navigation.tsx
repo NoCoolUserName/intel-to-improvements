@@ -14,7 +14,7 @@ type WorkspaceItem={id:string;label:string;slug:string;icon:typeof Layers};
 export const WORKSPACES = NAV_GROUPS.flatMap<WorkspaceItem>(group=>[...group.items]);
 export function workspaceLabel(id:string){return WORKSPACES.find(item=>item.id===id)?.label||id}
 export const DESCRIPTIONS:Record<string,string>={
-  'Exposure Overview':'Review scoped findings, accountability and evidence-qualified outcomes.',
+  'Exposure Overview':'Track cases, exposure and corrective work across the company’s network zones and segments.',
   'Coverage':'Inspect intelligence assessment coverage, telemetry gaps and independent timing.',
   'Add Intelligence':'Bring in selected sources to understand adversary behavior and customer relevance.',
   'Case overview':'Trace source evidence, relevance and proposed behaviors into investigation and action.',
@@ -24,24 +24,25 @@ export const DESCRIPTIONS:Record<string,string>={
   'Improvement Actions':'Follow existing corrective work, ownership and retests across the selected workspace.',
   'Hunts':'Investigate defensive assumptions using bounded questions and retained evidence.',
   'Purple team':'Plan human-led validation and preserve what each test actually establishes.',
-  'Pipeline Assurance':'Inspect supplied configuration and execution; effectiveness remains a separate question.',
+  'Pipeline Assurance':'Review release gates, security checks and evidence from the selected CI/CD pipeline.',
   'Evaluation':'Inspect the workbench’s analytical reliability and capability evidence.',
-  'Customer profiles':'Define customer priorities, environment scope, technologies and declared controls.',
+  'Customer profiles':'Choose the fictional company and sector for the demonstration.',
 };
-export type NavigationTarget={customer?:string;environment?:string;record?:string;assessment?:string};
+export type NavigationTarget={work?:'open';customer?:string;environment?:string;record?:string;assessment?:string};
 export function parseWorkspaceHash(hash:string){
   const [path,query='']=hash.replace(/^#\/?/,'').split('?');
   const segments=path.split('/');let slug='';let record:string|undefined;
   try{slug=decodeURIComponent(segments[0]);record=segments[1]?decodeURIComponent(segments[1]):undefined}catch{/* Malformed links fall back to Coverage. */}
   const item=WORKSPACES.find(item=>item.slug===slug||item.id===slug||(item.id==='Case overview'&&slug==='case-overview'));
   const params=new URLSearchParams(query);
-  return {workspace:item?.id||'Coverage',record:item?.id==='Improvement Actions'?record:undefined,
+  return {...(item?.id==='Improvement Actions'&&params.get('work')==='open'?{work:'open' as const}:{}),workspace:item?.id||'Coverage',record:['Improvement Actions','Vulnerability Intelligence','Application Findings'].includes(item?.id||'')?record:undefined,
     customer:params.get('customer')||undefined,environment:params.get('environment')||undefined,assessment:params.get('assessment')||undefined};
 }
 export function workspaceHash(id:string,target:NavigationTarget={}){
   const item=WORKSPACES.find(item=>item.id===id);if(!item)return '#/coverage';
   const params=new URLSearchParams();for(const key of ['customer','environment','assessment'] as const)if(target[key])params.set(key,target[key]!);
-  return '#/'+item.slug+(target.record&&id==='Improvement Actions'?'/'+encodeURIComponent(target.record):'')+(params.size?'?'+params:'');
+  if(id==='Improvement Actions'&&target.work==='open')params.set('work','open');
+  return '#/'+item.slug+(target.record&&['Improvement Actions','Vulnerability Intelligence','Application Findings'].includes(id)?'/'+encodeURIComponent(target.record):'')+(params.size?'?'+params:'');
 }
 export function useWorkspaceNavigation(){
   const [route,setRoute]=useState(()=>parseWorkspaceHash(location.hash));

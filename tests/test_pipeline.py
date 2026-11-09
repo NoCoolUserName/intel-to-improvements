@@ -8,9 +8,11 @@ from fastapi.testclient import TestClient
 from iti.api import create_app
 from iti import pipeline as p, pipeline_config as config, pipeline_execution as execution, profiles, exposure_overview
 from iti.models import CustomerProfile
-from iti.store import ROOT, digest, now
+from iti.store import ROOT, digest
 
-C='fictional-bank'; E='windows-ad'; S={'customer_id':C,'environment_id':E}
+C='fictional-bank'
+E='windows-ad'
+S={'customer_id':C,'environment_id':E}
 OP={'repository':'synthetic/juniper','ref':'main','commit':'a'*40,'synthetic':True}
 FIX=ROOT/'fixtures/pipeline'
 
@@ -30,10 +32,12 @@ def test_real_preview_confirm_sources_idempotence_revisions_and_dashboard_unchan
         files=[('files',(n,(FIX/n).read_bytes(),'application/yaml')) for n in ('good.yml','concerns.yml','shared.yml')]
         r=client.post('/api/pipeline-assurance/preview',data=S|OP,files=files)
         assert r.status_code==200,r.text
-        preview=r.json();assert not service.store.all('pipeline_snapshot')
+        preview=r.json()
+        assert not service.store.all('pipeline_snapshot')
         r=client.post('/api/pipeline-assurance/confirm',json=S|{'preview_id':preview['id']})
         assert r.status_code==200,r.text
-        snapshot=r.json();assert len(snapshot['files'])==3
+        snapshot=r.json()
+        assert len(snapshot['files'])==3
         detail=client.get('/api/pipeline-assurance/'+snapshot['id'],params=S).json()
         assert not detail['executions']
         assert client.get('/api/pipeline-assurance',params=S).json()['snapshots'][0]['id']==snapshot['id']
@@ -47,7 +51,8 @@ def test_real_preview_confirm_sources_idempotence_revisions_and_dashboard_unchan
         assert saved['id']!=snapshot['id']
         assert client.get('/api/pipeline-assurance/'+snapshot['id'],params=S).json()==detail
         wrong={'customer_id':'fictional-cloud','environment_id':'mac-cloud'}
-        for path in ['/api/pipeline-assurance/'+snapshot['id'],'/api/pipeline-assurance/sources/'+snapshot['files'][0]['source_id']]:assert client.get(path,params=wrong).status_code==404
+        for path in ['/api/pipeline-assurance/'+snapshot['id'],'/api/pipeline-assurance/sources/'+snapshot['files'][0]['source_id']]:
+            assert client.get(path,params=wrong).status_code==404
         assert client.post('/api/pipeline-assurance/confirm',json=wrong|{'preview_id':preview['id']}).status_code==404
         assert client.post('/api/pipeline-assurance/confirm',json=S|{'preview_id':'forged'}).status_code==404
         assert client.post('/api/pipeline-assurance/confirm',headers={'Origin':'https://evil.example'},json=S|{'preview_id':preview['id']}).status_code==403
@@ -80,21 +85,26 @@ def test_on_booleans_locations_and_loader_isolation():
     b'on: push\njobs: {test: {uses: "foo/bar@v1", steps: []}}',
 ])
 def test_reject_unsafe_malformed_and_pathological_yaml(raw):
-    with pytest.raises(ValueError):config.parse(raw)
+    with pytest.raises(ValueError):
+        config.parse(raw)
 
 
 @pytest.mark.parametrize('name',['../good.yml','/tmp/good.yml','a\\good.yml','.github/workflows/good.yml','http://evil/good.yml','bad.txt'])
 def test_unsafe_filenames(name):
-    with pytest.raises(ValueError):config.filename(name)
+    with pytest.raises(ValueError):
+        config.filename(name)
 
 
 def test_failed_multiple_file_import_has_no_partial_records_or_blobs(service):
     prior=set((service.store.root/'blobs').iterdir())
-    with pytest.raises(ValueError):p.preview(service.store,C,E,[('good.yml',(FIX/'good.yml').read_bytes()),('bad.yml',b'on: [')],OP)
+    with pytest.raises(ValueError):
+        p.preview(service.store,C,E,[('good.yml',(FIX/'good.yml').read_bytes()),('bad.yml',b'on: [')],OP)
     assert not service.store.all('pipeline_preview') and not service.store.all('pipeline_source')
     assert set((service.store.root/'blobs').iterdir())==prior
-    with pytest.raises(ValueError):p.preview(service.store,C,E,[('good.yml',b'a')]*21,OP)
-    with pytest.raises(ValueError):p.preview(service.store,C,E,[(str(i)+'.yml',b'x'*(512*1024)) for i in range(9)],OP)
+    with pytest.raises(ValueError):
+        p.preview(service.store,C,E,[('good.yml',b'a')]*21,OP)
+    with pytest.raises(ValueError):
+        p.preview(service.store,C,E,[(str(i)+'.yml',b'x'*(512*1024)) for i in range(9)],OP)
 
 
 def test_supported_checks_and_reusable_unknowns(service):
@@ -135,20 +145,26 @@ def test_lint_and_echo_are_not_sast_and_local_definition_is_bounded(service):
 
 def test_stale_context_expiry_version_and_hash_rollback(service):
     preview=p.preview(service.store,C,E,[('good.yml',(FIX/'good.yml').read_bytes())],OP)
-    broken=copy.deepcopy(preview);broken['expires_at']=(__import__('datetime').datetime.now(__import__('datetime').timezone.utc)-timedelta(hours=1)).isoformat()
+    broken=copy.deepcopy(preview)
+    broken['expires_at']=(__import__('datetime').datetime.now(__import__('datetime').timezone.utc)-timedelta(hours=1)).isoformat()
     service.store.put('pipeline_preview',preview['id'],broken)
-    with pytest.raises(ValueError,match='expired'):p.confirm(service.store,preview['id'],C,E)
+    with pytest.raises(ValueError,match='expired'):
+        p.confirm(service.store,preview['id'],C,E)
     service.store.put('pipeline_preview',preview['id'],preview)
-    source=preview['payload']['files'][0];(service.store.root/'blobs'/source['sha256']).write_bytes(b'corrupt')
-    with pytest.raises(ValueError,match='integrity'):p.confirm(service.store,preview['id'],C,E)
+    source=preview['payload']['files'][0]
+    (service.store.root/'blobs'/source['sha256']).write_bytes(b'corrupt')
+    with pytest.raises(ValueError,match='integrity'):
+        p.confirm(service.store,preview['id'],C,E)
     assert not service.store.all('pipeline_snapshot') and not service.store.all('pipeline_source')
     profiles.save(service.store,CustomerProfile.model_validate(service.store.get('customer',C)))
-    with pytest.raises(ValueError,match='Stale'):p.confirm(service.store,preview['id'],C,E)
+    with pytest.raises(ValueError,match='Stale'):
+        p.confirm(service.store,preview['id'],C,E)
 
 
 def test_concurrent_repeat_confirmation(service):
     preview=p.preview(service.store,C,E,[('good.yml',(FIX/'good.yml').read_bytes())],OP)
-    with ThreadPoolExecutor(max_workers=4) as pool:results=list(pool.map(lambda _:p.confirm(service.store,preview['id'],C,E),range(4)))
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        results=list(pool.map(lambda _:p.confirm(service.store,preview['id'],C,E),range(4)))
     assert sum(not r['duplicate'] for r in results)==1
     assert len(service.store.all('pipeline_snapshot'))==1
 
@@ -159,7 +175,8 @@ def test_execution_preview_confirm_reported_states_and_original_bytes(service):
     with TestClient(create_app(service),base_url='http://localhost') as client:
         r=client.post('/api/pipeline-assurance/execution-preview',data=S|{'snapshot_id':snapshot['id']},files={'file':('run.json',raw)})
         assert r.status_code==200,r.text
-        preview=r.json();assert not service.store.all('pipeline_execution')
+        preview=r.json()
+        assert not service.store.all('pipeline_execution')
         reported=client.post('/api/pipeline-assurance/confirm',json=S|{'preview_id':preview['id']}).json()
         states=reported['controls']
         assert states[observation(snapshot,'configured_sast')['id']]['state']=='Reported successful'
@@ -177,31 +194,50 @@ def test_execution_preview_confirm_reported_states_and_original_bytes(service):
 
 @pytest.mark.parametrize('change', ['repository','commit','branch','path','attempt','job_attempt','job_run','timestamp','duplicate_job','missing_step','duplicate_step_name','run_conclusion_missing','noncomplete_conclusion'])
 def test_execution_mismatch_and_unknowns(service,change):
-    snapshot=upload(service);doc=data()
-    if change=='repository':doc['workflow_run']['repository']['full_name']='other/repo'
-    if change=='commit':doc['workflow_run']['head_sha']='b'*40
-    if change=='branch':doc['workflow_run']['head_branch']='different'
-    if change=='path':doc['workflow_run']['path']='.github/workflows/other.yml'
-    if change=='attempt':doc['workflow_run'].pop('run_attempt')
-    if change=='job_attempt':doc['jobs']['jobs'][0].pop('run_attempt')
-    if change=='job_run':doc['jobs']['jobs'][0]['run_id']=999
-    if change=='timestamp':doc['jobs']['jobs'][0]['started_at']='2026-01-01'
-    if change=='duplicate_job':doc['jobs']['jobs'][1]['id']=doc['jobs']['jobs'][0]['id']
-    if change=='missing_step':doc['jobs']['jobs'][0].pop('steps')
-    if change=='duplicate_step_name':doc['jobs']['jobs'][0]['steps'].append(doc['jobs']['jobs'][0]['steps'][0]|{'number':4})
-    if change=='run_conclusion_missing':doc['workflow_run']['conclusion']=None
-    if change=='noncomplete_conclusion':doc['workflow_run']['status']='in_progress'
+    snapshot=upload(service)
+    doc=data()
+    if change=='repository':
+        doc['workflow_run']['repository']['full_name']='other/repo'
+    if change=='commit':
+        doc['workflow_run']['head_sha']='b'*40
+    if change=='branch':
+        doc['workflow_run']['head_branch']='different'
+    if change=='path':
+        doc['workflow_run']['path']='.github/workflows/other.yml'
+    if change=='attempt':
+        doc['workflow_run'].pop('run_attempt')
+    if change=='job_attempt':
+        doc['jobs']['jobs'][0].pop('run_attempt')
+    if change=='job_run':
+        doc['jobs']['jobs'][0]['run_id']=999
+    if change=='timestamp':
+        doc['jobs']['jobs'][0]['started_at']='2026-01-01'
+    if change=='duplicate_job':
+        doc['jobs']['jobs'][1]['id']=doc['jobs']['jobs'][0]['id']
+    if change=='missing_step':
+        doc['jobs']['jobs'][0].pop('steps')
+    if change=='duplicate_step_name':
+        doc['jobs']['jobs'][0]['steps'].append(doc['jobs']['jobs'][0]['steps'][0]|{'number':4})
+    if change=='run_conclusion_missing':
+        doc['workflow_run']['conclusion']=None
+    if change=='noncomplete_conclusion':
+        doc['workflow_run']['status']='in_progress'
     if change in ('missing_step','duplicate_step_name','run_conclusion_missing'):
         result=execution.parse(json.dumps(doc).encode(),snapshot)
         assert result['controls'][observation(snapshot,'configured_sast')['id']]['state'] in ('Unknown / no evidence','Incomplete')
     else:
-        with pytest.raises(ValueError):p.preview_execution(service.store,C,E,snapshot['id'],json.dumps(doc).encode())
+        with pytest.raises(ValueError):
+            p.preview_execution(service.store,C,E,snapshot['id'],json.dumps(doc).encode())
         assert not service.store.all('pipeline_execution')
 
 
 @pytest.mark.parametrize('conclusion,expected',[('cancelled','Reported cancelled'),('neutral','Unknown / no evidence'),('timed_out','Reported failed')])
 def test_non_success_outcomes(service,conclusion,expected):
-    snapshot=upload(service);doc=data();job=doc['jobs']['jobs'][0];job['conclusion']=conclusion;job['steps'][0]['conclusion']=conclusion
+    snapshot=upload(service)
+    doc=data()
+    job=doc['jobs']['jobs'][0]
+    job['conclusion']=conclusion
+    job['steps'][0]['conclusion']=conclusion
     r=execution.parse(json.dumps(doc).encode(),snapshot)
     assert r['controls'][observation(snapshot,'configured_sast')['id']]['state']==expected
 
@@ -209,9 +245,11 @@ def test_non_success_outcomes(service,conclusion,expected):
 def test_execution_bound_and_missing_commit(service):
     snap=upload(service)
     for raw in [b'{',b'{"jobs":{},"jobs":{}}',b'x'*(execution.MAX_EXECUTION+1)]:
-        with pytest.raises(ValueError):execution.parse(raw,snap)
+        with pytest.raises(ValueError):
+            execution.parse(raw,snap)
     snap['operator_context']['commit']=None
-    with pytest.raises(ValueError,match='commit'):execution.parse((FIX/'run.json').read_bytes(),snap)
+    with pytest.raises(ValueError,match='commit'):
+        execution.parse((FIX/'run.json').read_bytes(),snap)
 
 
 def test_permissions_override_inheritance_dates_and_shell_masking(service):
@@ -241,25 +279,33 @@ jobs:
 
 @pytest.mark.parametrize('change',['path_type','job_before_run','step_before_job','step_after_job','matrix','missing_name','missing_time','version'])
 def test_execution_chronology_unknown_binding_and_preview_version(service,change):
-    snapshot=upload(service);doc=data()
-    if change=='path_type':doc['workflow_run']['path']=[]
-    if change=='job_before_run':doc['jobs']['jobs'][0]['started_at']='2025-01-01T00:00:00Z'
-    if change=='step_before_job':doc['jobs']['jobs'][0]['steps'][0]['started_at']='2025-01-01T00:00:00Z'
-    if change=='step_after_job':doc['jobs']['jobs'][0]['steps'][0]['completed_at']='2027-01-01T00:00:00Z'
+    snapshot=upload(service)
+    doc=data()
+    if change=='path_type':
+        doc['workflow_run']['path']=[]
+    if change=='job_before_run':
+        doc['jobs']['jobs'][0]['started_at']='2025-01-01T00:00:00Z'
+    if change=='step_before_job':
+        doc['jobs']['jobs'][0]['steps'][0]['started_at']='2025-01-01T00:00:00Z'
+    if change=='step_after_job':
+        doc['jobs']['jobs'][0]['steps'][0]['completed_at']='2027-01-01T00:00:00Z'
     if change in ('matrix','missing_name'):
         raw=(FIX/'good.yml').read_bytes()
         raw=raw.replace(b'    name: Synthetic SAST',b'    strategy: {matrix: {os: [ubuntu-latest]}}\n    name: Synthetic SAST') if change=='matrix' else raw.replace(b'      - name: Analyze CodeQL\n        uses:',b'      - uses:')
         snapshot=p.preview(service.store,C,E,[('good.yml',raw)],OP)['payload']
-    if change=='missing_time':doc['jobs']['jobs'][0]['steps'][0].pop('completed_at')
+    if change=='missing_time':
+        doc['jobs']['jobs'][0]['steps'][0].pop('completed_at')
     if change in ('matrix','missing_name','missing_time'):
         result=execution.parse(json.dumps(doc).encode(),snapshot)
         assert result['controls'][observation(snapshot,'configured_sast')['id']]['state']=='Unknown / no evidence'
     elif change=='version':
         preview=p.preview_execution(service.store,C,E,snapshot['id'],json.dumps(doc).encode())
         service.store.put('pipeline_preview',preview['id'],preview|{'rule_version':'older'})
-        with pytest.raises(ValueError,match='rule version'):p.confirm(service.store,preview['id'],C,E)
+        with pytest.raises(ValueError,match='rule version'):
+            p.confirm(service.store,preview['id'],C,E)
     else:
-        with pytest.raises(ValueError):p.preview_execution(service.store,C,E,snapshot['id'],json.dumps(doc).encode())
+        with pytest.raises(ValueError):
+            p.preview_execution(service.store,C,E,snapshot['id'],json.dumps(doc).encode())
     assert not service.store.all('pipeline_execution')
 
 

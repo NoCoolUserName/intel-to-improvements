@@ -1,5 +1,4 @@
 import copy
-import json
 from datetime import timedelta
 import pytest
 from fastapi.testclient import TestClient
@@ -20,7 +19,8 @@ def test_demo_reconciles_readonly_idempotent_and_qualified(service):
     with service.store.connect() as c:
         before=[tuple(r) for r in c.execute('SELECT * FROM records ORDER BY kind,id')]
         activity=c.execute('SELECT count(*) FROM activity').fetchone()[0]
-    d=show(service,scope['customer_id'],scope['environment_id']);m=metrics(d)
+    d=show(service,scope['customer_id'],scope['environment_id'])
+    m=metrics(d)
     assert d['raw_appsec_occurrences']==11 and m['appsec']==10
     assert m['affected']==1 and m['potential']==1 and m['mentions']==1
     assert m['unreviewed']==2 and m['applicable']==8
@@ -50,10 +50,12 @@ def test_demo_reconciles_readonly_idempotent_and_qualified(service):
 def test_triage_identity_and_exclusions(service,disposition):
     f=Workflow(service)
     f.review(disposition=disposition,**({'duplicate_of':f.other['id']} if disposition==appsec.DUPLICATE else {}))
-    d=show(service);r=next(r for r in d['rows'] if r['reference'].get('finding_id')==f.f['id'])
+    d=show(service)
+    r=next(r for r in d['rows'] if r['reference'].get('finding_id')==f.f['id'])
     assert r['status']==disposition
     assert r['outstanding']==(disposition in (appsec.APPLICABLE,'Needs further investigation'))
-    f.newer();d=show(service)
+    f.newer()
+    d=show(service)
     assert metrics(d)['appsec']==2 and metrics(d)['unreviewed']==2
 
 
@@ -63,18 +65,25 @@ def test_triage_identity_and_exclusions(service,disposition):
     ('inconclusive','version/configuration evidence','Retest inconclusive'),
     ('passed','analyst attestation','Attestation only')])
 def test_current_retest_classes(service,result,method,expected):
-    f=Workflow(service);f.ready();f.retest(result=result,method=method)
+    f=Workflow(service)
+    f.ready()
+    f.retest(result=result,method=method)
     assert metrics(show(service))['verification:'+expected]==1
     assert show(service)['timing'][0]['sample_count']==0 # not closed
     if result=='passed' and method!='analyst attestation':
-        f.action(status='closed');assert metrics(show(service))['work']==0
-        f.retest(result='failed');assert metrics(show(service))['work']==1
+        f.action(status='closed')
+        assert metrics(show(service))['work']==0
+        f.retest(result='failed')
+        assert metrics(show(service))['work']==1
         assert metrics(show(service))['verification:Retest failed']==1
         assert show(service)['timing'][0]['median_seconds'] is None
 
 
 def test_missing_evidence_and_changed_implementation_invalidate(service):
-    f=Workflow(service);f.ready();f.retest();f.action(status='closed')
+    f=Workflow(service)
+    f.ready()
+    f.retest()
+    f.action(status='closed')
     evidence=f.store.all('appsec_evidence')[0]
     (f.store.root/'blobs'/evidence['sha256']).unlink()
     d=show(service)
@@ -84,8 +93,11 @@ def test_missing_evidence_and_changed_implementation_invalidate(service):
 
 @pytest.mark.parametrize('delta,expected',[(0,0),(-1,1),(1,0),(None,None)])
 def test_recorded_targets_utc_boundary(service,monkeypatch,delta,expected):
-    f=Workflow(service);f.review();a=f.action()
-    fixed='2026-10-26T00:00:00+00:00';monkeypatch.setattr(eo,'now',lambda:fixed)
+    f=Workflow(service)
+    f.review()
+    a=f.action()
+    fixed='2026-10-26T00:00:00+00:00'
+    monkeypatch.setattr(eo,'now',lambda:fixed)
     plan=a['remediation']|{'target_date':(appsec.dt(fixed)+timedelta(days=delta)).date().isoformat() if delta is not None else None}
     f.action(remediation=plan)
     row=next(r for r in show(service)['rows'] if r['entity']=='action')
@@ -120,11 +132,14 @@ def test_scope_limits_api_and_host_controls(service,monkeypatch):
 
 @pytest.mark.parametrize('decision',['approved','rejected','revoked'])
 def test_exception_latest_decision_expiry_and_profile_change(service,monkeypatch,decision):
-    f=Workflow(service);f.review();ctx=profiles.context(f.store,'fictional-bank','windows-ad').model_dump()
+    f=Workflow(service)
+    f.review()
+    ctx=profiles.context(f.store,'fictional-bank','windows-ad').model_dump()
     end=appsec.dt(now())+timedelta(days=1)
     req=appsec.request_exception(f.store,f.f,ctx,{'requester':'Requester','justification':'Authored justification','residual_risk':'Remains unresolved','review_by':end.isoformat()})
     appsec.decide_exception(f.store,f.f,ctx,req['id'],{'authority':'Authority','decision':decision,'reason':'Recorded decision'})
-    d=show(service);expected='active operator-recorded acceptance; finding remains' if decision=='approved' else decision
+    d=show(service)
+    expected='active operator-recorded acceptance; finding remains' if decision=='approved' else decision
     assert metrics(d)['exception:'+expected]==1
     assert metrics(d)['outstanding']==2
     monkeypatch.setattr(eo,'now',lambda:end.isoformat())
@@ -153,14 +168,18 @@ def test_infrastructure_revisions_distinct_assets_and_operational_qualification(
     assert result['timing'][2]['sample_count']==1
     assert next(r for r in result['rows'] if r['entity']=='action')['target_date'] is None
     evidence=service.store.all('vulnerability_evidence')[0]
-    path=service.store.root/'blobs'/evidence['sha256'];raw=path.read_bytes();path.unlink()
+    path=service.store.root/'blobs'/evidence['sha256']
+    raw=path.read_bytes()
+    path.unlink()
     assert metrics(show(service))['verification:Stale evidence']==1
     assert show(service)['timing'][2]['median_seconds'] is None
     path.write_bytes(raw)
     infra_test(service,d,a,result='failed')
     assert metrics(show(service))['verification:Retest failed']==1
     assert show(service)['timing'][2]['median_seconds'] is None
-    changed=copy.deepcopy(a);changed['proposed_change']='Changed implementation';service.store.put('improvement',a['id'],changed)
+    changed=copy.deepcopy(a)
+    changed['proposed_change']='Changed implementation'
+    service.store.put('improvement',a['id'],changed)
     assert metrics(show(service))['verification:Stale evidence']==1
 
 
@@ -186,22 +205,32 @@ def test_same_customer_environments_stay_distinct(service):
 
 
 def test_attachment_budget_fails_explicitly(service,monkeypatch):
-    f=Workflow(service);f.ready();f.retest()
+    f=Workflow(service)
+    f.ready()
+    f.retest()
     monkeypatch.setattr(eo,'EVIDENCE_LIMIT',1)
-    with pytest.raises(ValueError,match='not truncated'):show(service)
+    with pytest.raises(ValueError,match='not truncated'):
+        show(service)
 
 
 def test_expired_retest_and_missing_action_clock(service,monkeypatch):
-    f=Workflow(service);f.ready();f.retest();f.action(status='closed')
+    f=Workflow(service)
+    f.ready()
+    f.retest()
+    f.action(status='closed')
     monkeypatch.setattr(eo,'now',lambda:(appsec.dt(now())+timedelta(days=31)).isoformat())
     assert metrics(show(service))['verification:Stale evidence']==1
-    a=f.store.all('improvement')[0];a['opened_at']=None;f.store.put('improvement',a['id'],a)
+    a=f.store.all('improvement')[0]
+    a['opened_at']=None
+    f.store.put('improvement',a['id'],a)
     assert metrics(show(service))['age:Unknown']==1
 
 
 def test_orphan_action_visible_without_verification(service):
-    f=Workflow(service);f.ready()
-    with f.store.connect() as c:c.execute("DELETE FROM records WHERE kind='application_finding'")
+    f=Workflow(service)
+    f.ready()
+    with f.store.connect() as c:
+        c.execute("DELETE FROM records WHERE kind='application_finding'")
     d=show(service)
     assert metrics(d)['work']==1
     assert d['rows'][0]['verification']=='Unknown; origin unavailable'
@@ -209,7 +238,9 @@ def test_orphan_action_visible_without_verification(service):
 
 @pytest.mark.parametrize('disposition',['Not applicable','False positive (reviewed determination)',appsec.DUPLICATE])
 def test_excluded_findings_keep_commitments_visible_without_overdue_remediation(service,disposition):
-    f=Workflow(service);f.review();a=f.action()
+    f=Workflow(service)
+    f.review()
+    a=f.action()
     f.action(remediation=a['remediation']|{'target_date':(appsec.dt(now())-timedelta(days=1)).date().isoformat()})
     assert metrics(show(service))['overdue']==1
     f.review(disposition=disposition,**({'duplicate_of':f.other['id']} if disposition==appsec.DUPLICATE else {}))

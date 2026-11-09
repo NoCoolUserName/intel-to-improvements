@@ -1,12 +1,14 @@
 # Exposure Overview
 
-Phase 3 adds a read-only management view of persisted CVE observations, application findings, existing improvement actions, retests and exceptions. Open **Exposure Overview** in the existing navigation and select the customer/environment above. Refresh is explicit. Measurements cover selected local records and available evidence only; they do not measure complete enterprise inventory, exploitation, risk reduction or organizational coverage.
+Exposure Overview shows records associated with the fictional company selected in Customer Profiles. It shows four headline totals, Open work by environment, items needing attention, a searchable case list and environment summaries. The environment filter defaults to **All environments** for that company. Case and environment links open the existing workflow in its saved scope.
 
-This remains a local single-operator proof-of-concept workbench. Operator names, accepting authorities and uploaded evidence are not authenticated enterprise identities or independent scanner executions.
+Updates run every ten seconds while visible and on tab focus. Failed updates retain the last successful snapshot with a visible warning and automatic retry. There is no manual refresh or demo-loading box.
 
 ## Architecture and scope
 
-`iti/exposure_overview.py` reads a consistent SQLite snapshot and indexes scoped records in memory. `GET /api/exposure-overview?customer_id=…&environment_id=…` validates the selected environment against its current customer profile. There is no global or all-environments view. Switching scopes clears the React workspace and ignores late responses, including demo responses.
+`GET /api/exposure-overview/portfolio` combines latest assessments per `(customer, environment, source)` with recorded action status and the existing scoped exposure projections. Historical revisions remain saved. Open actions use recorded status, which does not establish verified remediation. Synthetic examples are included and labeled.
+
+The scoped API `GET /api/exposure-overview?customer_id=…&environment_id=…` remains available with the definitions below. A scope whose exposure projection fails is explicitly unavailable; its exposure totals are never presented as zero. The portfolio snapshot is assembled from separate scope reads and can reflect changes made during collection.
 
 The projection never calls the mutable CVE workspace/decision generator or source synchronizer. Reading metrics creates no records, decisions, clocks, activity or cached statistics. It uses persisted source mentions only; intake not yet synchronized by Vulnerability Intelligence is not included. Original source document bodies are omitted from the mention projection. It does not parse SARIF or retrieve external evidence.
 
@@ -71,22 +73,14 @@ Timing medians use only eligible current resolved exposures and show the sample 
 
 Reopened, stale, unresolved, missing/invalid milestone and incompatible-cohort records are excluded. No eligible records means **Not available**, with a reason, not a zero-day median. Small synthetic durations demonstrate workflow mechanics only.
 
-## Reproducible leadership demonstration (3–5 minutes)
+## Dashboard walkthrough
 
-Start the normal local app with `./scripts/run` (run `npm --prefix web run build` after frontend changes). Open **Exposure Overview** and choose **Load synthetic leadership demo**. This explicit action seeds `fictional-leadership-demo / leadership-lab` through existing services. It does not alter the earlier CVE/AppSec demo customers or seed on startup. Reloading is idempotent and preserves operator edits. A conflicting reserved customer without a completed marker causes an error rather than replacement.
+1. Open **Exposure Overview**. Confirm that the page names the selected fictional company and lists its associated environments.
+2. Select an environment or search a case title. Open a case to inspect its saved assessment; return to the overview to see the full portfolio.
+3. Use the environment table to open findings, infrastructure or actions in that environment.
+4. Record a change in the existing workflow and return to the dashboard. It reloads on entry and then updates automatically.
 
-1. **0:00:** compare 11 persisted AppSec occurrences with 10 logical findings. The last empty SARIF report does not close any finding. Compare one authored confirmed infrastructure observation, one unassessed asset and a separate source-only CVE mention.
-2. **0:45:** click **Actions past recorded target**. Five outstanding actions have targets two days before demo creation. Inspect owner, action priority, unknown scanner severity and the recorded dates. Targets are commitments, not assumed SLAs.
-3. **1:30:** expand verification/exception metrics. Inspect the pending fix claim, failed and inconclusive retests, one synthetic evidence-reviewed outcome and one stale historical closure. Operational infrastructure remediation remains zero.
-4. **2:15:** compare active, expired and unapproved exceptions. Click each metric to see its underlying request; inspect the original finding and Phase 2 history. Acceptance leaves exposure unresolved.
-5. **3:00:** inspect the stale finding to see the prior closed action requiring renewed review. Return to the overview; inspect the confirmed infrastructure row to open its CVE workspace. Unreviewed and unassigned findings remain visible with unknown metadata.
-6. **4:00:** reload, switch appearance and customer. Other customer scopes do not show the leadership dataset. Choose Refresh to recompute current expiry/freshness.
-
-All demo observations, owners, judgments and evidence are authored synthetic examples. The source-only CVE text is also explicitly fictional. Dates are deterministic offsets from the saved demo creation time; actual expiry and 30-day freshness continue to apply. To reproduce initial counts after editing/aging, use a fresh isolated data directory rather than overwriting normal user data:
-
-```sh
-ITI_DATA_DIR=/tmp/iti-leadership-demo .venv/bin/python -m uvicorn iti.api:create_app --factory --host 127.0.0.1 --port 8000
-```
+The existing synthetic leadership fixture and scoped API remain available for backend qualification tests. Loading the fixture is no longer a dashboard action.
 
 ## Validation and limitations
 
@@ -103,3 +97,41 @@ Tests cover read-only snapshots, reconciliation, historical occurrences, disposi
 No automatic prioritization, risk percentage, scanner, ingestion redesign, workflow changes, ticketing, notifications, SLA enforcement, AI summary, background polling, all-environment aggregation, PDF export or Phase 4 pipeline assurance is included. The existing app's independent CTI refresh behavior is unchanged; this overview fetches only on entry or explicit refresh. Evidence quality and inventory completeness remain bounded by supplied local records.
 
 Local validation on 2026-10-26: full backend suite **217 passed**, including **38 focused overview tests**; frontend **49 passed** across seven files; TypeScript and production build passed. Ruff correctness checks passed; Semgrep 1.180.0 ran the six pinned rules on 62 applicable files with zero findings. Real headless Chromium against an isolated loopback server reconciled all 38 metric populations, confirmed 11 occurrences / 10 logical findings and five overdue actions, exercised both existing detail workspaces, filters, reload, customer isolation, appearance and mobile layout with zero page errors. These are authored synthetic workflow results, not operational risk reduction.
+
+## Priority decisions and validation
+
+Vulnerability Intelligence and Exposure Overview share a compact priority summary. It keeps technical severity, exploitation evidence, applicability/reachability, proposed or analyst-reviewed response, rationale and validation distinct. Exposure Overview reads the latest saved decision per series; it never creates decisions or fetches enrichment. Saved decision dates are visible. Open the vulnerability workspace to refresh inputs and review a changed recommendation. Missing severity is explicitly unavailable.
+
+The overview also shows current AppSec/infrastructure evidence qualifications and case validation results using the existing ledger freshness rules. Case results retain their outcome dimension and live, lab, synthetic or attestation provenance. Failed and stale outcomes appear first. These subjects are not additional exposure counts. Links open the original case or finding in its customer/environment.
+
+An absent result is displayed as **No recorded validation**, with the existing owner retest plan and rationale where available. The current data model does not distinguish planned, blocked, or deliberately declined execution; the dashboard does not infer those decisions from silence or fabricate synthetic test results. For this demo, explain a blocker or decision not to test in the existing action rationale/retest plan. Those explanations do not establish successful validation. Existing synthetic passes, failures and inconclusive results remain labeled.
+
+## Fictional company selection
+
+In **Customer Profiles**, choose Juniper Software, Harborlight Capital, Northstar Bank or Cedar Cloud from **Fictional Company**, then choose **Primary sector** and save. The identity and sector are persisted together. Company choice selects the existing associated demo environments: Juniper includes its software, AppSec and leadership examples; Harborlight includes PHP2Shell and Brotli. The overview filters all case, action, priority and validation projections to that company. Its Open work chart groups by environment. The overview uses one company/environment/sector context strip in place of the generic system-dashboard strip. Sector selection describes the demonstration; existing assessment snapshots retain their recorded context and are not silently reassessed.
+
+The company/environment/sector strip occupies the page header above the Exposure Overview title and appears only on **Exposure Overview**. Selecting an environment there updates the shared workspace scope and navigation links. Other workspaces use that selected scope without displaying the strip. Returning to the overview retains the filter; choosing All environments expands the dashboard while retaining the last concrete environment for scoped workspaces. The dashboard has no Add Intelligence shortcut; intake remains in the sidebar.
+
+## Remediation responsibility and next steps
+
+Actions keep the existing implementation owner (`owner` in saved records), plus remediation coordinator and verification reviewer. All three existing origin workflows can edit these fields. Older unassigned roles remain explicitly Unassigned. Improvement Actions and Exposure Overview show the same derived stage and next-step owner: implementation team for implementation/evidence collection, reviewer for pending review, and the explicitly responsible person for blocked or deliberately unplanned validation. Coordinators remain visible alongside the next-step owner.
+
+Blocked or not-planned validation requires a responsible person and reason. A recorded evidence review requires its supplier, evidence reference, actual reviewer, supported conclusion and remaining uncertainty. This is review metadata; it does not create a test pass. Existing freshness, integrity, dependency and provenance rules still determine qualified outcomes. Supplied/synthetic AppSec reviews retain their evidence qualification and are not called independently verified operational remediation.
+
+The Working case selector includes assessed sources across the selected company’s environments. Selecting Brotli from Harborlight’s other demo environment changes the active environment and case together.
+
+## Open Working Cases and validation attention
+
+**Open Working Cases** identifies case-associated environments with outstanding actions. Selecting a row opens Improvement Actions in that environment with an explicit open-only filter; the list excludes recorded closed actions, matching the chart count. Inspecting and closing action details retains the filter. Show all scoped actions clears it. Clicking a case row does not change the overview environment filter.
+
+The three headline totals are Working cases, Outstanding exposures and Open actions. **Awaiting validation** appears in Needs attention and counts actions whose current next step is Awaiting evidence or Awaiting verification review. Blocked validation is counted under Needs attention. Deliberately unplanned validation remains recorded with its responsible person and reason in action details, but is not an attention item. These are pending-work states, not overdue determinations.
+
+The **Open Working Cases** headline card toggles its compact case list, which is hidden initially. Its count matches cases in the displayed open-work groups. The list grows to fit its rows and does not stretch to the height of Needs attention.
+
+Coverage inherits the selected case and shows its title/environment as read-only context. **Change case** opens Cases & Analysis with that assessment and environment retained in the link. The working-case selector remains in Cases & Analysis. On a browser reload, Exposure Overview starts at **All environments**, even if its URL retains a concrete environment for scoped workspaces. Automatic data updates during the session do not reset an actively chosen environment filter.
+
+**Open existing package** navigates to the saved package in Intelligence Exports without generating or updating it. Explicit Generate package / Generate updated package controls remain in Cases & Analysis and Intelligence Exports. Coverage inherits the case and links to exports; its open operation does not change package records.
+
+Hunts and Purple Team use the same read-only case/environment context as Coverage. Their Change case links return to Cases & Analysis with the current assessment and environment retained. The page-header Add Intelligence button appears only in Add Intelligence; sidebar intake navigation remains available throughout the app.
+
+Coverage omits the case-relevance badge. Analysis method, provider and recorded review status are available in a compact, initially collapsed **Analysis method / provenance** detail. Cases & Analysis retains relevance and its assessment context.

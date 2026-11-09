@@ -9,10 +9,10 @@ async function request(path: string, options?: RequestInit) {
   return data;
 }
 const json = (value: unknown) => <pre className="json">{JSON.stringify(value, null, 2)}</pre>;
-export default function ApplicationFindings(props: {customer: string; environment: string; onDemo?: (value:Obj)=>void; initialFindingId?: string; initialTab?:string; onActions?:(id:string)=>void}) {
+export default function ApplicationFindings(props: {customer: string; environment: string; workingCaseTitle?:string; scopeName:string; onChangeCase:()=>void; onDemo?: (value:Obj)=>void; initialFindingId?: string; initialTab?:string; onActions?:(id:string)=>void}) {
   return <Workspace key={props.customer + ':' + props.environment} {...props}/>;
 }
-function Workspace({customer, environment, onDemo, initialFindingId, initialTab, onActions}: {customer: string; environment: string; onDemo?: (value:Obj)=>void; initialFindingId?: string; initialTab?:string; onActions?:(id:string)=>void}) {
+function Workspace({customer, environment, workingCaseTitle, scopeName, onChangeCase, onDemo, initialFindingId, initialTab, onActions}: {customer: string; environment: string; workingCaseTitle?:string; scopeName:string; onChangeCase:()=>void; onDemo?: (value:Obj)=>void; initialFindingId?: string; initialTab?:string; onActions?:(id:string)=>void}) {
   const [data, setData] = useState<Obj>(), [preview, setPreview] = useState<Obj>(), [detail, setDetail] = useState<Obj>();
   const [error, setError] = useState(''), [notice, setNotice] = useState(''), [busy, setBusy] = useState(false);
   const selectedFile = useRef<File | undefined>(undefined);
@@ -66,7 +66,7 @@ function Workspace({customer, environment, onDemo, initialFindingId, initialTab,
         if (!alive.current) return; setPreview(undefined); setNotice((result.duplicate ? 'Existing import: ' : 'Imported: ') + result.id); await load();
       })}>Confirm SARIF import</button></div>}
     </div>
-    {data && <><div className="panel padded"><h2>Findings in selected scope</h2>{data.findings.length ? table(data.findings, true) : <p>No application findings in this scope.</p>}</div>
+    {data && <><div className="panel padded"><h2>Findings in selected scope</h2><p>Working case: <strong>{workingCaseTitle||'No case selected'}</strong> <button type="button" className="text-link" onClick={onChangeCase}>Change case</button></p><p className="fine">Saved scanner imports for {scopeName}. Findings in this scope are not automatically linked to the working case.</p>{data.findings.length ? table(data.findings, true) : <p>No application findings in this scope.</p>}</div>
       <div className="panel padded"><h2>Import history and limitations</h2>{data.imports.map((batch: Obj) => <details key={batch.id}><summary>{batch.id} · {batch.finding_ids.length} findings · {batch.imported_at}</summary>{json(batch)}<a href={'/api/application-findings/sources/' + encodeURIComponent(batch.source_id) + query} download>Download original SARIF evidence</a></details>)}</div></>}
     {finding && <div className="panel padded" aria-label="Finding details"><h2>Finding details: {finding.rule_id || 'Unknown rule'}</h2><p>{finding.verification}</p><blockquote>{finding.resolved_message ?? 'Message unresolved; inspect original message below.'}</blockquote>
       <AppsecGovernance initialTab={initialTab} onActions={onActions} key={finding.id} finding={finding} findings={data?.findings||[]} imports={data?.imports||[]} onInspect={inspect}/>

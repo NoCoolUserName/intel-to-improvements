@@ -171,3 +171,14 @@ No application dependency locks, shared store schema, existing evidence bytes or
 The complete Ruff correctness selection from the pinned shared quality workflow also passed. Semgrep 1.180.0 with the six pinned security rules, strict parsing and the workflow's exclusions scanned 81 applicable targets in the committed snapshot: **zero findings and zero errors**. The checksum-verified Gitleaks 8.24.3 binary detected the workflow's fake-key self-test, then reported **zero leaks** across the tracked snapshot with default rules and no exclusions. The public-path/commit-metadata privacy checker passed with the repository's pseudonymous author and noreply address.
 
 Publication handoff: the cloud shell has no authenticated Git push credential, and the connected commit writer cannot specify the privacy-required commit author. No remote feature branch, pull request or GitHub check run was created. The prepared Git bundle preserves the tested commit identity for authenticated publication on the Mac; remote checks must pass before any merge. This limitation does not affect the completed local validation.
+
+
+### Mac handoff integration — 2026-11-08
+
+Imported and checksum-verified the prepared ratings bundle at `f8706b343b95120299045face383d275f3fa4664`. Retained the earlier local workbench changes (company scope, dashboard drilldowns, remediation roles, Brotli case, pipeline review and typography) in an integration commit; the original branch remains available. Updated acceptance selectors for the current company-profile navigation and decision labels.
+
+Actual macOS results: 348 backend tests plus three subtests; 94 frontend tests across 15 files. Bootstrap, TypeScript and production build succeeded. Offline Chromium 145 acceptance passed: keyboard activation, independent impact save preserving exploitation history, response acceptance, ledger action creation, reload persistence, four themes, 390px layout, changed evidence, company isolation and unavailable enrichment retaining evidence. No browser errors or outbound requests were observed. The acceptance uses a separate synthetic store.
+
+The Desktop application was rebuilt, installed and reopened from the feature checkout. The running health endpoint matched the checkout and build identity. Preservation comparison found all 621 prior records unchanged, all 361 prior activity entries intact, and 688 evidence/artifact files unchanged. The runtime store, environment configuration and original branch were preserved; a database/evidence/application backup was made before installation. The shared page heading now has narrower word spacing without changing its position or size.
+
+GitHub exact-head checks are reported on the open PR; this local record does not claim a merge or an operational remediation outcome.

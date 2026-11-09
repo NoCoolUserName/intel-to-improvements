@@ -16,6 +16,7 @@ def related(store, kind, id, customer, environment):
 
 
 def project(store, action, customer, environment, details=False):
+    verified, reviewed_outcome, failed = False, False, False
     origin = action.get('origin') or {}
     reference = None
     title, kind = 'Origin record unavailable in this scope', 'Unavailable'
@@ -30,6 +31,8 @@ def project(store, action, customer, environment, details=False):
             title = finding.get('rule_id') or 'Application finding'
             kind, outcome = 'AppSec', governance['verification']['status']
             tests, exceptions = governance['verification']['history'], governance['exceptions']
+            reviewed_outcome = governance['verification']['can_close']
+            failed = bool(tests and not tests[-1]['stale'] and tests[-1]['result'] == 'failed')
             source = {'id': original['source_id'], 'sha256': original['source_sha256'], 'origin_finding_id': original['id']}
             reference = {'kind': 'appsec', 'finding_id': finding['id'], 'action_id': action['id']}
             qualification = governance['limitations']
@@ -43,6 +46,10 @@ def project(store, action, customer, environment, details=False):
             title, kind = decision['cve'] + ' · ' + origin.get('asset_id', 'Unknown asset'), 'Vulnerability'
             outcome = verification['status']
             tests = [t for t in verification['tests'] if t.get('improvement_id') == action['id']]
+            from .exposure_overview import overview
+            qualified = next((r for r in overview(store, customer, environment)['rows'] if r.get('action_id') == action['id']), None)
+            verified = bool(qualified and qualified['verification'] in ('Operational infrastructure remediation','Operational mitigation only'))
+            failed = bool(tests and tests[-1]['fresh'] and tests[-1]['result'] == 'failed')
             reference = {'kind': 'vulnerability', 'cve': decision['cve'], 'decision_id': decision['id'], 'action_id': action['id']}
             source = {'decision_id': decision['id'], 'assertion_ids': origin.get('source_assertions', [])}
             qualification = 'Asset-level verification uses existing scoped retests. This action’s linked retests are listed separately; synthetic/lab evidence stays qualified.'
@@ -57,6 +64,8 @@ def project(store, action, customer, environment, details=False):
             try:
                 view = ledger.view(store, assessment)
                 tests = [t for t in view['tests'] if t.get('improvement_id') == action['id']]
+                verified = bool(tests and not tests[-1]['stale'] and tests[-1]['result'] == 'passed' and tests[-1]['method'] != 'analyst attestation' and all(e['kind'] == 'live system' for e in tests[-1]['evidence']))
+                failed = bool(tests and not tests[-1]['stale'] and tests[-1]['result'] == 'failed')
                 outcome = ('Latest recorded retest: ' + tests[-1]['result'] + ' · ' + tests[-1]['method']
                            + (' · stale' if tests[-1]['stale'] else ' · current dependencies')) if tests else 'No action-linked retest recorded'
             except KeyError:
@@ -66,6 +75,8 @@ def project(store, action, customer, environment, details=False):
            'retest': action['retest'], 'outcome': outcome, 'qualification': qualification,
            'reference': reference, 'opened_at': action.get('opened_at'), 'source': source,
            'customer_id': customer, 'environment_id': environment}
+    from .action_tracking import progress
+    row.update(progress(action, verified, reviewed_outcome, failed))
     if details:
         row.update(action=action, tests=tests, exceptions=exceptions)
     return row

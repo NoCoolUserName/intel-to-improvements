@@ -1,8 +1,9 @@
-import json,os
+import json
+import os
 from pathlib import Path
 from contextlib import asynccontextmanager
-from fastapi import FastAPI,Request,HTTPException,UploadFile,File,Form
-from fastapi.responses import FileResponse,JSONResponse
+from fastapi import FastAPI,UploadFile,File,Form
+from fastapi.responses import FileResponse,JSONResponse,PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 from .services import Service
@@ -14,21 +15,29 @@ from . import profiles,gmail,ledger,detection,misp,ingestion,defenses
 def create_app(service=None):
     svc=service or Service()
     @asynccontextmanager
-    async def lifespan(app):svc.restart();yield
+    async def lifespan(app):
+        svc.restart()
+        yield
     app=FastAPI(title='Intel to Improvements',version='0.1.0',lifespan=lifespan)
     app.state.service=svc
     app.add_middleware(TrustedHostMiddleware,allowed_hosts=['127.0.0.1','localhost','[::1]'])
     @app.middleware('http')
     async def local_only(request,call_next):
-        origin=request.headers.get('origin');host=request.headers.get('host')
-        if origin and origin not in (f'http://{host}',f'https://{host}'):return JSONResponse({'detail':'Cross-origin requests rejected; use the loopback app'},status_code=403)
-        if request.headers.get('sec-fetch-site')=='cross-site':return JSONResponse({'detail':'Cross-site requests rejected'},status_code=403)
-        if int(request.headers.get('content-length','0'))>6*1024*1024:return JSONResponse({'detail':'Request exceeds 6 MiB'},status_code=413)
+        origin=request.headers.get('origin')
+        host=request.headers.get('host')
+        if origin and origin not in (f'http://{host}',f'https://{host}'):
+            return JSONResponse({'detail':'Cross-origin requests rejected; use the loopback app'},status_code=403)
+        if request.headers.get('sec-fetch-site')=='cross-site':
+            return JSONResponse({'detail':'Cross-site requests rejected'},status_code=403)
+        if int(request.headers.get('content-length','0'))>6*1024*1024:
+            return JSONResponse({'detail':'Request exceeds 6 MiB'},status_code=413)
         if request.method in ('POST','PUT','PATCH'):
-            chunks=[];total=0
+            chunks=[]
+            total=0
             async for chunk in request.stream():
                 total+=len(chunk)
-                if total>6*1024*1024:return JSONResponse({'detail':'Request exceeds 6 MiB'},status_code=413)
+                if total>6*1024*1024:
+                    return JSONResponse({'detail':'Request exceeds 6 MiB'},status_code=413)
                 chunks.append(chunk)
             request._body=b''.join(chunks)
         if request.url.path.startswith('/attack-flow-builder/') and not (ROOT/'runtime/attack-flow-viewer/index.html').is_file():
@@ -58,15 +67,64 @@ def create_app(service=None):
     def php2shell_demo_file(name:str):
         from .php2shell_demo import FIXTURES
         allowed={'dossier.md','waf-results.json','findings.sarif.json','initial-pipeline.yml','revised-pipeline.yml','initial-run.json','revised-run.json'}
-        if name not in allowed:raise KeyError('Unknown demo fixture')
+        if name not in allowed:
+            raise KeyError('Unknown demo fixture')
         return FileResponse(FIXTURES/name,filename=name)
+    @app.post('/api/demos/brotli')
+    def brotli_demo_load():
+        from .brotli_demo import load
+        return load(svc)
+    @app.get('/api/demos/brotli')
+    def brotli_demo_status():
+        from .brotli_demo import VERSION
+        return svc.store.maybe('working_case_demo', VERSION)
+    @app.get('/api/demos/brotli/files/{name}')
+    def brotli_demo_file(name:str):
+        from .brotli_demo import FIXTURES,FILES
+        if name not in FILES:
+            raise KeyError('Unknown demo fixture')
+        return FileResponse(FIXTURES/name,filename=name)
+    @app.get('/api/demos/brotli/manifest.json')
+    def brotli_demo_manifest():
+        from .brotli_demo import VERSION
+        result=svc.store.maybe('working_case_demo',VERSION)
+        if not result:
+            raise KeyError('Load the Brotli case first')
+        return JSONResponse(result,headers={'Content-Disposition':'attachment; filename="brotli-scenario-manifest.json"'})
+    @app.get('/api/demos/brotli/summary.md')
+    def brotli_demo_summary():
+        from .brotli_demo import VERSION,CVE
+        result=svc.store.maybe('working_case_demo',VERSION)
+        if not result:
+            raise KeyError('Load the Brotli case first')
+        rel=result['relations']
+        lines=['# Brotli exposure response — synthetic scenario summary','',
+               'Fictional customer: Harborlight Capital. No real asset, compromise, scan, pipeline run or operational remediation is asserted.',
+               'CVE: '+CVE+'; source revision: '+rel['source_revision']+'; case assessment: '+rel['assessment_id']+'; package: '+rel['package_id'],
+               '','## Actual stored relationships']
+        for asset,exposure in rel['asset_to_exposure'].items():
+            lines.append('- '+asset+': exposure '+exposure+'; decision '+rel['asset_to_decision'].get(asset,'unavailable')+
+                         '; action '+rel['asset_to_vulnerability_action'].get(asset,'none')+
+                         '; tests '+', '.join(rel['asset_to_vulnerability_tests'].get(asset,[])))
+        lines += ['','## Relationship limits']+['- '+x for x in rel['relationship_limits']]
+        lines += ['','## Source and outcome qualification',
+                  'Stored excerpts and paraphrases are transcribed from web-rendered pages; their hashes are not publisher-page hashes.',
+                  'Direct CISA and readable NVD evidence were unavailable; no direct KEV, EPSS or NVD score was imported.',
+                  'All passed/failed retests and pipeline metadata are authored synthetic replay. Green status and attestation do not establish operational verification.',
+                  'Prior-compromise investigation remains separate and inconclusive without sufficient retained telemetry.']
+        return PlainTextResponse('\n'.join(lines)+'\n',media_type='text/markdown',headers={'Content-Disposition':'attachment; filename="brotli-scenario-summary.md"'})
     @app.get('/api/bootstrap')
-    def bootstrap():return {'customers':svc.store.all('customer'),'sectors':SECTORS,'templates':[profiles.WINDOWS.model_dump(),profiles.MAC.model_dump()],'cases':[{'id':'activemq-derived','title':'ActiveMQ → LockBit','description':'Limited attributed DFIR Report case · exact-content replay'},{'id':'no-ioc','title':'Zero IOCs','description':'Authored healthcare / shared technology case'},{'id':'insufficient','title':'Insufficient intelligence','description':'Authored nontechnical source; no justified emulation'},{'id':'held-out','title':'Held-out change case','description':'Authored negation / benign indicators fixture'}],'capabilities':readiness(svc.store)}
+    def bootstrap():return {'company':profiles.company(svc.store),'company_names':profiles.COMPANY_NAMES,'company_customer_ids':profiles.company_customer_ids(svc.store),'customers':svc.store.all('customer'),'sectors':SECTORS,'templates':[profiles.WINDOWS.model_dump(),profiles.MAC.model_dump()],'cases':[{'id':'activemq-derived','title':'ActiveMQ → LockBit','description':'Limited attributed DFIR Report case · exact-content replay'},{'id':'no-ioc','title':'Zero IOCs','description':'Authored healthcare / shared technology case'},{'id':'insufficient','title':'Insufficient intelligence','description':'Authored nontechnical source; no justified emulation'},{'id':'held-out','title':'Held-out change case','description':'Authored negation / benign indicators fixture'}],'capabilities':readiness(svc.store)}
+    @app.post('/api/company-profile')
+    def save_company(value:dict):
+        return profiles.save_company(svc.store,value)
     @app.post('/api/customers')
     def save_customer(c:CustomerProfile):
         saved=profiles.save(svc.store,c)
-        prior=svc.assessments(c.id);latest={}
-        for a in prior:latest[(a['source']['id'],a['context']['environment_id'])]=a
+        prior=svc.assessments(c.id)
+        latest={}
+        for a in prior:
+            latest[(a['source']['id'],a['context']['environment_id'])]=a
         for (_,env_id),a in latest.items():
             if env_id in {e.id for e in saved.environments}:
                 svc.submit(c.id,env_id,a['extraction']['mode'],'source',a['source']['revision_id'])
@@ -78,17 +136,22 @@ def create_app(service=None):
     @app.post('/api/upload')
     async def upload(customer_id:str=Form(),environment_id:str=Form(),mode:str=Form('offline'),csv_mapping:str=Form(''),file:UploadFile=File()):
         content=await file.read(ingestion.MAX_BYTES+1)
-        if not file.filename or Path(file.filename).name!=file.filename or '\\' in file.filename:raise ValueError('Unsafe upload filename')
+        if not file.filename or Path(file.filename).name!=file.filename or '\\' in file.filename:
+            raise ValueError('Unsafe upload filename')
         return svc.submit(customer_id,environment_id,mode,'upload',content,name=file.filename,metadata={'column_mapping':json.loads(csv_mapping)} if csv_mapping else None)
     @app.get('/api/jobs')
     def jobs(customer_id:str):return svc.jobs(customer_id)
     @app.post('/api/jobs/{id}/{action}')
     def job_action(id:str,action:str,body:dict):
         j=svc.job(id)
-        if j['data']['context']['customer_id']!=body['customer_id']:raise KeyError('Job not found')
-        if action=='cancel':return svc.cancel(id)
-        if action=='resume':return svc.resume(id)
-        if action=='reanalyze':return svc.reanalyze(id,body.get('mode'))
+        if j['data']['context']['customer_id']!=body['customer_id']:
+            raise KeyError('Job not found')
+        if action=='cancel':
+            return svc.cancel(id)
+        if action=='resume':
+            return svc.resume(id)
+        if action=='reanalyze':
+            return svc.reanalyze(id,body.get('mode'))
         raise ValueError('Unknown job action')
     @app.get('/api/assessments')
     def assessments(customer_id:str,environment_id:str):
@@ -100,9 +163,12 @@ def create_app(service=None):
     @app.post('/api/assessments/{id}/override')
     def override(id:str,body:dict):
         a=svc.scoped('assessment',id,body['customer_id'])
-        if not body.get('reason','').strip():raise ValueError('Override reason required')
+        if not body.get('reason','').strip():
+            raise ValueError('Override reason required')
         r={'assessment_id':id,'context':a['context'],'reason':body['reason'],'include':bool(body.get('include',True)),'at':now()}
-        svc.store.put('override',id,r);svc.store.event('relevance_override',body['customer_id'],r);return r
+        svc.store.put('override',id,r)
+        svc.store.event('relevance_override',body['customer_id'],r)
+        return r
     @app.get('/api/overrides')
     def overrides(customer_id:str):return [o for o in svc.store.all('override') if o['context']['customer_id']==customer_id]
     @app.get('/api/packages')
@@ -110,7 +176,8 @@ def create_app(service=None):
     @app.get('/api/artifacts/{id}/{name}')
     def artifact(id:str,name:str,customer_id:str,environment_id:str):
         p=svc.scoped('package',id,customer_id,environment_id)
-        if name not in p['artifacts']['names']:raise KeyError('Artifact not found')
+        if name not in p['artifacts']['names']:
+            raise KeyError('Artifact not found')
         return FileResponse(svc.store.root/'artifacts'/id/name,filename=name)
     @app.get('/api/ledger/{id}')
     def coverage(id:str,customer_id:str,environment_id:str):
@@ -128,7 +195,8 @@ def create_app(service=None):
     def test(id:str,body:dict):return ledger.record_test(svc.store,svc.scoped('assessment',id,body['customer_id']),TestRun.model_validate(body['test']))
     @app.post('/api/ledger/{id}/improve')
     def improve(id:str,body:dict):
-        if body.get('candidate_ref') and not body.get('environment_id'):raise ValueError('Selected environment required for defense suggestion')
+        if body.get('candidate_ref') and not body.get('environment_id'):
+            raise ValueError('Selected environment required for defense suggestion')
         a=svc.scoped('assessment',id,body['customer_id'],body.get('environment_id'))
         return ledger.improve(svc.store,a,ImprovementAction.model_validate(body['action']),body.get('candidate_ref'))
     @app.get('/api/assessments/{id}/defenses')
@@ -136,9 +204,14 @@ def create_app(service=None):
         return defenses.suggestions(svc.store,svc.scoped('assessment',id,customer_id,environment_id))
     @app.post('/api/ledger/{id}/synthetic')
     def synthetic(id:str,body:dict):
-        a=svc.scoped('assessment',id,body['customer_id']);rule_id=body['rule_id'];b=body['behavior_id']
-        if not any(c['id']==rule_id and c['behavior_id']==b for c in a['candidates']):raise ValueError('Rule not associated with behavior')
-        result=detection.fixture_test(rule_id);blob=svc.store.blob(json.dumps(result).encode());executed=now()
+        a=svc.scoped('assessment',id,body['customer_id'])
+        rule_id=body['rule_id']
+        b=body['behavior_id']
+        if not any(c['id']==rule_id and c['behavior_id']==b for c in a['candidates']):
+            raise ValueError('Rule not associated with behavior')
+        result=detection.fixture_test(rule_id)
+        blob=svc.store.blob(json.dumps(result).encode())
+        executed=now()
         for variant,case in result['cases'].items():
             expected={'positive':'match','negative':'no match','missing-field':'inconclusive'}[variant]
             t=TestRun(behavior_id=b,environment_version=a['context']['environment_version'],control_id=rule_id,control_version=result['rule_version'],procedure='Restricted Sigma matcher on '+variant+' authored event',expected=expected,actual=case['result'],executed_at=executed,method='synthetic log match',result='inconclusive' if case['result']=='inconclusive' else ('passed' if case['result']==expected else 'failed'),dimension='detection',scope='local authored synthetic fixtures only',variant=variant,evidence=[EvidenceAttachment(id=uid('attachment',blob),reference='blob:'+blob,sha256=blob,description='Actual local matcher result, including original input event',kind='synthetic fixture replay')])
@@ -153,10 +226,12 @@ def create_app(service=None):
     @app.get('/api/gmail/sample/{id}')
     def sample(id:str,customer_id:str):
         r=svc.store.get('gmail_request',id)
-        if r['context']['customer_id']!=customer_id:raise KeyError('Request not found')
+        if r['context']['customer_id']!=customer_id:
+            raise KeyError('Request not found')
         return gmail.sample(r)
     def handoff_bytes(body):
-        if body.get('path'):return ingestion.read_path(body['path'])[0]
+        if body.get('path'):
+            return ingestion.read_path(body['path'])[0]
         return body['json']
     @app.post('/api/gmail/preview')
     def gmail_preview(body:dict):return gmail.preview(svc.store,handoff_bytes(body),body['customer_id'])
@@ -164,7 +239,8 @@ def create_app(service=None):
     def gmail_process(body:dict):return gmail.process(svc,handoff_bytes(body),body['customer_id'],body.get('mode','offline'))
     @app.post('/api/gmail/upload')
     async def gmail_upload(customer_id:str=Form(),file:UploadFile=File()):
-        raw=await file.read(ingestion.MAX_BYTES+1);return gmail.preview(svc.store,raw,customer_id)
+        raw=await file.read(ingestion.MAX_BYTES+1)
+        return gmail.preview(svc.store,raw,customer_id)
     @app.post('/api/misp/{id}')
     def misp_import(id:str,body:dict):return misp.import_event(svc.store,svc.scoped('package',id,body['customer_id']))
     @app.get('/api/misp/results')
@@ -173,7 +249,8 @@ def create_app(service=None):
         return [r for r in svc.store.all('misp_sync') if r['package_id'] in packages]
     @app.get('/api/evaluation')
     def evaluation():
-        p=ROOT/'validation/evaluation.json';return json.loads(p.read_text()) if p.exists() else {'status':'NOT RUN','command':'./scripts/iti eval'}
+        p=ROOT/'validation/evaluation.json'
+        return json.loads(p.read_text()) if p.exists() else {'status':'NOT RUN','command':'./scripts/iti eval'}
     from .vulnerability_api import register
     register(app,svc)
     from .application_api import register as register_application_findings
@@ -207,7 +284,9 @@ def create_app(service=None):
 
 def readiness(store=None):
     from .store import Store
-    store=store or Store();live_extractions=[e for e in store.all('extraction') if e.get('mode')=='live'];misp_reads=[r for r in store.all('misp_sync') if r.get('status') in ('readback matched','reconciled after uncertain write')]
+    store=store or Store()
+    live_extractions=[e for e in store.all('extraction') if e.get('mode')=='live']
+    misp_reads=[r for r in store.all('misp_sync') if r.get('status') in ('readback matched','reconciled after uncertain write')]
     measured=(ROOT/'validation/evaluation.json').exists()
     return [{'capability':'Existing Gmail plugin','implemented':True,'fixture_tested':None,'live_tested':'user-confirmed configured and tested','status':'Assisted handoff; no in-app mailbox connectivity'}, {'capability':'Selected Gmail handoff','implemented':True,'fixture_tested':measured,'live_tested':False,'status':'NOT RUN until scoped retrieval and import recorded'}, {'capability':'Live AI extraction','implemented':True,'fixture_tested':measured,'live_tested':bool(live_extractions),'status':'Successful structured request recorded; evaluate general extraction separately' if live_extractions else 'Configured; acceptance pending' if os.getenv('OPENAI_API_KEY') and os.getenv('OPENAI_MODEL') else 'NOT VERIFIED — API key/model unavailable'}, {'capability':'Native MISP export / converter','implemented':True,'fixture_tested':measured,'live_tested':False,'status':'See each package compatibility report'}, {'capability':'MISP import/readback','implemented':True,'fixture_tested':measured,'live_tested':bool(misp_reads),'status':'Actual readback result recorded; inspect differences' if misp_reads else 'Configured; live check pending' if os.getenv('MISP_URL') and os.getenv('MISP_API_KEY') else 'NOT RUN — instance credentials unavailable'}, {'capability':'Synthetic Sigma evaluation','implemented':True,'fixture_tested':measured,'live_tested':False,'status':'One rule, three authored variants; no live SIEM'}]
 app=create_app()

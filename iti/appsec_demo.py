@@ -47,8 +47,10 @@ def load(service):
                     remediation={'security_reviewer': 'Synthetic security reviewer', 'expected_result': 'Authored cause removed',
                         'implementation_ref': 'synthetic-change-1', 'implementation_claim': 'Synthetic developer reports implementation'})
                 saved = ledger.improve(tx, subject, action)
-                action.id = saved['id']; action.status = 'in progress' if label == 'B' else 'retest requested'
-                command['expected_updated_at'] = saved['updated_at']; saved = ledger.improve(tx, subject, action)
+                action.id = saved['id']
+                action.status = 'in progress' if label == 'B' else 'retest requested'
+                command['expected_updated_at'] = saved['updated_at']
+                saved = ledger.improve(tx, subject, action)
                 if label == 'B':
                     continue
                 attachment = appsec.capture_evidence(tx, f, ctx, 'synthetic-retest.txt',
@@ -59,7 +61,9 @@ def load(service):
                     'expected': 'Authored corrected behavior', 'actual': 'Authored positive result', 'executed_at': now(),
                     'result': 'passed', 'method': 'version/configuration evidence', 'evidence_ids': [attachment['id']]}
                 appsec.retest(tx, subject, value)
-                action.status = 'closed'; command['expected_updated_at'] = saved['updated_at']; ledger.improve(tx, subject, action)
+                action.status = 'closed'
+                command['expected_updated_at'] = saved['updated_at']
+                ledger.improve(tx, subject, action)
                 if label == 'D':
                     appsec.retest(tx, subject, value | {'executed_at': now(), 'result': 'failed', 'actual': 'Authored later failure contradicts the earlier result'})
         document = json.loads(raw)

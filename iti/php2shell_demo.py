@@ -94,11 +94,11 @@ def build(service):
     ctx = profiles.context(store, CUSTOMER, ENVIRONMENT)
     source = ingestion.ingest(store, (FIXTURES / 'dossier.md').read_bytes(), 'php2shell-dossier.md', 'authored-demo:php2shell', CUSTOMER,
         extra_gaps=['Limited source paraphrases, not original publisher bytes. Hypothetical stages are not a reported intrusion.',
-                    'No live AttackIQ, scanner, SIEM, WAF, pipeline or model execution. KEV/EPSS require explicit fresh enrichment.'],
+                    'No live BAS, scanner, SIEM, WAF, pipeline or model execution. KEV/EPSS require explicit fresh enrichment.'],
         metadata={'title': 'PHP2Shell → Harborlight Capital · synthetic working case', 'fixture': True, 'synthetic': True, 'synthetic_scenario': True,
                   'publisher': 'Developer-curated teaching dossier with linked primary sources', 'references': SOURCES,
                   'gaps': ['Limited source paraphrases, not original publisher bytes. Hypothetical stages are not a reported intrusion.',
-                           'No live AttackIQ, scanner, SIEM, WAF, pipeline or model execution. KEV/EPSS require explicit fresh enrichment.']})
+                           'No live BAS, scanner, SIEM, WAF, pipeline or model execution. KEV/EPSS require explicit fresh enrichment.']})
     def refs(anchor):
         matches = [s.id for s in source.spans if anchor in s.text]
         if len(matches) != 1:

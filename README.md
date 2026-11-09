@@ -194,6 +194,8 @@ These are suggestions requiring review. Creating, deploying or closing an action
 
 For one connected demonstration across all workspaces, open **Add Intelligence → Open PHP2Shell working case**. It creates/selects **Harborlight Capital · PHP2Shell fictional demo**, a fictional investment firm, with attributed CTI, hypothetical ATT&CK Flow, D3FEND improvements, hunts, purple-team plans, CVE response, AppSec commitments/exceptions, exposure drill-downs and pipeline configuration/execution examples. Expand its case guide for the thirteen-workspace walkthrough and downloadable inputs. Reopening preserves edits; all firm data and results are synthetic. See [the complete PHP2Shell working case](docs/PHP2SHELL_WORKING_CASE.md). Choose **Golden Ledger** in Appearance for the yellow-led investment-workbench palette.
 
+For the separate CVE-2026-111497 case, open **Add Intelligence → Load Brotli working case**. It creates a dedicated fictional Harborlight scope with six contrasting decoder observations, source-qualified decisions, a failed self-contained .NET retest, synthetic candidate evidence, AppSec and pipeline records, and a two-branch hypothetical Attack Flow. Expand its case guide for scoped record links and downloads. See the [Brotli exposure demonstration](docs/BROTLI_EXPOSURE_DEMO.md). No live scanner, SIEM, patch or exploitation runs.
+
 Open **Vulnerability Intelligence** for source-linked CVEs, dated KEV/EPSS/CNA-CVSS enrichment, a manual/CSV exposure register, explained per-asset response proposals and reviewed actions in the existing improvement ledger. No scanner or AI credential is required. **Load historical examples** explicitly selects a fictional software company with TeamCity and BYOVD cases; real historical reporting and synthetic asset observations remain labeled separately.
 
 Review the evidence, accept/override the recommendation with a reason, then create an owner action and record scoped verification. Remediation and prior-compromise hunting stay separate; closure, synthetic results and attestations cannot become live verified remediation. See the [three-minute walkthrough, CSV contract, policy, provenance and limitations](docs/VULNERABILITY_INTELLIGENCE_DEMO.md). Run `npm --prefix web run build`, restart `./scripts/run`, and refresh an existing install to load this view.
@@ -222,9 +224,9 @@ npm --prefix web run build
 
 ## Exposure Overview
 
-The **Exposure Overview** leadership workspace summarizes selected customer/environment records: reported findings, reviewed applicability, ownership, overdue commitments, exceptions and qualified verification. Every metric has a definition and a drill-down to its underlying records. Historical occurrences do not inflate current AppSec findings; source-only CVE mentions remain distinct from asset exposure.
+The **Exposure Overview** dashboard shows saved cases, outstanding exposures and corrective work for the fictional company selected in Customer Profiles. It refreshes every ten seconds while visible and when you return to the tab. Filter by environment, search case titles, or open a case, findings, infrastructure or actions in its original scope.
 
-Choose **Load synthetic leadership demo** to explore an isolated fictional Juniper scope with open work, pending/failed/inconclusive retests, current and stale evidence, and active/expired/unapproved exceptions. Synthetic or supplied-evidence review does not become independently verified operational remediation. Timing is shown only for eligible records and is not a claim of enterprise risk reduction. See [metric definitions and three-minute demonstration](docs/EXPOSURE_MANAGEMENT_DASHBOARD.md).
+Case counts use the latest assessment per source and environment. Exposure totals retain the existing evidence qualification rules; open action totals use recorded status. Synthetic examples are labeled. Historical assessment revisions do not inflate case totals. See [dashboard definitions](docs/EXPOSURE_MANAGEMENT_DASHBOARD.md).
 
 ## Pipeline Assurance
 
