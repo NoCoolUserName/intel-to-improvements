@@ -7,7 +7,7 @@ from . import profiles, vulnerability_enrichment as enrichment
 from .store import uid, now, canonical, digest
 from .vulnerability_models import CVE_PATTERN, RESPONSES, ExposureObservation, VulnerabilityAssertion, VulnerabilityReview, cve_id
 
-POLICY = 'vulnerability-response-1'
+POLICY = 'vulnerability-response-2'
 CVE_RE = re.compile(r'(?<![A-Za-z0-9_-])'+CVE_PATTERN+r'(?![A-Za-z0-9_-])', re.I)
 EXPEDITE, PRIORITIZE, INVESTIGATE, MONITOR, NOT_APPLICABLE = RESPONSES
 
@@ -150,7 +150,7 @@ def verification(store,ctx,asset,as_of=None):
     status=('verified '+current['dimension']) if verified else ('stale' if current and not current['fresh'] else ('attestation / synthetic or lab evidence only' if current and not current['qualifies'] else current['result'] if current else 'not tested'))
     return {'status':status,'tests':eligible,'verified_at':current['executed_at'] if verified else None,'method':current['method'] if current else None,'dimension':current['dimension'] if verified else None,'test_id':current['id'] if current else None}
 
-def policy(assertions,asset,ctx,values,verified):
+def policy(assertions,asset,ctx,values,verified,impact=None):
     reasons=[]
     supported=[a for a in assertions if a['review_status']=='reviewed' and a['classification'] in ('observed exploitation','attempted exploitation')]
     kev=values['kev'];kev_value=kev.get('value') or (kev.get('last_available') or {}).get('value') or {}
@@ -161,10 +161,16 @@ def policy(assertions,asset,ctx,values,verified):
         response=INVESTIGATE;reasons.append(('URGENT_APPLICABILITY' if credible else 'APPLICABILITY_UNKNOWN','Confirm affected version/configuration and reachable attack path; missing context is neither affected nor safe.'))
     elif asset['applicability']=='assessed not affected':
         response=NOT_APPLICABLE;reasons.append(('DOCUMENTED_EXCLUSION',asset['applicability_reason']))
-    elif credible and asset['reachability']=='confirmed' and asset['criticality'] in ('critical','high'):
+    elif credible and asset['reachability']=='confirmed' and (asset['criticality'] in ('critical','high') or (impact and impact['eligible'] and impact['current']['value'] in ('High','Critical'))):
         response=EXPEDITE;reasons.append(('EXPLOITED_REACHABLE_IMPORTANT','Confirmed affected, reachable, consequential asset with credible exploitation. Do not delay remediation for an offensive test.'))
     else:
         response=PRIORITIZE;reasons.append(('CONFIRMED_EXPOSURE','Confirmed affected asset; follow the existing program while resolving reachability and consequence.'))
+    if impact and impact['eligible'] and impact['current']['value'] in ('High','Critical') and response==EXPEDITE:
+        reasons.append(('REVIEWED_IMPACT_SUPPORTS_EXPEDITE','Current reviewed impact supports expedited action under the existing exploitation, applicability and reachability gates.'))
+    if impact and impact['needs_review']:
+        reasons.append(('RATING_NEEDS_REVIEW','Impact needs review; existing evidence and commitments retain their authority.'))
+    if impact and impact['current'] and asset and impact['current']['value'].lower()!=asset['criticality']:
+        reasons.append(('IMPACT_CRITICALITY_DIFFER','Asset importance and vulnerability consequence are independent judgments.'))
     if verified['verified_at']:
         response=MONITOR;reasons.append(('SCOPED_VERIFICATION','Current scoped operational evidence supports reduced exposure; retain prior-compromise investigation and residual-risk review.'))
     reasons.append(('SCORES_NOT_OVERRIDES','EPSS, CVSS, actor attribution and unverified control claims do not cancel exploitation/exposure evidence.'))
@@ -172,18 +178,26 @@ def policy(assertions,asset,ctx,values,verified):
 
 def decide(store,ctx,cve,asset):
     assertions=active_assertions(store,ctx,cve);values=enrichment.latest(store,cve);v=verification(store,ctx,asset)
-    response,reasons,credible=policy(assertions,asset,ctx,values,v)
+    from . import vulnerability_ratings as ratings
+    exploitation=ratings.projection(store,ctx,cve,'exploitation')
+    impact=ratings.projection(store,ctx,cve,'impact',asset) if asset else None
+    response,reasons,credible=policy(assertions,asset,ctx,values,v,impact)
     if any(m['source'].get('completeness')!='complete-for-supported-content' for m in mentions(store,ctx,cve)):
         reasons.append({'code':'SOURCE_LIMITATIONS','explanation':'Source parsing or derivative coverage is partial. Inspect source gaps; this decision cannot establish missing report content.'})
     key=uid('vdecision_series',ctx['customer_id'],ctx['environment_id'],cve,asset['logical_id'] if asset else 'unknown')
     history=[d for d in store.all('vulnerability_decision') if d['series_id']==key]
     reviews=[r for r in store.all('vulnerability_review') if r['series_id']==key]
     commitment=(reviews[-1]['response'] if reviews else None) or (asset or {}).get('commitment_response')
+    previous=history[-1] if history else None
+    held=previous and any(r['code'] in ('REVIEWED_IMPACT_SUPPORTS_EXPEDITE','RATING_URGENCY_RETAINED') for r in previous['reason_codes'])
+    released=reviews and previous and reviews[-1]['disposition']=='override' and reviews[-1]['response']!=EXPEDITE and reviews[-1]['recorded_at']>=previous['created_at']
+    if response==PRIORITIZE and held and not released and impact and not (impact['eligible'] and impact['current']['value'] in ('High','Critical')):
+        response=EXPEDITE;reasons.append({'code':'RATING_URGENCY_RETAINED','explanation':'Previously expedited impact lost eligibility; retain urgency until an explicit analyst review resolves it.'})
     proposal=response
     if commitment and RESPONSES.index(response)>RESPONSES.index(commitment):
         response=commitment;reasons.append({'code':'COMMITMENT_RETAINED','explanation':'A lower proposal cannot silently remove the accepted response or deadline. Explicit analyst override with a reason is required.'})
     inputs={'assertions':[a['id'] for a in assertions],'sources':[m['id'] for m in mentions(store,ctx,cve)],'exposure':asset['id'] if asset else None,'exposure_stale':asset.get('assessment_stale',False) if asset else True,
-      'enrichment':{k:{'id':r.get('id'),'status':r['status']} for k,r in values.items()},'verification':{k:v[k] for k in ('status','test_id') if k in v},'context':ctx,'policy':POLICY}
+      'enrichment':{k:{'id':r.get('id'),'status':r['status']} for k,r in values.items()},'verification':{k:v[k] for k in ('status','test_id') if k in v},'context':ctx,'policy':POLICY,'ratings':{'exploitation':ratings.decision_inputs(exploitation),'impact':ratings.decision_inputs(impact) if impact else None}}
     id=uid('vdecision',key,inputs);prior=store.maybe('vulnerability_decision',id)
     if prior:return prior
     previous=history[-1] if history else None
@@ -191,6 +205,7 @@ def decide(store,ctx,cve,asset):
     receipt=store.get('vulnerability_receipt',uid('vreceipt',ctx['customer_id'],ctx['environment_id'],cve))['at']
     row={'id':id,'series_id':key,'cve':cve,'context':ctx,'asset':asset,'inputs':inputs,'enrichment':values,'assertions':assertions,
       'response':response,'unconstrained_proposal':proposal,'reason_codes':reasons,'credible_exploitation':credible,'policy_version':POLICY,
+      'ratings':{axis:{k:view[k] for k in ('current','needs_review','eligible')} for axis,view in [('exploitation',exploitation),('impact',impact)] if view},
       'verification':v,'receipt_at':receipt,'created_at':now(),'previous_id':previous['id'] if previous else None,'previous_response':previous['response'] if previous else None,'changed_inputs':changed,
       'deadline':(asset or {}).get('commitment_deadline'),'commitment':commitment,'sources':[m['id'] for m in mentions(store,ctx,cve)]}
     return stamp(store,'vulnerability_decision',row)
@@ -217,7 +232,7 @@ def action_origin(store,assessment):
     if not reviews:raise ValueError('Accept or override this decision before creating an improvement')
     if not d['asset']:raise ValueError('Record an asset or explicitly scoped investigation target before creating an action')
     return {'kind':'vulnerability_decision','assessment_id':d['id'],'review_id':reviews[-1]['id'],'cve':d['cve'],'asset_id':d['asset']['asset_id'],
-      'asset_logical_id':d['asset']['logical_id'],'exposure_revision':d['asset']['id'],'policy_version':d['policy_version'],'source_assertions':d['inputs']['assertions']}
+      'asset_logical_id':d['asset']['logical_id'],'exposure_revision':d['asset']['id'],'policy_version':d['policy_version'],'source_assertions':d['inputs']['assertions'],'rating_dependencies':d['inputs'].get('ratings',{})}
 
 def validate_test(store,assessment,test):
     d=assessment['vulnerability'];asset=d['asset']
@@ -273,10 +288,18 @@ def workspace(service,customer,environment):
     with store.lock('vulnerability-workspace:'+customer+':'+environment):
         for cve in cves:
             assets=current_exposures(store,ctx,cve);assertions=active_assertions(store,ctx,cve)
+            from . import vulnerability_ratings as ratings
             decisions=[decide(store,ctx,cve,a) for a in (assets or [None])]
+            exploitation=ratings.projection(store,ctx,cve,'exploitation')
+            impacts={a['logical_id']:ratings.projection(store,ctx,cve,'impact',a) for a in assets}
             actions=[a for a in store.all('improvement') if in_scope(a,ctx) and (a.get('origin') or {}).get('cve')==cve]
             histories=[r for r in store.all('vulnerability_decision') if in_scope(r,ctx) and r['cve']==cve]
             reviews=[r for r in store.all('vulnerability_review') if in_scope(r,ctx) and r['cve']==cve]
+            for d in decisions:
+                accepted=next((r for r in reversed(reviews) if r['series_id']==d['series_id']),None)
+                d['effective_response']=accepted['response'] if accepted else d['response']
+                d['latest_review']=accepted
+                d['more_urgent_proposal']=bool(accepted and accepted['decision_id']!=d['id'] and RESPONSES.index(d['unconstrained_proposal'])<RESPONSES.index(accepted['response']))
             from .ledger import seconds
             first_decision=min(r['created_at'] for r in histories)
             metrics=[]
@@ -285,7 +308,9 @@ def workspace(service,customer,environment):
                 clock=store.maybe('confirmed_exposure',a['logical_id']+':'+kind) if a else None
                 metrics.append({'asset_id':a['asset_id'] if a else None,'scope':kind,'confirmed_exposure_at':clock['at'] if clock else None,
                   'verified_at':v['verified_at'],'confirmed_exposure_to_verified_seconds':seconds(clock['at'],v['verified_at']) if clock and v['verified_at'] and v['verified_at']>=clock['at'] else None})
-            items.append({'cve':cve,'mentions':mentions(store,ctx,cve),'assertions':assertions,'assertion_history':[r for r in store.all('vulnerability_assertion') if in_scope(r,ctx) and r['cve']==cve],
+            items.append({'cve':cve,'exploitation_assessment':exploitation,'impact_assessments':impacts,'mentions':mentions(store,ctx,cve),'assertions':assertions,'assertion_history':[r for r in store.all('vulnerability_assertion') if in_scope(r,ctx) and r['cve']==cve],
               'assets':assets,'decisions':decisions,'decision_history':histories,'reviews':reviews,'actions':actions,'action_links':[r for r in store.all('vulnerability_action_link') if in_scope(r,ctx) and r['decision_id'] in {d['id'] for d in histories}],'enrichment':enrichment.latest(store,cve),'plans':plans(store,ctx,cve,assertions),
               'metrics':{'receipt_to_first_decision_seconds':seconds(decisions[0]['receipt_at'],first_decision),'receipt_at':decisions[0]['receipt_at'],'first_decision_at':first_decision,'outcomes':metrics}})
+    from . import vulnerability_ratings as ratings
+    items.sort(key=lambda item:min(ratings.queue_key(d) for d in item['decisions']))
     return {'context':ctx,'policy_version':POLICY,'responses':RESPONSES,'items':items,'freshness_policy':'Verification: exact exposure/customer/environment versions, latest result, within 30 days. Synthetic/lab/attestation outcomes never enter operational remediation metrics.'}
