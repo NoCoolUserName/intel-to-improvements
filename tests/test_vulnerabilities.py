@@ -232,6 +232,15 @@ def test_stale_and_unavailable_enrichment_remains_dated(service,demo):
     r=enrichment.latest(service.store,cve)['epss']
     assert r['status']=='unavailable' and r['last_available']['stale'] and r['value'] is None
 
+def test_enrichment_refresh_route_reaches_provider(service,demo,monkeypatch):
+    calls=[]
+    monkeypatch.setattr(enrichment,'refresh',lambda store,cves: calls.append(cves) or {'refreshed':cves})
+    client=TestClient(create_app(service),base_url='http://localhost')
+    result=client.post('/api/vulnerabilities/enrichment',json=scope()|{'context':demo['context'],'cves':['CVE-2023-42793']})
+    assert result.status_code==200
+    assert result.json()=={'refreshed':['CVE-2023-42793']}
+    assert calls==[['CVE-2023-42793']]
+
 def test_api_scope_origin_upload_and_persistence(service,demo):
     client=TestClient(create_app(service),base_url='http://localhost')
     query='?customer_id=fictional-software&environment_id=software-lab'
