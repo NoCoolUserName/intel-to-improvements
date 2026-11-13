@@ -19,7 +19,7 @@ from pypdf import PdfReader
 from .models import SourceDocument, EvidenceSpan
 from .store import digest, uid, now
 
-PARSER_VERSION='parser-1.4'
+PARSER_VERSION='parser-1.5'
 MAX_BYTES=5*1024*1024
 FORMATS={'.txt','.md','.html','.htm','.json','.csv','.eml','.pdf'}
 DFIR_URL='https://thedfirreport.com/2026/02/23/apache-activemq-exploit-leads-to-lockbit-ransomware/'
@@ -169,6 +169,10 @@ def parse_bytes(data,name,representation=None,column_mapping=None):
             if article is None:
                 article=soup.body or soup
                 gaps.append('Generic fallback: no article/main region; inspect extraction')
+            # CSS selectors no longer descend into HTML templates in SoupSieve 4.
+            # Remove inert markup before collecting text with Beautiful Soup's find_all.
+            for el in article.find_all('template'):
+                el.decompose()
             for el in article.select('script,style,nav,footer,aside,form,.sharedaddy,.related-posts,.wp-block-jetpack-subscriptions,.ad,.advertisement'):
                 el.decompose()
             images=len(article.find_all('img'))

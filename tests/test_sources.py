@@ -172,3 +172,20 @@ def test_near_duplicates_are_candidates_not_merged(service):
     a=ingest(service.store,b'The analyst observed CertUtil download a payload on a Windows host during the investigation.','a.txt','newsletter-a','shared')
     b=ingest(service.store,b'The analyst observed CertUtil download a payload on a Windows host during the investigation. Minor editorial correction.','b.txt','newsletter-b','shared')
     assert a.id!=b.id and b.metadata['near_duplicate_candidates'][0]['document_id']==a.id
+
+def test_html_template_boilerplate_does_not_become_evidence(service):
+    raw=b'<article><h1>Report</h1><p>Ordinary report content.</p><template><aside><p>CertUtil downloaded a payload on Windows.</p></aside></template></article>'
+    s=ingest(service.store,raw,'report.html','template-fixture','shared')
+    assert 'Ordinary report content.' in s.normalized
+    assert 'CertUtil' not in s.normalized
+    assert not bounded_extract(s).behaviors
+
+
+def test_report_listing_ignores_template_links(monkeypatch):
+    from iti import ingestion
+    raw=b'<template><a href="/2026/02/23/hidden-report/">Hidden</a></template><a href="/2026/02/24/visible-report/">Visible</a>'
+    monkeypatch.setattr(ingestion,'fetch',lambda *_:(raw,{}))
+    reports=ingestion.list_reports()
+    assert len(reports)==1
+    assert reports[0]['title']=='Visible'
+    assert reports[0]['url']=='https://thedfirreport.com/2026/02/24/visible-report/'
